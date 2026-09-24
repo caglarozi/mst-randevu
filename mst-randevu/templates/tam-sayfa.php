@@ -1,0 +1,36 @@
+<?php
+/**
+ * "MST Randevu (Tam Sayfa)" şablonu: temanın üst kısmı yerine MST çubuğu (logo, WhatsApp, Siteye Git).
+ * Sayfa içeriği yazılmışsa randevu kutusunun üstünde gösterilir.
+ */
+if (!defined('ABSPATH')) {
+    exit;
+}
+?><!doctype html>
+<html <?php language_attributes(); ?>>
+<head>
+    <meta charset="<?php bloginfo('charset'); ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#ffffff">
+    <?php wp_head(); ?>
+</head>
+<body <?php body_class('mst-sayfa'); ?>>
+<?php wp_body_open(); ?>
+<?php echo MST_Randevu::header_html(); ?>
+
+<main class="mst-sayfa__main">
+    <?php
+    while (have_posts()) {
+        the_post();
+        $icerik = trim(get_the_content());
+        if ($icerik !== '' && !has_shortcode($icerik, 'mst_randevu')) {
+            echo '<div class="mst-sayfa__intro">' . apply_filters('the_content', $icerik) . '</div>';
+        }
+    }
+    echo MST_Randevu::shortcode();
+    ?>
+</main>
+
+<?php wp_footer(); ?>
+</body>
+</html>

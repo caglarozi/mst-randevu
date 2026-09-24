@@ -1,0 +1,10 @@
+# Derleme çıktısı (WordPress'e yüklenecek zip)
+*.zip
+
+# Yerel araç ayarları
+.claude/
+
+# Sistem dosyaları
+Thumbs.db
+.DS_Store
+*.log
