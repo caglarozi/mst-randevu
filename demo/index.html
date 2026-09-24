@@ -122,6 +122,13 @@
       if (alinan[tel]) return json({ success: false, data: { mesaj: 'Bu numarayla zaten ' + uzun(alinan[tel]) + ' tarihine randevunuz var.' } });
       if (!s || s.dolu >= s.kapasite) return json({ success: false, data: { mesaj: 'Bu saat az önce doldu. Lütfen başka bir saat seçin.', yenile: true } }, 409);
       s.dolu++; alinan[tel] = s.t;
+      // Eklentinin webhook'uyla aynı biçim; demo sunucusu --crm ile başlatıldıysa gerçek CRM'e iletir
+      realFetch('/crm-ilet', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({
+        olay: 'randevu.olusturuldu', kaynak: 'mst-randevu-demo', randevu_id: 'demo-' + Date.now(),
+        ad_soyad: ad, telefon: '+' + tel,
+        baslangic: iso(s.t) + 'T' + pad(s.t.getHours()) + ':' + pad(s.t.getMinutes()) + ':00+03:00',
+        tarih_metin: uzun(s.t), not: (f.get('not_metni') || '').trim()
+      }) }).then(function (r) { return r.json(); }).then(function (c) { console.log('CRM iletimi:', c); }).catch(function () {});
       var bit = new Date(s.t.getTime() + 30 * 60000);
       return json({ success: true, data: { mesaj: MST_RANDEVU.basari, tarih: uzun(s.t),
         takvim: 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=' + encodeURIComponent('MST Yayıncılık — Yazar görüşmesi') + '&dates=' + utc(s.t) + '/' + utc(bit) } });
