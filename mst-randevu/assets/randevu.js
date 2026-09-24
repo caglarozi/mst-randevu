@@ -207,7 +207,23 @@
     load();
   }
 
+  /* ---------------- Üst çubuk: mobil menü ---------------- */
+  function initMenu(top) {
+    var btn = top.querySelector('.mst-top__menu'), menu = top.querySelector('.mst-top__cta');
+    if (!btn || !menu) return;
+    function set(open) {
+      top.classList.toggle('is-open', open);
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      btn.setAttribute('aria-label', open ? 'Menüyü kapat' : 'Menüyü aç');
+    }
+    btn.addEventListener('click', function () { set(!top.classList.contains('is-open')); });
+    menu.addEventListener('click', function (e) { if (e.target.closest('a')) set(false); });
+    document.addEventListener('click', function (e) { if (!top.contains(e.target)) set(false); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && top.classList.contains('is-open')) { set(false); btn.focus(); } });
+  }
+
   function boot() {
+    document.querySelectorAll('.mst-top').forEach(initMenu);
     document.querySelectorAll('[data-mst-randevu]').forEach(init);
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();

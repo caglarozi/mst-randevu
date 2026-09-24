@@ -278,7 +278,8 @@ class MST_Randevu
                 <a class="mst-top__logo" href="<?php echo esc_url($home); ?>" aria-label="Ana sayfa">
                     <img src="<?php echo esc_url(self::logo_url()); ?>" alt="MST" width="50" height="50">
                 </a>
-                <div class="mst-top__cta">
+                <button type="button" class="mst-top__menu" aria-label="Menüyü aç" aria-expanded="false" aria-controls="mst-top-menu"><span></span><span></span><span></span></button>
+                <div class="mst-top__cta" id="mst-top-menu">
                     <?php if ($wa) : ?><a class="mst-top__btn mst-top__btn--wa" href="<?php echo esc_url($wa); ?>" target="_blank" rel="noopener" aria-label="WhatsApp'tan yazın"><?php echo self::icon('wa'); ?><span>WhatsApp</span></a><?php endif; ?>
                     <a class="mst-top__btn" href="<?php echo esc_url($home); ?>"><span>Siteye Git</span><?php echo self::icon('dis'); ?></a>
                 </div>
