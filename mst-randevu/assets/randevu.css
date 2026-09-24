@@ -288,6 +288,7 @@ body.admin-bar .mst-top { top: 32px; }
 }
 .mst-rnd__check { display: flex; gap: 10px; align-items: flex-start; font-size: 13px; line-height: 1.5; color: var(--mst-soluk); margin: 4px 0 18px; cursor: pointer; }
 .mst-rnd__check input { margin: 2px 0 0; width: 18px; height: 18px; accent-color: var(--mst-yesil); flex: 0 0 auto; }
+.mst-rnd__check a { color: var(--mst-yesil); font-weight: 700; text-decoration: underline !important; text-underline-offset: 2px; }
 .mst-rnd__hp { position: absolute !important; left: -9999px !important; width: 1px; height: 1px; overflow: hidden; }
 
 .mst-rnd__error {
