@@ -13,6 +13,12 @@ if (!defined('ABSPATH')) {
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="#ffffff">
     <?php wp_head(); ?>
+    <?php
+    // Güvence: bir eklenti stil dosyasını kuyruktan düşürdüyse doğrudan ekle
+    if (!wp_style_is('mst-randevu', 'done')) {
+        echo '<link rel="stylesheet" id="mst-randevu-yedek-css" href="' . esc_url(MST_RANDEVU_URL . 'assets/randevu.css?ver=' . MST_RANDEVU_VER) . '">' . "\n";
+    }
+    ?>
 </head>
 <body <?php body_class('mst-sayfa'); ?>>
 <?php wp_body_open(); ?>

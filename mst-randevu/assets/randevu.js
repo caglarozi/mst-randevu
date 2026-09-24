@@ -23,6 +23,21 @@
     var errBox = $('[data-error]'), done = $('[data-done]');
     var steps = root.querySelectorAll('[data-steps] li');
     var nonce = '', byDay = {}, order = [], activeDay = null, chosen = null;
+    var weeks = [], weekOf = {}, activeWeek = 0;
+
+    // Mobilde günler haftalık gösterilir: ‹ 29 Eyl – 3 Eki ›  (masaüstünde gizli, tüm günler görünür)
+    var weekNav = el('div', 'mst-rnd__week');
+    var prevW = el('button', 'mst-rnd__week-btn', '‹'), nextW = el('button', 'mst-rnd__week-btn', '›');
+    var weekLabel = el('span', 'mst-rnd__week-label');
+    prevW.type = nextW.type = 'button';
+    prevW.setAttribute('aria-label', 'Önceki hafta');
+    nextW.setAttribute('aria-label', 'Sonraki hafta');
+    weekLabel.setAttribute('aria-live', 'polite');
+    weekNav.appendChild(prevW); weekNav.appendChild(weekLabel); weekNav.appendChild(nextW);
+    weekNav.hidden = true;
+    daysBox.parentNode.insertBefore(weekNav, daysBox);
+    prevW.addEventListener('click', function () { goWeek(activeWeek - 1); });
+    nextW.addEventListener('click', function () { goWeek(activeWeek + 1); });
 
     function setStep(n) {
       steps.forEach(function (li, i) {
@@ -38,7 +53,7 @@
     function load(flashMsg) {
       daysBox.innerHTML = '';
       daysBox.appendChild(el('div', 'mst-rnd__loading', 'Müsait saatler yükleniyor…'));
-      timesBox.innerHTML = ''; timesLabel.hidden = true; nextBar.hidden = true; chosen = null;
+      timesBox.innerHTML = ''; timesLabel.hidden = true; nextBar.hidden = true; weekNav.hidden = true; chosen = null;
       var fd = new FormData(); fd.append('action', 'mst_randevu_slotlar');
       post(fd).then(function (res) {
         if (!res.success) throw new Error();
@@ -61,26 +76,70 @@
       setTimeout(function () { n.remove(); }, 6000);
     }
 
+    /** 'YYYY-MM-DD' gününün ait olduğu haftanın pazartesisi (hafta anahtarı) */
+    function monday(gun) {
+      var p = gun.split('-'), d = new Date(+p[0], +p[1] - 1, +p[2]);
+      d.setDate(d.getDate() - (d.getDay() + 6) % 7);
+      return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
+    }
+
+    function goWeek(i) {
+      if (i < 0 || i >= weeks.length) return;
+      activeWeek = i;
+      var w = weeks[i];
+      daysBox.querySelectorAll('.mst-rnd__day').forEach(function (b) {
+        b.classList.toggle('is-diger-hafta', weekOf[b.dataset.gun] !== i);
+      });
+      var ilk = byDay[w[0]][0], son = byDay[w[w.length - 1]][0];
+      weekLabel.textContent = w.length > 1 ? ilk.no + ' – ' + son.no : ilk.no;
+      prevW.disabled = i === 0;
+      nextW.disabled = i === weeks.length - 1;
+      // Hafta değişince o haftanın ilk müsait gününü seç
+      if (weekOf[activeDay] !== i) selectDay(w.filter(musait)[0] || w[0]);
+    }
+
     function renderDays() {
       daysBox.innerHTML = '';
+      weeks = []; weekOf = {};
       if (!order.length) {
+        weekNav.hidden = true;
         daysBox.appendChild(el('div', 'mst-rnd__empty', 'Şu an müsait saat bulunmuyor. Lütfen daha sonra tekrar kontrol edin ya da WhatsApp’tan bize yazın.'));
         return;
       }
+      var sonHafta = null;
       order.forEach(function (gun) {
-        var f = byDay[gun][0];
-        var b = el('button', 'mst-rnd__day');
+        var h = monday(gun);
+        if (h !== sonHafta) { weeks.push([]); sonHafta = h; }
+        weeks[weeks.length - 1].push(gun);
+        weekOf[gun] = weeks.length - 1;
+      });
+      weekNav.hidden = false;
+      // Mobil ızgaranın sütun sayısı en kalabalık haftaya göre; tek günlük hafta tüm satırı kaplamasın
+      daysBox.style.setProperty('--mst-gun', Math.max(5, Math.max.apply(null, weeks.map(function (w) { return w.length; }))));
+      order.forEach(function (gun) {
+        var f = byDay[gun][0], bos = musait(gun);
+        var b = el('button', 'mst-rnd__day' + (bos ? '' : ' is-dolu'));
         b.type = 'button';
         b.dataset.gun = gun;
         b.setAttribute('aria-pressed', 'false');
-        b.setAttribute('aria-label', f.etiket + ', ' + byDay[gun].length + ' müsait saat');
+        b.setAttribute('aria-label', f.etiket + ', ' + (bos ? bos + ' müsait saat' : 'tüm saatler dolu'));
         b.appendChild(el('span', 'mst-rnd__day-name', f.kisa));
-        b.appendChild(el('span', 'mst-rnd__day-no', f.no));
-        b.appendChild(el('span', 'mst-rnd__day-count', byDay[gun].length + ' saat'));
+        // "28 Eyl": masaüstünde tek satır, mobilde gün numarası büyük ve ay altında
+        var no = el('span', 'mst-rnd__day-no'), bol = f.no.indexOf(' ');
+        no.appendChild(document.createTextNode(bol > 0 ? f.no.slice(0, bol) : f.no));
+        if (bol > 0) no.appendChild(el('span', 'mst-rnd__day-ay', ' ' + f.no.slice(bol + 1)));
+        b.appendChild(no);
+        b.appendChild(el('span', 'mst-rnd__day-count', bos ? bos + ' saat' : 'Dolu'));
         b.addEventListener('click', function () { selectDay(gun); });
         daysBox.appendChild(b);
       });
-      selectDay(activeDay && byDay[activeDay] ? activeDay : order[0]);
+      var ilk = order.filter(musait)[0] || order[0];
+      selectDay(activeDay && byDay[activeDay] && musait(activeDay) ? activeDay : ilk);
+      goWeek(weekOf[activeDay]);
+    }
+
+    function musait(gun) {
+      return byDay[gun].filter(function (s) { return s.kalan > 0; }).length;
     }
 
     function selectDay(gun) {
@@ -93,7 +152,15 @@
       byDay[gun].forEach(function (s) {
         var b = el('button', 'mst-rnd__time', s.saat);
         b.type = 'button';
-        // Son yer kaldıysa kırmızı "Dolmak üzere" uyarısı
+        // Dolu saat kırmızı ve seçilemez; son yer kaldıysa turuncu "Dolmak üzere"
+        if (s.kalan < 1) {
+          b.classList.add('is-dolu');
+          b.disabled = true;
+          b.setAttribute('aria-label', s.saat + ', dolu');
+          b.appendChild(el('small', null, 'Dolu'));
+          timesBox.appendChild(b);
+          return;
+        }
         if (s.kalan === 1) {
           b.classList.add('is-az');
           b.appendChild(el('small', null, 'Dolmak üzere'));
@@ -116,7 +183,7 @@
       form.slot_id.value = chosen.id;
       picked.innerHTML = '';
       var info = el('div');
-      info.appendChild(el('small', null, 'Seçilen saat · ' + chosen.sure + ' dk'));
+      info.appendChild(el('small', null, 'Seçilen saat'));
       info.appendChild(el('strong', null, slotText(chosen)));
       var change = el('button', null, 'Değiştir');
       change.type = 'button';
@@ -194,7 +261,23 @@
     load();
   }
 
+  /* ---------------- Üst çubuk: mobil menü ---------------- */
+  function initMenu(top) {
+    var btn = top.querySelector('.mst-top__menu'), menu = top.querySelector('.mst-top__cta');
+    if (!btn || !menu) return;
+    function set(open) {
+      top.classList.toggle('is-open', open);
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      btn.setAttribute('aria-label', open ? 'Menüyü kapat' : 'Menüyü aç');
+    }
+    btn.addEventListener('click', function () { set(!top.classList.contains('is-open')); });
+    menu.addEventListener('click', function (e) { if (e.target.closest('a')) set(false); });
+    document.addEventListener('click', function (e) { if (!top.contains(e.target)) set(false); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && top.classList.contains('is-open')) { set(false); btn.focus(); } });
+  }
+
   function boot() {
+    document.querySelectorAll('.mst-top').forEach(initMenu);
     document.querySelectorAll('[data-mst-randevu]').forEach(init);
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
