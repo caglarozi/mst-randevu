@@ -68,19 +68,24 @@
         return;
       }
       order.forEach(function (gun) {
-        var f = byDay[gun][0];
-        var b = el('button', 'mst-rnd__day');
+        var f = byDay[gun][0], bos = musait(gun);
+        var b = el('button', 'mst-rnd__day' + (bos ? '' : ' is-dolu'));
         b.type = 'button';
         b.dataset.gun = gun;
         b.setAttribute('aria-pressed', 'false');
-        b.setAttribute('aria-label', f.etiket + ', ' + byDay[gun].length + ' müsait saat');
+        b.setAttribute('aria-label', f.etiket + ', ' + (bos ? bos + ' müsait saat' : 'tüm saatler dolu'));
         b.appendChild(el('span', 'mst-rnd__day-name', f.kisa));
         b.appendChild(el('span', 'mst-rnd__day-no', f.no));
-        b.appendChild(el('span', 'mst-rnd__day-count', byDay[gun].length + ' saat'));
+        b.appendChild(el('span', 'mst-rnd__day-count', bos ? bos + ' saat' : 'Dolu'));
         b.addEventListener('click', function () { selectDay(gun); });
         daysBox.appendChild(b);
       });
-      selectDay(activeDay && byDay[activeDay] ? activeDay : order[0]);
+      var ilk = order.filter(musait)[0] || order[0];
+      selectDay(activeDay && byDay[activeDay] && musait(activeDay) ? activeDay : ilk);
+    }
+
+    function musait(gun) {
+      return byDay[gun].filter(function (s) { return s.kalan > 0; }).length;
     }
 
     function selectDay(gun) {
@@ -93,7 +98,15 @@
       byDay[gun].forEach(function (s) {
         var b = el('button', 'mst-rnd__time', s.saat);
         b.type = 'button';
-        // Son yer kaldıysa kırmızı "Dolmak üzere" uyarısı
+        // Dolu saat kırmızı ve seçilemez; son yer kaldıysa turuncu "Dolmak üzere"
+        if (s.kalan < 1) {
+          b.classList.add('is-dolu');
+          b.disabled = true;
+          b.setAttribute('aria-label', s.saat + ', dolu');
+          b.appendChild(el('small', null, 'Dolu'));
+          timesBox.appendChild(b);
+          return;
+        }
         if (s.kalan === 1) {
           b.classList.add('is-az');
           b.appendChild(el('small', null, 'Dolmak üzere'));
@@ -116,7 +129,7 @@
       form.slot_id.value = chosen.id;
       picked.innerHTML = '';
       var info = el('div');
-      info.appendChild(el('small', null, 'Seçilen saat · ' + chosen.sure + ' dk'));
+      info.appendChild(el('small', null, 'Seçilen saat'));
       info.appendChild(el('strong', null, slotText(chosen)));
       var change = el('button', null, 'Değiştir');
       change.type = 'button';

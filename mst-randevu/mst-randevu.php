@@ -121,7 +121,7 @@ class MST_Randevu
             'gun_ileri'       => 30,  // kaç gün ilerisi gösterilsin
             'baslik'          => 'Yazar Adayı Görüşme Randevusu',
             'aciklama'        => 'Size uygun saati seçin, adınızı ve telefon numaranızı bırakın; editörümüz sizi belirtilen saatte arasın.',
-            'rozetler'        => '30 dakika, Editörümüz sizi telefonla arar, Ücretsiz ön değerlendirme',
+            'rozetler'        => 'Editörümüz sizi telefonla arar, Ücretsiz ön değerlendirme',
             'whatsapp'        => '905514112004',
             'logo_url'        => '',
             'kvkk_metni'      => 'Kişisel verilerimin randevu ve iletişim amacıyla MST Yayıncılık tarafından işlenmesini kabul ediyorum.',
@@ -239,7 +239,7 @@ class MST_Randevu
     public static function logo_url()
     {
         $o = self::opts();
-        return $o['logo_url'] ?: MST_RANDEVU_URL . 'assets/mst-logo.png';
+        return $o['logo_url'] ?: MST_RANDEVU_URL . 'assets/mst-figur.png';
     }
 
     public static function figur_url()
@@ -276,7 +276,7 @@ class MST_Randevu
         <header class="mst-top">
             <div class="mst-top__in">
                 <a class="mst-top__logo" href="<?php echo esc_url($home); ?>" aria-label="Ana sayfa">
-                    <img src="<?php echo esc_url(self::logo_url()); ?>" alt="MST Ajans Production" width="126" height="50">
+                    <img src="<?php echo esc_url(self::logo_url()); ?>" alt="MST" width="50" height="50">
                 </a>
                 <div class="mst-top__cta">
                     <?php if ($wa) : ?><a class="mst-top__btn mst-top__btn--wa" href="<?php echo esc_url($wa); ?>" target="_blank" rel="noopener" aria-label="WhatsApp'tan yazın"><?php echo self::icon('wa'); ?><span>WhatsApp</span></a><?php endif; ?>
@@ -293,7 +293,7 @@ class MST_Randevu
         $o = self::opts();
         self::enqueue();
         $meta = array_values(array_filter(array_map('trim', explode(',', (string) $o['rozetler']))));
-        $ikon = ['saat', 'tel', 'onay'];
+        $ikon = ['tel', 'onay', 'saat'];
         $wa   = self::wa_link('Merhaba, yazar görüşmesi hakkında bilgi almak istiyorum.');
 
         ob_start(); ?>
@@ -370,7 +370,7 @@ class MST_Randevu
         return ob_get_clean();
     }
 
-    /** Yeri olan saatleri AJAX ile verir; böylece sayfa önbelleğe alınsa bile saatler hep günceldir. */
+    /** Açık saatleri (dolu olanlar dahil) AJAX ile verir; böylece sayfa önbelleğe alınsa bile saatler hep günceldir. */
     public static function ajax_slots()
     {
         global $wpdb;
@@ -380,7 +380,7 @@ class MST_Randevu
 
         $rows = $wpdb->get_results($wpdb->prepare(
             'SELECT id, baslangic, sure, kapasite, dolu FROM ' . self::t_slot() . "
-             WHERE durum = 'acik' AND dolu < kapasite AND baslangic > %s AND baslangic <= %s
+             WHERE durum = 'acik' AND baslangic > %s AND baslangic <= %s
              ORDER BY baslangic ASC LIMIT 600",
             $min,
             $max
@@ -396,7 +396,7 @@ class MST_Randevu
                 'no'     => self::fmt($r->baslangic, 'j M'),
                 'saat'   => self::fmt($r->baslangic, 'H:i'),
                 'sure'   => (int) $r->sure,
-                'kalan'  => (int) $r->kapasite - (int) $r->dolu,
+                'kalan'  => max(0, (int) $r->kapasite - (int) $r->dolu),
             ];
         }
 

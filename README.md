@@ -3,7 +3,7 @@
 Yazar adaylarının müsait saatlerden görüşme randevusu aldığı WordPress eklentisi.
 
 - Aday gün ve saat seçer, ad soyad + telefon (+ isteğe bağlı kitap notu) bırakır.
-- Her saate en fazla **3 kişi** randevu alabilir (panelden değiştirilebilir); son yer kaldığında saat kırmızı **"Dolmak üzere"** etiketiyle görünür.
+- Her saate en fazla **3 kişi** randevu alabilir (panelden değiştirilebilir); son yer kaldığında saat turuncu **"Dolmak üzere"**, dolduğunda kırmızı **"Dolu"** olarak görünür (dolu saat seçilemez).
 - Aynı numara ileri tarihli ikinci randevu alamaz; bot tuzağı ve IP başına deneme sınırı vardır.
 - Her randevuda e-posta ve (tanımlıysa) webhook bildirimi gider.
 - Telefonda tam uyumlu: saat seçilince ekranın altında sabit "Devam Et" çubuğu çıkar.
@@ -14,7 +14,7 @@ Yazar adaylarının müsait saatlerden görüşme randevusu aldığı WordPress 
 2. WordPress → **Eklentiler → Yeni Ekle → Eklenti Yükle** → zip'i yükleyip etkinleştirin.
 3. **Yazar Randevu → Saatler**: tarih aralığı, ilk/son randevu saati (ör. 10:00 → 17:30), aralık ve kişi sınırını girip saatleri oluşturun.
 4. Sayfaya ekleyin:
-   - **Tam sayfa (önerilen):** yeni sayfa → *Sayfa Özellikleri → Şablon →* **MST Randevu (Tam Sayfa)**. Temanın üst kısmı yerine logo + WhatsApp + "Siteye Git" çubuğu gelir.
+   - **Tam sayfa (önerilen):** yeni sayfa → *Sayfa Özellikleri → Şablon →* **MST Randevu (Tam Sayfa)**. Temanın üst kısmı yerine ortada MST logosu, en sağda WhatsApp + "Siteye Git" butonları olan çubuk gelir.
    - **Tema içinde:** sayfa içeriğine `[mst_randevu]` kısa kodunu yazın.
 5. **Bildirim & Ayarlar**: bildirim e-postası, webhook adresi, WhatsApp numarası ve metinler.
 

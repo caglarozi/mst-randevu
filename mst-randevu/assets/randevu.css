@@ -16,6 +16,9 @@
   --mst-cizgi: #e7e3d8;
   --mst-beyaz: #ffffff;
   --mst-hata: #b42318;
+  /* Trafik ışığı: turuncu = dolmak üzere, kırmızı = dolu */
+  --mst-turuncu: #f39200;
+  --mst-kirmizi: #e3170a;
   --mst-font: Manrope, -apple-system, "Segoe UI", system-ui, sans-serif;
   --mst-font-baslik: "IBM Plex Sans", Manrope, system-ui, sans-serif;
 }
@@ -46,12 +49,13 @@ body.mst-sayfa {
 body.admin-bar .mst-top { top: 32px; }
 .mst-top * { box-sizing: border-box; }
 .mst-top a { text-decoration: none; }
+/* Logo ortada, butonlar en sağda */
 .mst-top__in {
-  max-width: 1080px; margin: 0 auto; height: 76px; padding: 0 20px;
-  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  position: relative; height: 76px; padding: 0 24px;
+  display: flex; align-items: center; justify-content: flex-end;
 }
-.mst-top__logo { display: flex; align-items: center; flex: 0 0 auto; }
-.mst-top__logo img { height: 50px; width: auto; display: block; }
+.mst-top__logo { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: flex; align-items: center; }
+.mst-top__logo img { height: 54px; width: auto; display: block; }
 
 .mst-top__cta { display: flex; align-items: center; gap: 10px; }
 .mst-top__btn {
@@ -67,16 +71,24 @@ body.admin-bar .mst-top { top: 32px; }
 .mst-top__btn--wa:hover { background: #1ebe5b; border-color: #1ebe5b; color: #fff; }
 
 @media (max-width: 782px) { body.admin-bar .mst-top { top: 0; } }
-@media (max-width: 480px) {
-  .mst-top__in { height: 64px; padding: 0 14px; gap: 10px; }
-  .mst-top__logo img { height: 40px; }
-  .mst-top__cta { gap: 8px; }
-  .mst-top__btn { height: 40px; padding: 0 14px; font-size: 13px; }
+@media (max-width: 560px) {
+  .mst-top__in { height: 64px; padding: 0 12px; }
+  .mst-top__logo img { height: 44px; }
+  .mst-top__cta { gap: 6px; }
+  .mst-top__btn { height: 38px; padding: 0 14px; font-size: 13px; }
+  /* Ortadaki logoya çarpmasın diye WhatsApp yalnızca simge, Siteye Git simgesiz */
+  .mst-top__btn--wa { width: 38px; padding: 0; }
+  .mst-top__btn--wa span, .mst-top__btn:not(.mst-top__btn--wa) .mst-ic { display: none; }
 }
-@media (max-width: 370px) {
-  /* Çok dar ekranda WhatsApp yalnızca simge */
-  .mst-top__btn--wa { width: 40px; padding: 0; }
-  .mst-top__btn--wa span { display: none; }
+@media (max-width: 360px) {
+  .mst-top__in { padding: 0 10px; }
+  .mst-top__logo img { height: 40px; }
+  .mst-top__btn:not(.mst-top__btn--wa) { padding: 0 10px; font-size: 12px; }
+}
+@media (max-width: 340px) {
+  .mst-top__logo img { height: 36px; }
+  .mst-top__cta { gap: 4px; }
+  .mst-top__btn:not(.mst-top__btn--wa) { padding: 0 9px; }
 }
 
 /* --------------------------------------------------------------------------
@@ -193,14 +205,23 @@ body.admin-bar .mst-top { top: 32px; }
 .mst-rnd__time[aria-pressed="true"] { background: var(--mst-yesil); border-color: var(--mst-yesil); color: #fff; }
 .mst-rnd__time { display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.15; }
 .mst-rnd__time small { margin-top: 3px; font-size: 11px; font-weight: 800; letter-spacing: .01em; }
-/* Son yer: kırmızı "Dolmak üzere" */
-.mst-rnd__time.is-az { border-color: #f4b9b2; background: #fff6f5; }
-.mst-rnd__time.is-az small { color: #d92d20; }
-.mst-rnd__time.is-az small::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 4px; border-radius: 50%; background: #d92d20; vertical-align: 1px; }
-.mst-rnd__time.is-az:hover { border-color: #d92d20; background: #fef0ee; }
+/* Son yer: turuncu "Dolmak üzere" */
+.mst-rnd__time.is-az { border-color: #fcd29a; background: #fff7eb; }
+.mst-rnd__time.is-az small { color: #d97f00; }
+.mst-rnd__time small::before { content: ""; display: inline-block; width: 7px; height: 7px; margin-right: 4px; border-radius: 50%; background: currentColor; vertical-align: 1px; }
+.mst-rnd__time.is-az small::before { background: var(--mst-turuncu); }
+.mst-rnd__time.is-az:hover { border-color: var(--mst-turuncu); background: #fff0d9; }
 .mst-rnd__time.is-az[aria-pressed="true"] { background: var(--mst-yesil); border-color: var(--mst-yesil); }
-.mst-rnd__time.is-az[aria-pressed="true"] small { color: #ffb4ab; }
-.mst-rnd__time.is-az[aria-pressed="true"] small::before { background: #ffb4ab; }
+.mst-rnd__time.is-az[aria-pressed="true"] small { color: #ffc266; }
+.mst-rnd__time.is-az[aria-pressed="true"] small::before { background: var(--mst-turuncu); }
+/* Dolu: kırmızı, seçilemez */
+.mst-rnd__time.is-dolu,
+.mst-rnd__time.is-dolu:hover { cursor: not-allowed; color: var(--mst-kirmizi); border-color: #f7b4ae; background: #fff1f0; }
+.mst-rnd__time.is-dolu small { color: var(--mst-kirmizi); }
+.mst-rnd__time.is-dolu small::before { background: var(--mst-kirmizi); }
+/* Tamamen dolu gün */
+.mst-rnd__day.is-dolu .mst-rnd__day-count { color: var(--mst-kirmizi); opacity: 1; font-weight: 800; }
+.mst-rnd__day.is-dolu[aria-pressed="true"] .mst-rnd__day-count { color: #ffb4ab; }
 
 .mst-rnd__loading, .mst-rnd__empty { color: var(--mst-soluk); padding: 12px 0; }
 
@@ -332,6 +353,9 @@ body.admin-bar .mst-top { top: 32px; }
 
   .mst-rnd__actions { flex-direction: column-reverse; }
   .mst-rnd__actions .mst-rnd__btn, .mst-rnd__done-actions .mst-rnd__btn { width: 100%; }
+}
+@media (max-width: 420px) {
+  .mst-rnd__time small { font-size: 10px; white-space: nowrap; letter-spacing: -.01em; }
 }
 @media (max-width: 360px) {
   .mst-rnd__times { grid-template-columns: repeat(2, 1fr); }
