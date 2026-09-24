@@ -27,7 +27,8 @@ require_once __DIR__ . '/lib/plugin-update-checker/plugin-update-checker.php';
 $mst_randevu_guncelleme = \YahnisElsts\PluginUpdateChecker\v5\PucFactory::buildUpdateChecker(
     'https://github.com/caglarozi/mst-randevu/',
     __FILE__,
-    'mst-randevu'
+    'mst-randevu',
+    6 // GitHub'a 6 saatte bir bakılır (WordPress'in otomatik güncellemesi günde iki kez çalışır)
 );
 $mst_randevu_guncelleme->setBranch('main');
 $mst_randevu_guncelleme->getVcsApi()->enableReleaseAssets(
@@ -138,6 +139,22 @@ class MST_Randevu
         if ((int) get_option('mst_randevu_db') !== MST_RANDEVU_DB) {
             self::activate();
         }
+        // Yeni sürüm kurulduysa (elle ya da otomatik güncellemeyle) site önbelleğini
+        // temizle: ziyaretçiler eski sayfayı/stili görmesin. Önbellek eklentisi yoksa
+        // bu çağrılar hiçbir şey yapmaz.
+        if (get_option('mst_randevu_surum') !== MST_RANDEVU_VER) {
+            update_option('mst_randevu_surum', MST_RANDEVU_VER);
+            add_action('init', [__CLASS__, 'onbellek_temizle'], 99);
+        }
+    }
+
+    public static function onbellek_temizle()
+    {
+        do_action('litespeed_purge_all');          // LiteSpeed Cache (Hostinger)
+        if (function_exists('rocket_clean_domain')) rocket_clean_domain();      // WP Rocket
+        if (function_exists('w3tc_flush_all')) w3tc_flush_all();                // W3 Total Cache
+        if (function_exists('wp_cache_clear_cache')) wp_cache_clear_cache();    // WP Super Cache
+        wp_cache_flush();
     }
 
     public static function defaults()
