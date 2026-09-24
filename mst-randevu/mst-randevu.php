@@ -2,7 +2,7 @@
 /**
  * Plugin Name: MST Yazar Adayı Randevu
  * Description: Yazar adaylarının müsait saatlerden görüşme randevusu alması. Kısa kod: [mst_randevu] — ya da sayfa şablonu olarak "MST Randevu (Tam Sayfa)".
- * Version:     1.2.1
+ * Version:     1.3.0
  * Author:      MST Yayıncılık
  * Text Domain: mst-randevu
  * Requires PHP: 7.4
@@ -12,7 +12,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('MST_RANDEVU_VER', '1.2.1');
+define('MST_RANDEVU_VER', '1.3.0');
 define('MST_RANDEVU_DB', 2);
 define('MST_RANDEVU_URL', plugin_dir_url(__FILE__));
 
@@ -40,6 +40,8 @@ class MST_Randevu
     const OPT    = 'mst_randevu_ayarlar';
     const NONCE  = 'mst_randevu';
     const SABLON = 'mst-randevu-tam-sayfa';
+    const OTO    = 'mst_randevu_otomatik';
+    const CRON   = 'mst_randevu_gunluk';
 
     /* ------------------------------------------------------------------ */
     /*  Kurulum                                                            */
@@ -48,7 +50,14 @@ class MST_Randevu
     public static function init()
     {
         register_activation_hook(__FILE__, [__CLASS__, 'activate']);
+        register_deactivation_hook(__FILE__, function () { wp_clear_scheduled_hook(self::CRON); });
         add_action('plugins_loaded', [__CLASS__, 'maybe_upgrade']);
+
+        // Otomatik saat açma: saatte bir kontrol (iş yoksa hemen döner)
+        add_action(self::CRON, [__CLASS__, 'otomatik_saatler']);
+        add_action('init', function () {
+            if (!wp_next_scheduled(self::CRON)) wp_schedule_event(time() + 60, 'hourly', self::CRON);
+        });
 
         add_shortcode('mst_randevu', [__CLASS__, 'shortcode']);
         add_action('wp_enqueue_scripts', [__CLASS__, 'register_assets']);
@@ -69,6 +78,7 @@ class MST_Randevu
         add_action('admin_post_mst_randevu_randevu_islem', [__CLASS__, 'handle_booking_action']);
         add_action('admin_post_mst_randevu_ayar_kaydet', [__CLASS__, 'handle_settings']);
         add_action('admin_post_mst_randevu_test', [__CLASS__, 'handle_test']);
+        add_action('admin_post_mst_randevu_oto_kaydet', [__CLASS__, 'handle_oto_save']);
     }
 
     public static function t_slot()
@@ -144,6 +154,7 @@ class MST_Randevu
             'whatsapp'        => '905514112004',
             'logo_url'        => '',
             'kvkk_metni'      => 'Kişisel verilerimin randevu ve iletişim amacıyla MST Yayıncılık tarafından işlenmesini kabul ediyorum.',
+            'kvkk_url'        => '', // boşsa sitedeki KVKK / Aydınlatma sayfası kendiliğinden bulunur
             'basari_mesaji'   => 'Randevunuz alındı! Belirtilen saatte sizi arayacağız.',
         ];
     }
@@ -274,6 +285,19 @@ class MST_Randevu
         return MST_RANDEVU_URL . 'assets/mst-figur.png';
     }
 
+    /** Aydınlatma metni adresi: ayar → başlığında KVKK/Aydınlatma geçen yayındaki sayfa → WordPress gizlilik sayfası. */
+    public static function kvkk_url()
+    {
+        $o = self::opts();
+        if (!empty($o['kvkk_url'])) return $o['kvkk_url'];
+        global $wpdb;
+        $id = $wpdb->get_var("SELECT ID FROM {$wpdb->posts} WHERE post_type = 'page' AND post_status = 'publish'
+            AND (post_title LIKE '%KVKK%' OR post_title LIKE '%Aydınlatma%' OR post_title LIKE '%AYDINLATMA%' OR post_name LIKE '%kvkk%' OR post_name LIKE '%aydinlatma%')
+            ORDER BY (post_title LIKE '%Aydınlatma%' OR post_title LIKE '%AYDINLATMA%' OR post_name LIKE '%aydinlatma%') DESC, ID ASC LIMIT 1");
+        if ($id) return get_permalink((int) $id);
+        return get_privacy_policy_url();
+    }
+
     public static function wa_link($text = '')
     {
         $n = preg_replace('/\D+/', '', (string) self::opts()['whatsapp']);
@@ -330,7 +354,7 @@ class MST_Randevu
             <aside class="mst-rnd__aside">
                 <div class="mst-rnd__brand">
                     <span class="mst-rnd__avatar"><img src="<?php echo esc_url(self::figur_url()); ?>" alt="" width="40" height="40"></span>
-                    <span class="mst-rnd__brand-txt"><strong>MST Ajans Production</strong><small>Editör Ekibi</small></span>
+                    <span class="mst-rnd__brand-txt"><strong>MST Yayıncılık</strong><small>Editör Ekibi</small></span>
                 </div>
                 <h2 class="mst-rnd__title"><?php echo esc_html($o['baslik']); ?></h2>
                 <?php if ($meta) : ?>
@@ -381,7 +405,7 @@ class MST_Randevu
                     <label class="mst-rnd__hp" aria-hidden="true">Web sitesi <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
                     <label class="mst-rnd__check">
                         <input type="checkbox" name="kvkk" value="1" required>
-                        <span><?php echo esc_html($o['kvkk_metni']); ?></span>
+                        <span><?php $kv = self::kvkk_url(); if ($kv) : ?><a href="<?php echo esc_url($kv); ?>" target="_blank" rel="noopener">KVKK Aydınlatma Metni</a>’ni okudum. <?php endif; echo esc_html($o['kvkk_metni']); ?></span>
                     </label>
                     <div class="mst-rnd__error" data-error role="alert" hidden></div>
                     <div class="mst-rnd__actions">
@@ -402,6 +426,7 @@ class MST_Randevu
     public static function ajax_slots()
     {
         global $wpdb;
+        self::otomatik_saatler();
         $o   = self::opts();
         $min = self::now()->modify('+' . (int) $o['min_saat'] . ' hours')->format('Y-m-d H:i:s');
         $max = self::now()->modify('+' . (int) $o['gun_ileri'] . ' days')->format('Y-m-d 23:59:59');
@@ -625,8 +650,6 @@ class MST_Randevu
     {
         if (!current_user_can('manage_options')) wp_die('Yetkisiz');
         check_admin_referer('mst_randevu_slot_ekle');
-        global $wpdb;
-
         $tz       = wp_timezone();
         $bas_g    = sanitize_text_field(wp_unslash($_POST['bas_tarih'] ?? ''));
         $bit_g    = sanitize_text_field(wp_unslash($_POST['bit_tarih'] ?? '')) ?: $bas_g;
@@ -645,8 +668,17 @@ class MST_Randevu
             self::back('Tarih aralığı en fazla 120 gün olabilir.', 'saatler');
         }
 
+        $eklenen = self::saat_ekle($d1, $d2, $ilk, $son, $sure, $kapasite, $gunler);
+        self::back($eklenen ? "$eklenen saat eklendi (her birine $kapasite kişi)." : 'Yeni saat eklenmedi (geçmiş tarih ya da zaten var).', 'saatler');
+    }
+
+    /** $d1–$d2 arasındaki seçili günlere saat açar (geçmiş saatler ve var olanlar atlanır). Eklenen sayıyı döner. */
+    private static function saat_ekle(DateTime $d1, DateTime $d2, $ilk, $son, $sure, $kapasite, array $gunler)
+    {
+        global $wpdb;
+        $tz      = wp_timezone();
+        $now     = self::now();
         $eklenen = 0;
-        $now = self::now();
         for ($d = clone $d1; $d <= $d2; $d->modify('+1 day')) {
             if ($gunler && !in_array((int) $d->format('N'), $gunler, true)) continue;
             $t    = new DateTime($d->format('Y-m-d') . ' ' . $ilk, $tz);
@@ -663,8 +695,87 @@ class MST_Randevu
                 $t->modify("+$sure minutes");
             }
         }
+        return $eklenen;
+    }
 
-        self::back($eklenen ? "$eklenen saat eklendi (her birine $kapasite kişi)." : 'Yeni saat eklenmedi (geçmiş tarih ya da zaten var).', 'saatler');
+    /* --- Otomatik saat açma: pencere her gün bir gün kayar --- */
+
+    /**
+     * Otomatik saat açma ayarları. İlk okunuşta mevcut saatlerden türetilir: pencere
+     * genişliği = bugünden en son açık saate kadar olan gün sayısı (ör. 07.10'a kadar
+     * açıldıysa 13 gün), "son_tarih" = en son açık gün — böylece hiçbir gün iki kez
+     * açılmaz ve pencere, yöneticinin elle seçtiği genişlikte kalır.
+     */
+    public static function oto()
+    {
+        $a = get_option(self::OTO);
+        if (is_array($a)) return $a;
+        global $wpdb;
+        $bugun = self::now()->format('Y-m-d');
+        $enSon = $wpdb->get_var('SELECT MAX(DATE(baslangic)) FROM ' . self::t_slot());
+        $gun   = 14;
+        if ($enSon && $enSon > $bugun) {
+            $gun = max(7, min(60, (int) (new DateTime($bugun))->diff(new DateTime($enSon))->days));
+        }
+        $a = [
+            'acik'      => 1,
+            'gun'       => $gun,
+            'ilk'       => '10:00',
+            'son'       => '17:30',
+            'sure'      => 30,
+            'kapasite'  => 3,
+            'gunler'    => [1, 2, 3, 4, 5, 6],
+            'son_tarih' => ($enSon && $enSon > $bugun) ? $enSon : '',
+        ];
+        update_option(self::OTO, $a, false);
+        return $a;
+    }
+
+    /**
+     * Pencereyi doldurur: en son açılan günün ertesinden bugün+N'e kadar saat açar.
+     * Günde bir (cron) ve randevu sayfası her açıldığında çağrılır; iş yoksa hemen döner.
+     * Elle silinen saatler tekrar açılmaz (yalnızca son_tarih'ten sonraki günlere bakılır).
+     */
+    public static function otomatik_saatler()
+    {
+        $a = self::oto();
+        if (empty($a['acik'])) return 0;
+        $tz    = wp_timezone();
+        $bugun = DateTime::createFromFormat('!Y-m-d', self::now()->format('Y-m-d'), $tz);
+        $hedef = (clone $bugun)->modify('+' . (int) $a['gun'] . ' days');
+        $son   = $a['son_tarih'] ? DateTime::createFromFormat('!Y-m-d', $a['son_tarih'], $tz) : null;
+        $bas   = ($son && $son >= $bugun) ? (clone $son)->modify('+1 day') : $bugun;
+        if ($bas > $hedef) return 0;
+
+        $n = self::saat_ekle($bas, $hedef, $a['ilk'], $a['son'], (int) $a['sure'], (int) $a['kapasite'], array_map('intval', (array) $a['gunler']));
+        $a['son_tarih'] = $hedef->format('Y-m-d');
+        update_option(self::OTO, $a, false);
+        return $n;
+    }
+
+    public static function handle_oto_save()
+    {
+        if (!current_user_can('manage_options')) wp_die('Yetkisiz');
+        check_admin_referer('mst_randevu_oto_kaydet');
+        $in  = wp_unslash($_POST);
+        $a   = self::oto();
+        $ilk = sanitize_text_field($in['ilk_saat'] ?? '');
+        $son = sanitize_text_field($in['son_saat'] ?? '');
+        if (!preg_match('/^\d{2}:\d{2}$/', $ilk) || !preg_match('/^\d{2}:\d{2}$/', $son) || $ilk > $son) {
+            self::back('Otomatik saat açma: saat aralığı geçersiz.', 'saatler');
+        }
+        $a['acik']     = empty($in['acik']) ? 0 : 1;
+        $a['gun']      = max(1, min(120, absint($in['gun'] ?? 14)));
+        $a['ilk']      = $ilk;
+        $a['son']      = $son;
+        $a['sure']     = max(10, min(240, absint($in['sure'] ?? 30)));
+        $a['kapasite'] = max(1, min(50, absint($in['kapasite'] ?? 3)));
+        $a['gunler']   = array_values(array_filter(array_map('absint', (array) ($in['gunler'] ?? [])), function ($g) { return $g >= 1 && $g <= 7; }));
+        update_option(self::OTO, $a, false);
+        $n = self::otomatik_saatler();
+        self::back($a['acik']
+            ? 'Otomatik saat açma kaydedildi.' . ($n ? " $n yeni saat açıldı." : '')
+            : 'Otomatik saat açma kapatıldı.', 'saatler');
     }
 
     public static function handle_slot_action()
@@ -740,6 +851,7 @@ class MST_Randevu
             'whatsapp'        => preg_replace('/\D+/', '', (string) ($in['whatsapp'] ?? '')),
             'logo_url'        => esc_url_raw(trim($in['logo_url'] ?? '')),
             'kvkk_metni'      => sanitize_textarea_field($in['kvkk_metni'] ?? ''),
+            'kvkk_url'        => esc_url_raw(trim($in['kvkk_url'] ?? '')),
             'basari_mesaji'   => sanitize_textarea_field($in['basari_mesaji'] ?? ''),
         ]);
         self::back('Ayarlar kaydedildi.', 'ayarlar');
@@ -814,8 +926,13 @@ class MST_Randevu
                 <table class="form-table">
                     <tr><th>Başlık</th><td><input type="text" name="baslik" class="large-text" value="<?php echo esc_attr($o['baslik']); ?>"></td></tr>
                     <tr><th>Açıklama</th><td><textarea name="aciklama" class="large-text" rows="2"><?php echo esc_textarea($o['aciklama']); ?></textarea></td></tr>
-                    <tr><th>Görüşme bilgileri</th><td><input type="text" name="rozetler" class="large-text" value="<?php echo esc_attr($o['rozetler']); ?>"><p class="description">Virgülle ayırın. Sol sütunda simgeli liste olarak görünür (1. saat, 2. telefon, 3. onay simgesi).</p></td></tr>
+                    <tr><th>Görüşme bilgileri</th><td><input type="text" name="rozetler" class="large-text" value="<?php echo esc_attr($o['rozetler']); ?>"><p class="description">Virgülle ayırın. Sol sütunda simgeli liste olarak görünür (1. telefon, 2. onay, 3. saat simgesi).</p></td></tr>
                     <tr><th>KVKK onay metni</th><td><textarea name="kvkk_metni" class="large-text" rows="2"><?php echo esc_textarea($o['kvkk_metni']); ?></textarea></td></tr>
+                    <tr><th>KVKK aydınlatma metni</th><td>
+                        <input type="url" name="kvkk_url" class="large-text" value="<?php echo esc_attr($o['kvkk_url']); ?>" placeholder="Boş = sitedeki KVKK / Aydınlatma sayfası kendiliğinden bulunur">
+                        <?php $kv = self::kvkk_url(); ?>
+                        <p class="description"><?php echo $kv ? 'Onay kutusundaki bağlantı: <a href="' . esc_url($kv) . '" target="_blank" rel="noopener">' . esc_html($kv) . '</a>' : '<strong style="color:#b32d2e">Aydınlatma metni sayfası bulunamadı</strong> — sayfanın adresini buraya yazın.'; ?></p>
+                    </td></tr>
                     <tr><th>Başarı mesajı</th><td><textarea name="basari_mesaji" class="large-text" rows="2"><?php echo esc_textarea($o['basari_mesaji']); ?></textarea></td></tr>
                 </table>
                 <?php submit_button('Kaydet'); ?>
@@ -829,8 +946,37 @@ class MST_Randevu
         <?php elseif ($tab === 'saatler') :
             $rows  = $wpdb->get_results($wpdb->prepare('SELECT * FROM ' . self::t_slot() . ' WHERE baslangic >= %s ORDER BY baslangic ASC LIMIT 1500', $from));
             $bugun = self::now()->format('Y-m-d');
+            $oto   = self::oto();
+            $gunAd = [1 => 'Pzt', 2 => 'Sal', 3 => 'Çar', 4 => 'Per', 5 => 'Cum', 6 => 'Cmt', 7 => 'Paz'];
             ?>
-            <h2>Müsait saat ekle</h2>
+            <h2>Otomatik saat açma</h2>
+            <form method="post" action="<?php echo $post; ?>" style="background:#fff;padding:16px 20px;border:1px solid #dcdcde;border-left:4px solid <?php echo $oto['acik'] ? '#00a32a' : '#dcdcde'; ?>;max-width:920px">
+                <?php wp_nonce_field('mst_randevu_oto_kaydet'); ?>
+                <input type="hidden" name="action" value="mst_randevu_oto_kaydet">
+                <p><label><input type="checkbox" name="acik" value="1" <?php checked($oto['acik']); ?>> <strong>Açık</strong> — takvim hep bugünden itibaren
+                    <input type="number" name="gun" value="<?php echo (int) $oto['gun']; ?>" min="1" max="120" style="width:64px"> gün ileriye kadar dolu kalır; her gün bir gün eklenir.</label></p>
+                <p>
+                    <label>İlk randevu: <input type="time" name="ilk_saat" value="<?php echo esc_attr($oto['ilk']); ?>" required></label>
+                    &nbsp;&nbsp;
+                    <label>Son randevu: <input type="time" name="son_saat" value="<?php echo esc_attr($oto['son']); ?>" required></label>
+                    &nbsp;&nbsp;
+                    <label>Aralık: <input type="number" name="sure" value="<?php echo (int) $oto['sure']; ?>" min="10" max="240" style="width:64px"> dk</label>
+                    &nbsp;&nbsp;
+                    <label>Kişi sınırı: <input type="number" name="kapasite" value="<?php echo (int) $oto['kapasite']; ?>" min="1" max="50" style="width:56px"> kişi / saat</label>
+                </p>
+                <p>Günler:
+                    <?php foreach ($gunAd as $n => $g) : ?>
+                        <label style="margin-right:8px"><input type="checkbox" name="gunler[]" value="<?php echo $n; ?>" <?php checked(in_array($n, array_map('intval', (array) $oto['gunler']), true)); ?>> <?php echo $g; ?></label>
+                    <?php endforeach; ?>
+                </p>
+                <?php submit_button('Kaydet', 'primary', 'submit', false); ?>
+                <p class="description">
+                    <?php if ($oto['son_tarih']) : ?>Şu ana kadar <strong><?php echo esc_html(wp_date('j F Y l', strtotime($oto['son_tarih'] . ' 12:00'))); ?></strong> gününe kadar açıldı. <?php endif; ?>
+                    Yeni ayarlar yalnızca bundan sonra açılacak günlere uygulanır. Elle sildiğiniz ya da kapattığınız saatler tekrar açılmaz (tatil günleri için).
+                </p>
+            </form>
+
+            <h2 style="margin-top:28px">Müsait saat ekle <span style="font-weight:400;color:#646970;font-size:13px">(elle, tek seferlik)</span></h2>
             <form method="post" action="<?php echo $post; ?>" style="background:#fff;padding:16px 20px;border:1px solid #dcdcde;max-width:920px">
                 <?php wp_nonce_field('mst_randevu_slot_ekle'); ?>
                 <input type="hidden" name="action" value="mst_randevu_slot_ekle">
@@ -849,7 +995,7 @@ class MST_Randevu
                 </p>
                 <p>Günler:
                     <?php foreach ([1 => 'Pzt', 2 => 'Sal', 3 => 'Çar', 4 => 'Per', 5 => 'Cum', 6 => 'Cmt', 7 => 'Paz'] as $n => $g) : ?>
-                        <label style="margin-right:8px"><input type="checkbox" name="gunler[]" value="<?php echo $n; ?>" <?php checked($n <= 5); ?>> <?php echo $g; ?></label>
+                        <label style="margin-right:8px"><input type="checkbox" name="gunler[]" value="<?php echo $n; ?>" <?php checked($n <= 6); ?>> <?php echo $g; ?></label>
                     <?php endforeach; ?>
                 </p>
                 <?php submit_button('Saatleri oluştur', 'primary', 'submit', false); ?>
