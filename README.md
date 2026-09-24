@@ -5,7 +5,7 @@ Yazar adaylarının müsait saatlerden görüşme randevusu aldığı WordPress 
 - Aday gün ve saat seçer, ad soyad + telefon (+ isteğe bağlı kitap notu) bırakır.
 - Her saate en fazla **3 kişi** randevu alabilir (panelden değiştirilebilir); son yer kaldığında saat turuncu **"Dolmak üzere"**, dolduğunda kırmızı **"Dolu"** olarak görünür (dolu saat seçilemez).
 - Aynı numara ileri tarihli ikinci randevu alamaz; bot tuzağı ve IP başına deneme sınırı vardır.
-- Her randevuda e-posta ve (tanımlıysa) webhook bildirimi gider.
+- Her randevuda e-posta ve (tanımlıysa) webhook bildirimi gider; webhook ile MST CRM'e aday kaydı düşer (aşağıya bakın).
 - Telefonda tam uyumlu: saat seçilince ekranın altında sabit "Devam Et" çubuğu çıkar.
 
 ## Kurulum
@@ -35,6 +35,25 @@ Ardından http://localhost:8788 — eklentinin kendi CSS/JS'i sahte verilerle ç
 | `mst-randevu/assets/` | CSS, JS, logo |
 | `demo/` + `demo-sunucu.js` | WordPress'siz yerel önizleme |
 
-## Yapılacaklar
+## MST CRM bağlantısı
 
-- [ ] Randevuların doğrudan CRM'e aday kaydı olarak düşmesi (webhook alıcısı)
+Her randevu MST CRM'e (caglarozi/mstcrm) düşer:
+
+- Telefon CRM'de kayıtlıysa (numara hangi biçimde yazılmış olursa olsun) randevu o yazarın kaydına eklenir; değilse **"Aday"** statüsünde, kaynağı **"Web randevu"** olan yeni kayıt açılır.
+- Yazarın görüşme tarihi/saati randevu saatine ayarlanır — CRM'in mevcut randevu hatırlatıcısı çalışır.
+- CRM'deki **Web Randevuları** sekmesinde tüm kullanıcılar görür; "Arandı / Ulaşılamadı" olarak işaretlenir.
+- CRM uygulaması yüklü telefonlara bildirim gider.
+- Panelden iptal edilen randevu CRM'de de "İptal" olur.
+
+Kurulum (bir kez):
+
+1. CRM servisine anahtar tanımlayıp yayınlayın (`mstcrm` deposunda):
+   ```bash
+   cd whatsapp-webhook
+   npx wrangler secret put RANDEVU_SECRET   # uzun, rastgele bir metin yapıştırın
+   npx wrangler deploy
+   ```
+2. WordPress → **Yazar Randevu → Bildirim & Ayarlar**:
+   - Webhook URL: `https://yazar-crm-whatsapp-webhook.mst-ajans.workers.dev/randevu`
+   - Webhook anahtarı: 1. adımdaki metnin aynısı
+3. **Test bildirimi gönder** düğmesine basın: sonuç `webhook: 200` olmalı (test CRM'e kayıt yazmaz).

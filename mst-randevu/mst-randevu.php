@@ -562,7 +562,7 @@ class MST_Randevu
                 : 'webhook: ' . wp_remote_retrieve_response_code($res);
         }
 
-        if (!empty($o['bildirim_eposta']) && $olay !== 'test') {
+        if (!empty($o['bildirim_eposta']) && $olay === 'randevu.olusturuldu') {
             $ok = wp_mail(
                 $o['bildirim_eposta'],
                 'Yeni randevu: ' . $r->ad_soyad . ' — ' . self::fmt($r->baslangic, 'j F H:i'),
@@ -571,7 +571,7 @@ class MST_Randevu
             $sonuc[] = 'e-posta: ' . ($ok ? 'ok' : 'HATA');
         }
 
-        if (!empty($r->id)) {
+        if (!empty($r->id) && $sonuc) {
             $wpdb->update(self::t_rnd(), ['bildirim_durumu' => mb_substr(implode(' | ', $sonuc), 0, 190)], ['id' => $r->id]);
         }
 
@@ -685,6 +685,8 @@ class MST_Randevu
             if ($islem === 'iptal') {
                 $wpdb->update(self::t_rnd(), ['durum' => 'iptal'], ['id' => $id]);
                 $wpdb->query($wpdb->prepare('UPDATE ' . self::t_slot() . ' SET dolu = GREATEST(dolu - 1, 0) WHERE id = %d', $r->slot_id));
+                // CRM'deki randevu da iptal görünsün (yalnızca webhook; e-posta gitmez)
+                self::notify($r, 'randevu.iptal');
                 $n++;
             } elseif ($islem === 'bildir') {
                 self::notify($r);
@@ -759,7 +761,7 @@ class MST_Randevu
                 <table class="form-table">
                     <tr><th>Webhook URL</th><td>
                         <input type="url" name="webhook_url" class="large-text" value="<?php echo esc_attr($o['webhook_url']); ?>" placeholder="https://…">
-                        <p class="description">Her yeni randevuda bu adrese JSON POST atılır (CRM vb.).</p>
+                        <p class="description">Her yeni randevuda ve panelden iptal edilen randevuda bu adrese JSON POST atılır. MST CRM için CRM servisinin adresinin sonuna <code>/randevu</code> eklenir.</p>
                     </td></tr>
                     <tr><th>Webhook anahtarı</th><td>
                         <input type="text" name="webhook_token" class="regular-text" value="<?php echo esc_attr($o['webhook_token']); ?>" autocomplete="off">
