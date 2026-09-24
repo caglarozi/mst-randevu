@@ -23,6 +23,11 @@
   --mst-font-baslik: "IBM Plex Sans", Manrope, system-ui, sans-serif;
 }
 
+/* Sitedeki yüzen WhatsApp butonu (Simple Chat Button eklentisi) randevu sayfasında gizlenir:
+   üst çubukta zaten WhatsApp var, mobilde de "Devam Et" çubuğunun üstüne biniyordu. */
+body.mst-sayfa #simple-chat-button--container,
+body:has(.mst-rnd-wrap) #simple-chat-button--container { display: none !important; }
+
 .mst-ic { width: 1.15em; height: 1.15em; flex: 0 0 auto; display: inline-block; vertical-align: -0.2em; }
 
 /* --------------------------------------------------------------------------
