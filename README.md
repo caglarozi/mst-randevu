@@ -18,6 +18,15 @@ Yazar adaylarının müsait saatlerden görüşme randevusu aldığı WordPress 
    - **Tema içinde:** sayfa içeriğine `[mst_randevu]` kısa kodunu yazın.
 5. **Bildirim & Ayarlar**: bildirim e-postası, webhook adresi, WhatsApp numarası ve metinler.
 
+## Güncellemeler (otomatik)
+
+Eklenti kendini bu depodaki GitHub sürümlerinden (Releases) günceller — zip'i elle yüklemek gerekmez.
+
+- `mst-randevu/mst-randevu.php` içinde **hem** `Version:` başlığı **hem** `MST_RANDEVU_VER` artırılıp (ör. `1.2.0 → 1.2.1`) `main`'e birleştirilince GitHub Actions (`.github/workflows/eklenti-surumu.yml`) `v1.2.1` sürümünü açar ve `mst-randevu.zip`'i ekler.
+- WordPress bunu birkaç saat içinde görür (hemen görmek için **Eklentiler** sayfasında "Güncellemeleri kontrol et" bağlantısı). **Şimdi güncelle** ile ya da eklentinin **Otomatik güncellemeleri etkinleştir** seçeneğiyle kurulur.
+- Sürüm numarası artırılmayan değişiklikler siteye gitmez.
+- Dikkat: otomatik güncelleme açıksa `main`'e giren her sürüm doğrudan canlı siteye gider.
+
 ## Yerel önizleme (WordPress olmadan)
 
 ```bash
@@ -33,6 +42,8 @@ Ardından http://localhost:8788 — eklentinin kendi CSS/JS'i sahte verilerle ç
 | `mst-randevu/mst-randevu.php` | Eklenti: veritabanı, AJAX, bildirim, yönetim paneli |
 | `mst-randevu/templates/tam-sayfa.php` | "MST Randevu (Tam Sayfa)" sayfa şablonu |
 | `mst-randevu/assets/` | CSS, JS, logo |
+| `mst-randevu/lib/plugin-update-checker/` | GitHub'dan güncelleme kütüphanesi (Plugin Update Checker 5.7, MIT) |
+| `.github/workflows/eklenti-surumu.yml` | Sürüm artınca zip'li GitHub sürümü açar |
 | `demo/` + `demo-sunucu.js` | WordPress'siz yerel önizleme |
 
 ## MST CRM bağlantısı

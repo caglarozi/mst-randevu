@@ -2,7 +2,7 @@
 /**
  * Plugin Name: MST Yazar Adayı Randevu
  * Description: Yazar adaylarının müsait saatlerden görüşme randevusu alması. Kısa kod: [mst_randevu] — ya da sayfa şablonu olarak "MST Randevu (Tam Sayfa)".
- * Version:     1.1.1
+ * Version:     1.2.0
  * Author:      MST Yayıncılık
  * Text Domain: mst-randevu
  * Requires PHP: 7.4
@@ -12,9 +12,28 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('MST_RANDEVU_VER', '1.1.1');
+define('MST_RANDEVU_VER', '1.2.0');
 define('MST_RANDEVU_DB', 2);
 define('MST_RANDEVU_URL', plugin_dir_url(__FILE__));
+
+/*
+ * Güncellemeler GitHub'dan gelir (caglarozi/mst-randevu). main dalında sürüm
+ * numarası artınca GitHub Actions yeni bir sürüm (release) açıp eklenti zip'ini
+ * ekler; WordPress bunu Eklentiler sayfasında "güncelleme var" olarak gösterir.
+ * Yalnızca sürümdeki mst-randevu.zip kullanılır — depo arşivi eklenti yapısında
+ * olmadığı için ona asla düşülmez.
+ */
+require_once __DIR__ . '/lib/plugin-update-checker/plugin-update-checker.php';
+$mst_randevu_guncelleme = \YahnisElsts\PluginUpdateChecker\v5\PucFactory::buildUpdateChecker(
+    'https://github.com/caglarozi/mst-randevu/',
+    __FILE__,
+    'mst-randevu'
+);
+$mst_randevu_guncelleme->setBranch('main');
+$mst_randevu_guncelleme->getVcsApi()->enableReleaseAssets(
+    '/^mst-randevu\.zip$/i',
+    \YahnisElsts\PluginUpdateChecker\v5p7\Vcs\Api::REQUIRE_RELEASE_ASSETS
+);
 
 class MST_Randevu
 {

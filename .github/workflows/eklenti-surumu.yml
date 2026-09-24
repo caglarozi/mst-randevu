@@ -1,0 +1,63 @@
+# main dalında eklentinin sürüm numarası artınca yeni bir GitHub sürümü (release)
+# açar ve mst-randevu.zip'i ekler. Sitedeki eklenti güncellemeyi buradan görür
+# (bkz. mst-randevu.php → Plugin Update Checker).
+#
+# Yeni sürüm çıkarmak için: mst-randevu.php'de hem "Version:" başlığını hem
+# MST_RANDEVU_VER sabitini artırın (ör. 1.2.0 → 1.2.1) ve main'e birleştirin.
+# Sürüm numarası değişmediyse hiçbir şey yapılmaz.
+name: Eklenti sürümü
+
+on:
+  push:
+    branches: [main]
+    paths: ['mst-randevu/**']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: eklenti-surumu
+  cancel-in-progress: false
+
+jobs:
+  surum:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Sürüm numarasını oku
+        id: surum
+        run: |
+          BASLIK=$(grep -m1 -oP '^\s*\*\s*Version:\s*\K[0-9][0-9.]*' mst-randevu/mst-randevu.php)
+          SABIT=$(grep -m1 -oP "define\('MST_RANDEVU_VER',\s*'\K[0-9][0-9.]*" mst-randevu/mst-randevu.php)
+          if [ -z "$BASLIK" ] || [ "$BASLIK" != "$SABIT" ]; then
+            echo "::error::Sürüm numaraları uyuşmuyor: Version: '$BASLIK', MST_RANDEVU_VER: '$SABIT'"
+            exit 1
+          fi
+          echo "no=$BASLIK" >> "$GITHUB_OUTPUT"
+          if git ls-remote --exit-code --tags origin "refs/tags/v$BASLIK" > /dev/null; then
+            echo "v$BASLIK zaten yayında, yeni sürüm açılmayacak."
+            echo "var=1" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: PHP sözdizimi kontrolü
+        if: steps.surum.outputs.var != '1'
+        run: find mst-randevu -name '*.php' -print0 | xargs -0 -n1 php -l > /dev/null
+
+      - name: Zip hazırla
+        if: steps.surum.outputs.var != '1'
+        run: |
+          zip -rq mst-randevu.zip mst-randevu -x '*.DS_Store'
+          unzip -l mst-randevu.zip | grep -q ' mst-randevu/mst-randevu.php$'
+
+      - name: Sürümü yayınla
+        if: steps.surum.outputs.var != '1'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NO: ${{ steps.surum.outputs.no }}
+        run: |
+          gh release create "v$NO" mst-randevu.zip \
+            --target "$GITHUB_SHA" \
+            --title "MST Randevu $NO" \
+            --notes "Otomatik sürüm: $(git log -1 --format=%s)"
