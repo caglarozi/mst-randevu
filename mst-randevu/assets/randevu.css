@@ -208,6 +208,9 @@ body.admin-bar .mst-top { top: 32px; }
 .mst-rnd__day-no { font-weight: 800; font-size: 17px; line-height: 1.35; }
 .mst-rnd__day-count { font-size: 11px; font-weight: 600; opacity: .7; }
 
+/* Hafta seçici (yalnızca mobilde görünür) */
+.mst-rnd__week { display: none; }
+
 /* Saatler */
 .mst-rnd__times { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
 .mst-rnd__time {
@@ -353,6 +356,28 @@ body.admin-bar .mst-top { top: 32px; }
   }
   .mst-rnd__meta-ic { width: 20px; height: 20px; background: transparent; font-size: 13px; }
   .mst-rnd__wa { font-size: 13px; }
+  /* Günler: kaydırma yerine haftalık görünüm, bir hafta ekrana sığar */
+  .mst-rnd__week { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 0 0 12px; }
+  .mst-rnd__week-label { font-weight: 800; font-size: 15px; color: var(--mst-koyu); text-align: center; }
+  .mst-rnd__week-btn {
+    flex: 0 0 auto; width: 40px; height: 40px; padding: 0 0 3px; margin: 0; cursor: pointer;
+    display: grid; place-items: center; font: inherit; font-size: 26px; font-weight: 700; line-height: 1;
+    color: var(--mst-yesil); background: var(--mst-beyaz); border: 1.5px solid var(--mst-cizgi); border-radius: 50%;
+    -webkit-tap-highlight-color: transparent; transition: border-color .15s, background .15s;
+  }
+  .mst-rnd__week-btn:hover:not(:disabled) { border-color: var(--mst-yesil); background: var(--mst-yesil-acik); }
+  .mst-rnd__week-btn:disabled { opacity: .3; cursor: default; }
+  .mst-rnd__days {
+    display: grid; grid-template-columns: repeat(var(--mst-gun, 5), minmax(0, 1fr)); gap: 6px;
+    overflow: visible; margin: 0; padding: 0; scroll-snap-type: none;
+  }
+  .mst-rnd__day { min-width: 0; padding: 10px 2px; border-radius: 12px; }
+  .mst-rnd__day.is-diger-hafta { display: none; }
+  .mst-rnd__day-name { font-size: 10px; letter-spacing: .04em; }
+  .mst-rnd__day-no { font-size: 20px; line-height: 1.2; text-align: center; }
+  .mst-rnd__day-ay { display: block; font-size: 12px; font-weight: 700; line-height: 1.2; }
+  .mst-rnd__day-count { font-size: 10px; white-space: nowrap; }
+
   .mst-rnd__steps li:not(.is-active) { font-size: 0; gap: 0; }
   .mst-rnd__steps li:not(.is-active)::after { margin-left: 8px; }
   .mst-rnd__steps { gap: 10px; }
