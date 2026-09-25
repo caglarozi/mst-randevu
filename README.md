@@ -31,7 +31,7 @@ Eklenti kendini bu depodaki GitHub sürümlerinden (Releases) günceller — zip
 
 Yeni sayfa → *Sayfa Özellikleri → Şablon →* **MST Yazar Paneli Tanıtım (Tam Sayfa)** → Yayımla. Üst çubuk randevu sayfasıyla aynıdır; "Panele Giriş" butonları **Bildirim & Ayarlar → Yazar Paneli adresi**'ne (boşsa `https://app.mstyayincilik.com/`), "MST yazarı olun / randevu" butonları randevu sayfasına gider. Telefon ve paneldeki ekranlar temsili çizimlerdir (gerçek veri değildir).
 
-Sayfada **kitap perisi** maskotu uçar: bölüm değiştikçe ekranın bir alt köşesinden öbürüne kavis çizerek geçer, pozunu değiştirir, arkasında ışıltı parçacıkları bırakır ve her bölümü konuşma balonunda **bir kez** anlatır (balon okunma süresi sonunda kaybolur; periye tıklanınca yeniden söyler). Beklerken ara sıra olduğu yerde tur atar. Poz ve cümleler şablondaki `$peri('poz', 'cümle')` çağrılarındadır; pozlar `assets/peri/` altındaki görsellerdir (Blender ile çizildi). Ziyaretçi × ile kapatırsa o oturumda bir daha çıkmaz; "hareketi azalt" ayarında hareketsiz görünür.
+Sayfada **kitap perisi** maskotu uçar: bölüm değiştikçe ekranın bir alt köşesinden öbürüne kavis çizerek geçer, pozunu değiştirir, arkasında ışıltı parçacıkları bırakır ve her bölümü konuşma balonunda **bir kez** anlatır (balon okunma süresi sonunda kaybolur; periye tıklanınca yeniden söyler). Beklerken ara sıra olduğu yerde tur atar. Poz ve cümleler şablondaki `$peri('poz', 'cümle')` çağrılarındadır; her poz `assets/peri/` altında gövde + kanat katmanı olarak iki görseldir (`araclar/peri-blender.py` ile Blender'da çizildi); kanatlar çırpar, uçarken hızlanır. Ziyaretçi × ile kapatırsa o oturumda bir daha çıkmaz; "hareketi azalt" ayarında hareketsiz görünür.
 
 ## Yerel önizleme (WordPress olmadan)
 

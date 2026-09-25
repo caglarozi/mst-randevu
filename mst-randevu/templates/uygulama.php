@@ -435,8 +435,12 @@ $sss = [
     </div>
     <button type="button" class="uyg-peri__govde" aria-label="Kitap perisi: mesajı göster">
         <span class="uyg-peri__ic">
-        <?php foreach (['selam', 'goster', 'dusun', 'sevinc', 'goz-kirp'] as $i => $p) : ?>
-            <img src="<?php echo esc_url(MST_RANDEVU_URL . 'assets/peri/' . $p . '.webp?ver=' . MST_RANDEVU_VER); ?>" alt="" width="180" height="130" decoding="async" data-poz="<?php echo esc_attr($p); ?>"<?php echo $i === 0 ? ' class="is-aktif"' : ''; ?>>
+        <?php foreach (['selam', 'goster', 'dusun', 'sevinc', 'goz-kirp'] as $i => $p) :
+            $yol = MST_RANDEVU_URL . 'assets/peri/' . $p; ?>
+            <span class="uyg-peri__poz<?php echo $i === 0 ? ' is-aktif' : ''; ?>" data-poz="<?php echo esc_attr($p); ?>">
+                <img class="uyg-peri__kanat" src="<?php echo esc_url($yol . '-kanat.webp?ver=' . MST_RANDEVU_VER); ?>" alt="" width="180" height="130" decoding="async">
+                <img class="uyg-peri__beden" src="<?php echo esc_url($yol . '-govde.webp?ver=' . MST_RANDEVU_VER); ?>" alt="" width="180" height="130" decoding="async">
+            </span>
         <?php endforeach; ?>
         </span>
     </button>

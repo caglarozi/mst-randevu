@@ -217,7 +217,7 @@
     if (!kutu || !bolumler.length) return;
     try { if (sessionStorage.getItem('mst_peri_gizli') === '1') return; } catch (e) { /* depolama kapalı */ }
     var govde = kutu.querySelector('.uyg-peri__govde'), soz = kutu.querySelector('[data-uyg-peri-soz]');
-    var resimler = kutu.querySelectorAll('.uyg-peri__ic img'), tuval = document.querySelector('.uyg-peri-iz');
+    var resimler = kutu.querySelectorAll('.uyg-peri__poz'), tuval = document.querySelector('.uyg-peri-iz');
     var yazilan = document.createElement('span'), kalan = document.createElement('span');
     kalan.className = 'uyg-peri__kalan';
     soz.appendChild(yazilan); soz.appendChild(kalan);
@@ -302,7 +302,8 @@
         if (Math.abs(dx) > 0.6) bakis = dx < 0 ? 1 : -1; // "göster" pozu sola bakar; sağa uçarken aynala
         hedefAci = Math.max(-18, Math.min(18, dx * 1.2));
         konum = { x: x, y: y };
-        if (u >= 1) { var f = ucus.bitince; ucus = null; sonTur = t; if (f) f(); }
+        kutu.classList.add('is-ucuyor'); // kanatlar hızlı çırpsın
+        if (u >= 1) { kutu.classList.remove('is-ucuyor'); var f = ucus.bitince; ucus = null; sonTur = t; if (f) f(); }
       } else if (basladi) {
         var h = durak(taraf);
         konum = { x: h.x, y: h.y };

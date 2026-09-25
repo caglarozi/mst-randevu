@@ -323,10 +323,29 @@ def poz_uygula(p):
         piv.rotation_euler = (0, -sx * R(ac * p['kanat']), sx * R(-18))
 
 
+import json
+from bpy_extras.object_utils import world_to_camera_view
+KANATLAR = [o for o in sc.objects if o.name.startswith('kanat') and o.type == 'MESH']
+merkez = {}
 for ad, p in POZLAR.items():
     if POZLAR_ISTENEN and ad not in POZLAR_ISTENEN:
         continue
     poz_uygula(p)
-    sc.render.filepath = os.path.join(OUT, ad + '.png')
+    bpy.context.view_layer.update()
+    # Kanat çırpma ekseni: kanatların gövdeye bağlandığı nokta (görüntüde yüzde olarak)
+    kok_nokta = govde.matrix_world @ Vector((0, 0.24, 0.12))
+    v = world_to_camera_view(sc, sc.camera, kok_nokta)
+    merkez[ad] = (v.x * sc.render.resolution_x, (1 - v.y) * sc.render.resolution_y)
+    # 1) Gövde (kanatsız)  2) Yalnız kanatlar — sayfada kanatlar ayrı katman olarak çırpılır
+    gizli = {o.name: o.hide_render for o in sc.objects}
+    for k in KANATLAR: k.hide_render = True
+    sc.render.filepath = os.path.join(OUT, ad + '-govde.png')
     bpy.ops.render.render(write_still=True)
+    for o in sc.objects:
+        if o.type in ('MESH', 'CURVE'): o.hide_render = True
+    for k in KANATLAR: k.hide_render = False
+    sc.render.filepath = os.path.join(OUT, ad + '-kanat.png')
+    bpy.ops.render.render(write_still=True)
+    for o in sc.objects: o.hide_render = gizli[o.name]
     print('RENDER', ad)
+json.dump(merkez, open(os.path.join(OUT, 'kanat-merkez.json'), 'w'))
