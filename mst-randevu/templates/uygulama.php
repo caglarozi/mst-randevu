@@ -100,7 +100,7 @@ $sss = [
 <main class="uyg">
 
     <!-- ============ Giriş ============ -->
-    <section class="uyg-hero" <?php echo $peri('selam', 'Merhaba! Ben kitap perisi. Aşağı kaydırın, Yazar Paneli\'ni birlikte gezelim.', '.uyg-tel', 'sag,kose-sag'); ?>>
+    <section class="uyg-hero" <?php echo $peri('goster', 'İşte Yazar Paneli: kitabınızla ilgili her şey bu ekranda.', '.uyg-tel', 'sag,kose-sag'); ?>>
         <div class="uyg-kap uyg-hero__in">
             <div class="uyg-hero__metin">
                 <h1 aria-label="Kitabınızın tüm yolculuğu tek uygulamada."><span class="uyg-k" style="--i:0">Kitabınızın</span> <span class="uyg-k" style="--i:1">tüm</span> <span class="uyg-k" style="--i:2">yolculuğu</span> <em class="uyg-k uyg-parilti" style="--i:3">tek uygulamada.</em></h1>
@@ -434,6 +434,10 @@ $sss = [
 <div class="uyg-peri" data-uyg-peri hidden>
     <div class="uyg-peri__balon" role="status" aria-live="polite">
         <p data-uyg-peri-soz></p>
+        <div class="uyg-peri__secim" hidden>
+            <button type="button" class="uyg-peri__cevap uyg-peri__cevap--evet" data-peri-cevap="evet">Evet, lütfen</button>
+            <button type="button" class="uyg-peri__cevap" data-peri-cevap="hayir">Hayır, teşekkürler</button>
+        </div>
         <button type="button" class="uyg-peri__kapat" aria-label="Kitap perisini kapat" data-uyg-peri-kapat>&times;</button>
     </div>
     <button type="button" class="uyg-peri__govde" aria-label="Kitap perisi: mesajı göster">
@@ -449,6 +453,9 @@ $sss = [
     </button>
     <button type="button" class="uyg-peri__x" aria-label="Kitap perisini kapat" title="Periyi kapat" data-uyg-peri-kapat>&times;</button>
 </div>
+<button type="button" class="uyg-peri-cagir" data-uyg-peri-cagir hidden aria-label="Kitap perisini çağır" title="Kitap perisini çağır">
+    <img src="<?php echo esc_url(MST_RANDEVU_URL . 'assets/peri/selam-govde.webp?ver=' . MST_RANDEVU_VER); ?>" alt="" width="64" height="46" loading="lazy" decoding="async">
+</button>
 
 <?php wp_footer(); ?>
 </body>
