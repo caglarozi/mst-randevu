@@ -285,33 +285,8 @@
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && top.classList.contains('is-open')) { set(false); btn.focus(); } });
   }
 
-  /* ---------------- Açık / koyu görünüm düğmesi (randevu sayfası) ---------------- */
-  function initTema(btn) {
-    var kok = document.documentElement, sema = document.getElementById('mst-renk-semasi');
-    function uygula(koyu, kaydet) {
-      kok.classList.toggle('mst-koyu', koyu);
-      btn.setAttribute('aria-pressed', koyu ? 'true' : 'false');
-      if (!kaydet) return;
-      try { localStorage.setItem('mst-tema', koyu ? 'koyu' : 'acik'); } catch (e) {}
-      if (sema) sema.content = koyu ? 'dark' : 'only light';
-    }
-    uygula(kok.classList.contains('mst-koyu'), false);
-    btn.addEventListener('click', function () { uygula(!kok.classList.contains('mst-koyu'), true); });
-    // Ziyaretçi seçim yapmadıysa cihazın ayarı değişince sayfa da değişsin
-    if (window.matchMedia) {
-      var mq = matchMedia('(prefers-color-scheme: dark)');
-      var degisti = function (e) {
-        var secim = null;
-        try { secim = localStorage.getItem('mst-tema'); } catch (x) {}
-        if (!secim) uygula(e.matches, false);
-      };
-      if (mq.addEventListener) mq.addEventListener('change', degisti); else if (mq.addListener) mq.addListener(degisti);
-    }
-  }
-
   function boot() {
     document.querySelectorAll('.mst-top').forEach(initMenu);
-    document.querySelectorAll('[data-mst-tema]').forEach(initTema);
     document.querySelectorAll('[data-mst-randevu]').forEach(init);
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();

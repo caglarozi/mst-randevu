@@ -8,7 +8,7 @@ Yazar adaylarının müsait saatlerden görüşme randevusu aldığı WordPress 
 - Her randevuda e-posta ve (tanımlıysa) webhook bildirimi gider; webhook ile MST CRM'e aday kaydı düşer (aşağıya bakın).
 - Telefonda tam uyumlu: saat seçilince ekranın altında sabit "Devam Et" çubuğu çıkar. Mobil menüdeki WhatsApp düğmesi çubuğun gri tonundadır (yalnızca simgesi yeşil).
 - Randevu alınınca onay ekranında **Yazar Kariyer Akademisi** kartı çıkar. Adres: **Bildirim & Ayarlar → Akademi adresi**; boşsa "MST Yazar Kariyer Akademisi (Tam Sayfa)" şablonlu yayımlanmış sayfa. İkisi de yoksa kart görünmez.
-- **Açık / koyu görünüm:** üst çubuğun solundaki ay/güneş düğmesiyle ziyaretçi açık ya da koyu görünümü seçer, seçimi hatırlanır. Seçim yapmadıysa cihazın ayarı geçerlidir (telefon karanlık moddaysa koyu açılır). Koyu tema aynı palettedir (antrasit + altın); tarayıcının "zorla karartma"sı sayfayı bozmaz. Yazar Paneli ve Akademi sayfaları zorla karartılmaz (`color-scheme: only light`).
+- **Karanlık mod:** yalnızca cihaz/tarayıcı karanlık istediğinde (telefonun karanlık modu ya da tarayıcının "zorla karartma"sı) randevu sayfası kendi koyu temasına (antrasit + altın) geçer; böylece tarayıcı renkleri ters çevirip sayfayı bozmaz. Diğer durumlarda sayfa açık renktedir; ayrı bir açık/koyu düğmesi yoktur.
 
 ## Kurulum
 
