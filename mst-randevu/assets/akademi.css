@@ -21,14 +21,6 @@
   --akd-yazi: #2b2a27;
   --akd-soluk: #6d6a63;
   --akd-cizgi: #e3ddcf;
-  --akd-metin: #45423c;        /* açık bölümlerde gövde metni */
-  --akd-beyaz: #fff;
-  --akd-not: #f1ede3;
-  --akd-not-cizgi: #bfb49d;
-  --akd-kesik: #cdc4b1;        /* kesik çizgiler */
-  --akd-ikon: #b3aa98;
-  --akd-satir: #faf7f0;        /* tablo satırı üzerine gelince */
-  --akd-soluk-2: #7d786d;
   --akd-serif: "Cormorant Garamond", "Cormorant", Georgia, "Times New Roman", serif;
   --akd-sans: "IBM Plex Sans", Manrope, system-ui, sans-serif;
   --akd-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
@@ -101,7 +93,7 @@ body.mst-akd { background: var(--akd-antrasit); }
    -------------------------------------------------------------------------- */
 .akd-bolum { position: relative; padding-block: clamp(80px, 10vw, 136px); }
 .akd-bolum--krem { background: var(--akd-krem); }
-.akd-bolum--beyaz { background: var(--akd-beyaz); }
+.akd-bolum--beyaz { background: #fff; }
 .akd-bolum--koyu {
   background: radial-gradient(90% 60% at 85% 0%, rgba(220, 152, 20, .08), transparent 60%), linear-gradient(170deg, var(--akd-antrasit) 0%, var(--akd-ana) 55%, var(--akd-bronz) 100%);
   color: rgba(247, 245, 239, .74);
@@ -230,7 +222,7 @@ body.admin-bar .akd-gezinti { top: calc(var(--akd-ust) + 32px); }
    Neden akademi: dağınık başlıklar → sıralı sistem
    -------------------------------------------------------------------------- */
 .akd-sorun { margin-top: 56px; display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 48px 72px; align-items: center; }
-.akd-sorun__metin { display: grid; gap: 18px; font-size: 18px; line-height: 1.75; color: var(--akd-metin); max-width: 32em; }
+.akd-sorun__metin { display: grid; gap: 18px; font-size: 18px; line-height: 1.75; color: #45423c; max-width: 32em; }
 .akd-sorun__metin strong { color: var(--akd-antrasit); background: linear-gradient(transparent 62%, rgba(220, 152, 20, .28) 62%); }
 
 .akd-duzen {
@@ -240,8 +232,8 @@ body.admin-bar .akd-gezinti { top: calc(var(--akd-ust) + 32px); }
 }
 .akd-duzen__daginik { position: relative; height: 300px; }
 .akd-duzen__daginik span {
-  position: absolute; padding: 7px 12px; font-size: 13px; font-weight: 700; white-space: nowrap; color: var(--akd-soluk-2);
-  background: var(--akd-beyaz); border: 1px dashed var(--akd-kesik); border-radius: 4px;
+  position: absolute; padding: 7px 12px; font-size: 13px; font-weight: 700; white-space: nowrap; color: #7d786d;
+  background: #fff; border: 1px dashed #cdc4b1; border-radius: 4px;
 }
 .akd-duzen__daginik span:nth-child(1) { left: 2%; top: 3%; transform: rotate(-8deg); }
 .akd-duzen__daginik span:nth-child(2) { right: 4%; top: 15%; transform: rotate(7deg); }
@@ -310,7 +302,7 @@ body.admin-bar .akd-gezinti { top: calc(var(--akd-ust) + 32px); }
 }
 .akd-dizin__no { font-family: var(--akd-mono); font-size: 12px; color: var(--akd-altin-koyu); }
 .akd-dizin__ad { font-family: var(--akd-sans); font-weight: 600; font-size: 17px; line-height: 1.3; color: var(--akd-antrasit); }
-.akd-dizin .akd-ic { color: var(--akd-ikon); transition: color .2s, transform .3s; }
+.akd-dizin .akd-ic { color: #b3aa98; transition: color .2s, transform .3s; }
 .akd-dizin li:hover .akd-ic { color: var(--akd-altin-koyu); transform: scale(1.12); }
 
 /* --------------------------------------------------------------------------
@@ -390,17 +382,17 @@ body.admin-bar .akd-gezinti { top: calc(var(--akd-ust) + 32px); }
 .akd-kunye-tablo dd { margin-top: 2px; font-family: var(--akd-sans); font-weight: 600; font-size: 16px; color: var(--akd-antrasit); font-variant-numeric: tabular-nums; }
 
 .akd-program__ikili { margin-top: 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-.akd-not { padding: 22px 24px; border-radius: 4px; background: var(--akd-not); border-left: 3px solid var(--akd-not-cizgi); }
+.akd-not { padding: 22px 24px; border-radius: 4px; background: #f1ede3; border-left: 3px solid #bfb49d; }
 .akd-not small { display: block; margin-bottom: 6px; font-family: var(--akd-mono); font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--akd-soluk); }
-.akd-not p { font-size: 15.5px; line-height: 1.6; color: var(--akd-metin); }
+.akd-not p { font-size: 15.5px; line-height: 1.6; color: #45423c; }
 .akd-not--altin { background: var(--akd-antrasit); border-left-color: var(--akd-altin); }
 .akd-not--altin small { color: var(--akd-altin); }
 .akd-not--altin p { color: var(--akd-krem); font-weight: 600; }
 
 .akd-program__govde { margin-top: 48px; display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.6fr); gap: 40px 56px; }
-.akd-program__sol .akd-tik { font-size: 15px; color: var(--akd-metin); }
+.akd-program__sol .akd-tik { font-size: 15px; color: #45423c; }
 .akd-program__sol h4 + .akd-tik + h4 { margin-top: 32px; }
-.akd .akd-program__metin { font-size: 15px; line-height: 1.6; color: var(--akd-metin); }
+.akd .akd-program__metin { font-size: 15px; line-height: 1.6; color: #45423c; }
 
 .akd-mufredat { counter-reset: akd-m; border-top: 1px solid var(--akd-antrasit); }
 .akd-mufredat--uzun { display: grid; grid-template-columns: 1fr 1fr; column-gap: 32px; }
@@ -410,13 +402,13 @@ body.admin-bar .akd-gezinti { top: calc(var(--akd-ust) + 32px); }
 .akd-mufredat p { margin-top: 3px; font-size: 13.5px; line-height: 1.55; color: var(--akd-soluk); }
 .akd-mufredat--kisa p { font-size: 14px; }
 
-.akd-dosyalar { margin-top: 48px; padding: 28px; border-radius: 4px; background: var(--akd-beyaz); border: 1px solid var(--akd-cizgi); }
+.akd-dosyalar { margin-top: 48px; padding: 28px; border-radius: 4px; background: #fff; border: 1px solid var(--akd-cizgi); }
 .akd-dosyalar ul { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px 24px; }
 .akd-dosyalar li { display: flex; align-items: flex-start; gap: 10px; font-size: 14.5px; line-height: 1.45; color: var(--akd-antrasit); }
 .akd-dosyalar .akd-ic { margin-top: 1px; color: var(--akd-altin-koyu); }
 
 .akd-program__alt {
-  margin-top: 40px; padding-top: 28px; border-top: 1px dashed var(--akd-kesik);
+  margin-top: 40px; padding-top: 28px; border-top: 1px dashed #cdc4b1;
   display: grid; grid-template-columns: auto 1fr auto; gap: 20px 40px; align-items: center;
 }
 .akd-fiyat { display: grid; gap: 2px; }
@@ -441,7 +433,7 @@ body.admin-bar .akd-gezinti { top: calc(var(--akd-ust) + 32px); }
 .akd-tablo td { font-size: 15.5px; font-weight: 600; color: var(--akd-antrasit); }
 .akd-tablo td:nth-child(4), .akd-tablo thead th:nth-child(4) { background: rgba(220, 152, 20, .07); }
 .akd-tablo tbody tr:last-child td { font-family: var(--akd-sans); font-size: 18px; font-weight: 700; border-bottom: 0; }
-.akd-tablo tbody tr:hover td, .akd-tablo tbody tr:hover th { background-color: var(--akd-satir); }
+.akd-tablo tbody tr:hover td, .akd-tablo tbody tr:hover th { background-color: #faf7f0; }
 .akd .akd-dipnot { margin-top: 16px; font-family: var(--akd-mono); font-size: 11.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--akd-soluk); }
 
 /* --------------------------------------------------------------------------
@@ -523,9 +515,9 @@ body.admin-bar .akd-gezinti { top: calc(var(--akd-ust) + 32px); }
 .akd-halka span { margin-top: 10px; font-family: var(--akd-mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--akd-soluk); }
 .akd-belge__metin { display: grid; gap: 14px; }
 .akd .akd-belge__metin h3 { font-family: var(--akd-sans); font-weight: 600; font-size: 26px; letter-spacing: -.015em; color: var(--akd-antrasit); }
-.akd-belge__metin > p { font-size: 16px; line-height: 1.65; color: var(--akd-metin); }
+.akd-belge__metin > p { font-size: 16px; line-height: 1.65; color: #45423c; }
 .akd-belge__metin > p em { font-style: normal; font-weight: 700; color: var(--akd-antrasit); }
-.akd-belge__metin .akd-tik { margin-top: 8px; font-size: 14.5px; color: var(--akd-metin); }
+.akd-belge__metin .akd-tik { margin-top: 8px; font-size: 14.5px; color: #45423c; }
 
 .akd-sinirlar { margin-top: 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px 64px; }
 .akd-sinirlar > div { padding-top: 24px; border-top: 2px solid var(--akd-bordo); }
@@ -552,7 +544,7 @@ body.admin-bar .akd-gezinti { top: calc(var(--akd-ust) + 32px); }
 .akd-sss summary::after { transform: rotate(90deg); }
 .akd-sss details[open] summary::after { transform: rotate(0); }
 .akd-sss summary:hover { color: var(--akd-altin-koyu); }
-.akd-sss details p { padding: 0 48px 24px 0; font-size: 16px; line-height: 1.7; color: var(--akd-metin); }
+.akd-sss details p { padding: 0 48px 24px 0; font-size: 16px; line-height: 1.7; color: #55524b; }
 
 /* --------------------------------------------------------------------------
    Kapanış: aynı sahne ışığı, bu kez sıra ziyaretçide
@@ -665,48 +657,6 @@ body.admin-bar .akd-gezinti { top: calc(var(--akd-ust) + 32px); }
   .akd-sss details p { padding-right: 0; }
   .akd-alt .akd-kap span { flex-basis: 100%; }
 }
-
-/* --------------------------------------------------------------------------
-   Karanlık mod: yalnızca cihaz/tarayıcı karanlık istediğinde (karanlık mod ya da "zorla karartma").
-   <html> "mst-koyu" sınıfını şablonun <head>'indeki küçük betik koyar. Koyu bölümler (sahne, yaklaşım,
-   programlar, ücretsiz eğitim, kapanış) zaten koyu; krem ve beyaz bölümler ile program kitapçığı
-   antrasit/bronz tonlara döner, altın vurgular kalır.
-   -------------------------------------------------------------------------- */
-html.mst-koyu body.mst-akd { color-scheme: dark; }
-html.mst-koyu .akd-bolum--krem,
-html.mst-koyu .akd-bolum--beyaz,
-html.mst-koyu .akd-program {
-  --akd-krem: #1b1a17;
-  --akd-beyaz: #151412;
-  --akd-kagit: #211f1b;
-  --akd-antrasit: #f1ece2;     /* açık bölümlerde başlık rengiydi */
-  --akd-yazi: #ddd8cd;
-  --akd-metin: #cfc9bd;
-  --akd-soluk: #a39e93;
-  --akd-soluk-2: #a39e93;
-  --akd-cizgi: #34312b;
-  --akd-kesik: #4a453c;
-  --akd-not: #262320;
-  --akd-not-cizgi: #5a5346;
-  --akd-ikon: #7d776c;
-  --akd-satir: rgba(247, 245, 239, .03);
-  --akd-altin-koyu: #e3a93f;   /* koyu zeminde okunur altın */
-  color: var(--akd-yazi);
-}
-html.mst-koyu .akd-program { box-shadow: 0 40px 80px -40px rgba(0, 0, 0, .8), 0 0 0 1px rgba(220, 152, 20, .18); }
-/* Açık bölümlerde koyu zeminli küçük parçalar: bronz zemin, krem yazı */
-html.mst-koyu .akd-duzen__ok,
-html.mst-koyu .akd-duzen__sirali li,
-html.mst-koyu .akd-not--altin,
-html.mst-koyu .akd-program--mentorluk .akd-program__seviye { background: var(--akd-bronz); color: #f1ece2; }
-html.mst-koyu .akd-duzen__ok { color: var(--akd-altin); }
-html.mst-koyu .akd-program--mentorluk .akd-program__seviye { color: var(--akd-altin); }
-html.mst-koyu .akd-not--altin p { color: #f1ece2; }
-html.mst-koyu .akd-duzen { box-shadow: none; }
-html.mst-koyu .akd-sorun__metin strong { background: linear-gradient(transparent 62%, rgba(220, 152, 20, .35) 62%); }
-html.mst-koyu .akd-tablo td:nth-child(4), html.mst-koyu .akd-tablo thead th:nth-child(4) { background: rgba(220, 152, 20, .08); }
-html.mst-koyu .akd-sinirlar > div { border-top-color: #b24a5c; }
-html.mst-koyu .akd-carpi .akd-ic { color: #e07a8a; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

@@ -82,8 +82,19 @@ MST_Randevu::seo_hazirla(); // arama başlığı/açıklaması (wp_head'den önc
     <meta charset="<?php bloginfo('charset'); ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="#1a1a1a">
-    <!-- Renkler tasarımın parçası: telefonun "zorla karanlık mod"u sayfayı ters çevirmesin -->
-    <meta name="color-scheme" content="only light">
+    <!-- Sayfanın kendi karanlık teması var: tarayıcı renkleri kendisi ters çevirmesin -->
+    <meta name="color-scheme" content="light dark">
+    <script>
+    /* Koyu tema yalnızca cihaz/tarayıcı karanlık istediğinde (karanlık mod ya da zorla karartma):
+       sayfa çizilmeden önce uygulanır, cihaz ayarı değişince de güncellenir. */
+    (function () {
+        if (!window.matchMedia) return;
+        var mq = matchMedia('(prefers-color-scheme: dark)'), kok = document.documentElement;
+        var uygula = function () { kok.classList.toggle('mst-koyu', mq.matches); };
+        uygula();
+        if (mq.addEventListener) mq.addEventListener('change', uygula); else if (mq.addListener) mq.addListener(uygula);
+    })();
+    </script>
     <?php echo MST_Randevu::paylasim_meta('uygulama'); ?>
     <?php echo MST_Randevu::seo_uygulama($sss); ?>
     <script>document.documentElement.classList.add('uyg-js');</script>
