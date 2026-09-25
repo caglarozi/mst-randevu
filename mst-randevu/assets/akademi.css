@@ -252,21 +252,34 @@ body.admin-bar .akd-gezinti { top: 108px; }
 /* --------------------------------------------------------------------------
    Ücretsiz eğitim
    -------------------------------------------------------------------------- */
-/* Ücretsiz eğitim: tarih yerine vurgulu bilgi kartı; katılım bilgisi WhatsApp'tan */
-.akd-ucretsiz__vurgu {
-  position: relative; margin: 0 0 26px; padding: 26px 24px 22px; border-radius: 22px;
-  background: linear-gradient(135deg, rgba(220, 152, 20, .2) 0%, rgba(220, 152, 20, .06) 100%);
-  border: 1.5px solid var(--mst-altin); box-shadow: 0 0 0 6px rgba(220, 152, 20, .08), 0 20px 50px rgba(0, 0, 0, .35);
+/* Ücretsiz eğitim: davetiye bileti (krem kâğıt, çentikli kenarlar, dikey "Ücretsiz" koçanı) */
+.akd-bilet {
+  position: relative; display: grid; grid-template-columns: 1fr 76px; margin: 0 0 30px; transform: rotate(-2deg);
+  filter: drop-shadow(0 30px 40px rgba(0, 0, 0, .45)); transition: transform .5s cubic-bezier(.2, .8, .2, 1);
 }
-.akd-ucretsiz__damga {
-  position: absolute; top: -15px; left: 22px; padding: 5px 16px; border-radius: 100px;
-  background: var(--mst-altin); color: #1a1a1a; font-size: 13px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
-  box-shadow: 0 6px 18px rgba(220, 152, 20, .45);
+.akd-bilet:hover { transform: rotate(0); }
+.akd-bilet__ana, .akd-bilet__kocan { position: relative; }
+.akd-bilet__ana {
+  display: grid; gap: 14px; padding: 30px 30px 26px; border-radius: 6px 0 0 6px; background: #f7f5ef; color: #161616;
+  -webkit-mask: radial-gradient(circle at 100% 0, transparent 12px, #000 12.5px) top / 100% 51% no-repeat, radial-gradient(circle at 100% 100%, transparent 12px, #000 12.5px) bottom / 100% 51% no-repeat;
+  mask: radial-gradient(circle at 100% 0, transparent 12px, #000 12.5px) top / 100% 51% no-repeat, radial-gradient(circle at 100% 100%, transparent 12px, #000 12.5px) bottom / 100% 51% no-repeat;
 }
-.akd-ucretsiz__vurgu ul { list-style: none; margin: 4px 0 14px; padding: 0; display: grid; gap: 10px; }
-.akd-ucretsiz__vurgu li { display: flex; align-items: center; gap: 10px; font-size: 17px; font-weight: 700; color: #fff; }
-.akd-ucretsiz__vurgu li .uyg-ic { color: var(--mst-altin); }
-.akd .akd-ucretsiz__vurgu p { font-size: 14.5px; color: rgba(255, 255, 255, .72); }
+.akd-bilet__ana::before { content: ""; position: absolute; inset: 10px; border: 1px solid rgba(168, 112, 10, .35); border-radius: 3px; pointer-events: none; }
+.akd-bilet__ust { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: #a8700a; }
+.akd-bilet__baslik { font-family: "Cormorant Garamond", Georgia, "Times New Roman", serif; font-style: italic; font-weight: 600; font-size: 32px; line-height: 1.1; color: #161616; }
+.akd-bilet dl { display: grid; margin: 0; border-top: 1px solid #e3ddcf; }
+.akd-bilet dl div { display: grid; grid-template-columns: 76px 1fr; gap: 12px; padding: 10px 0; border-bottom: 1px solid #e3ddcf; }
+.akd-bilet dt { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: #6d6a63; padding-top: 3px; }
+.akd-bilet dd { margin: 0; font-weight: 700; font-size: 15px; color: #161616; }
+.akd-bilet__kocan {
+  display: grid; place-items: center; border-radius: 0 6px 6px 0; background: var(--mst-altin);
+  -webkit-mask: radial-gradient(circle at 0 0, transparent 12px, #000 12.5px) top / 100% 51% no-repeat, radial-gradient(circle at 0 100%, transparent 12px, #000 12.5px) bottom / 100% 51% no-repeat;
+  mask: radial-gradient(circle at 0 0, transparent 12px, #000 12.5px) top / 100% 51% no-repeat, radial-gradient(circle at 0 100%, transparent 12px, #000 12.5px) bottom / 100% 51% no-repeat;
+}
+.akd-bilet__kocan::before { content: ""; position: absolute; left: 0; top: 16px; bottom: 16px; border-left: 2px dashed rgba(22, 19, 13, .35); }
+.akd-bilet__kocan span {
+  writing-mode: vertical-rl; transform: rotate(180deg); font-family: "IBM Plex Mono", ui-monospace, monospace; font-weight: 500; font-size: 14px; letter-spacing: .4em; text-transform: uppercase; color: #16130d;
+}
 .akd-ucretsiz .uyg-btn--altin .mst-ic { width: 20px; height: 20px; }
 /* Girişteki ikinci düğme: bilet. Solda kesik çizgiyle ayrılmış "Ücretsiz" koçanı */
 .akd-bilet-btn {
@@ -353,6 +366,10 @@ body.admin-bar .akd-gezinti { top: 108px; }
   .akd-kapsam { grid-template-columns: 1fr; }
 }
 @media (max-width: 640px) {
+  .akd-bilet { transform: none; grid-template-columns: 1fr 56px; }
+  .akd-bilet__ana { padding: 24px 22px 20px; }
+  .akd-bilet__baslik { font-size: 27px; }
+  .akd-bilet dl div { grid-template-columns: 66px 1fr; }
   .akd-sahne__cta .uyg-btn, .akd-bilet-btn { width: 100%; }
   .akd-bilet-btn__metin { flex: 1; justify-content: center; }
   .akd .akd-imza { gap: 10px; font-size: 11px; letter-spacing: .1em; }

@@ -124,8 +124,8 @@ class MST_Akademi
         if (!self::is_page()) return;
         wp_register_style('mst-akademi', MST_Randevu::varlik('akademi.css'), ['mst-uygulama'], null);
         wp_register_script('mst-akademi', MST_Randevu::varlik('akademi.js'), [], null, true);
-        // Açılıştaki daktilo satırı için ek yazı tipi (yalnızca bu sayfada)
-        wp_enqueue_style('mst-akademi-font', 'https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&display=swap', [], null);
+        // Yalnızca bu sayfada: daktilo satırı ve bilet için IBM Plex Mono, bilet başlığı için Cormorant Garamond italik
+        wp_enqueue_style('mst-akademi-font', 'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,600&family=IBM+Plex+Mono:wght@500&display=swap', [], null);
         wp_enqueue_style('mst-randevu-font');
         wp_enqueue_style('mst-akademi');
         wp_enqueue_script('mst-randevu');

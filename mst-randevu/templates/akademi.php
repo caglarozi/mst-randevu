@@ -352,14 +352,18 @@ $sss = [
                     <h2>Yazarlık Yolculuğunuzun Hangi Aşamasındasınız?</h2>
                     <p>Ücretli programların kısaltılmış hâli değildir. Mevcut durumunuzu görmenizi ve size uygun yolu seçmenizi sağlayan bir başlangıç buluşmasıdır.</p>
                 </header>
-                <div class="akd-ucretsiz__vurgu">
-                    <span class="akd-ucretsiz__damga">Ücretsiz</span>
-                    <ul>
-                        <li><?php echo $ik('onay', 16); ?> Katılım tamamen ücretsizdir</li>
-                        <li><?php echo $ik('onay', 16); ?> Çevrim içi ve canlı</li>
-                        <li><?php echo $ik('onay', 16); ?> Sonunda aşamanıza uygun program önerisi</li>
-                    </ul>
-                    <p>Tarih, saat ve katılım bilgisi için bize yazın; size uygun ilk eğitimi birlikte planlayalım.</p>
+                <div class="akd-bilet" aria-label="Ücretsiz başlangıç eğitimi davetiyesi">
+                    <div class="akd-bilet__ana">
+                        <span class="akd-bilet__ust">MST Yayıncılık · Davetiye</span>
+                        <strong class="akd-bilet__baslik">Ücretsiz Başlangıç Eğitimi</strong>
+                        <dl>
+                            <div><dt>Katılım</dt><dd>Ücretsiz</dd></div>
+                            <div><dt>Yer</dt><dd>Çevrim içi, canlı</dd></div>
+                            <div><dt>Sonunda</dt><dd>Aşamanıza uygun program önerisi</dd></div>
+                            <div><dt>Tarih</dt><dd>Bilgi için bize yazın</dd></div>
+                        </dl>
+                    </div>
+                    <div class="akd-bilet__kocan" aria-hidden="true"><span>Ücretsiz</span></div>
                 </div>
                 <?php if ($wa) : ?><a class="uyg-btn uyg-btn--altin" href="<?php echo esc_url(MST_Randevu::wa_link('Merhaba, Yazar Kariyer Akademisi ücretsiz eğitimi hakkında bilgi almak istiyorum.')); ?>" target="_blank" rel="noopener"><?php echo MST_Randevu::icon('wa'); ?> Ücretsiz eğitim hakkında bilgi alın</a><?php endif; ?>
             </div>
