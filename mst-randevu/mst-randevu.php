@@ -481,7 +481,7 @@ class MST_Randevu
             <aside class="mst-rnd__aside">
                 <div class="mst-rnd__brand">
                     <span class="mst-rnd__avatar"><img src="<?php echo esc_url(self::figur_url()); ?>" alt="" width="40" height="40"></span>
-                    <span class="mst-rnd__brand-txt"><strong>MST Yayıncılık</strong><small>Yayın Danışmanlığı</small></span>
+                    <span class="mst-rnd__brand-txt"><strong>MST Yayıncılık</strong><small>Yayın Danışmanımız</small></span>
                 </div>
                 <h2 class="mst-rnd__title"><?php echo esc_html($o['baslik']); ?></h2>
                 <?php if ($meta) : ?>
