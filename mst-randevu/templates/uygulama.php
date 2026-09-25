@@ -106,14 +106,16 @@ $sss = [
                 <h1 aria-label="Kitabınızın tüm yolculuğu tek uygulamada."><span class="uyg-k" style="--i:0">Kitabınızın</span> <span class="uyg-k" style="--i:1">tüm</span> <span class="uyg-k" style="--i:2">yolculuğu</span> <em class="uyg-k uyg-parilti" style="--i:3">tek uygulamada.</em></h1>
                 <p class="uyg-hero__alt uyg-gir" style="--d:.75s">Yayın sürecinden satışlara, telif kazancından kariyer planınıza kadar her şeyi anlık takip edin. 7/24 yapay zekâ destekli Yazar Asistanı her an yanınızda.</p>
                 <div class="uyg-hero__cta uyg-gir" style="--d:.9s">
-                    <a class="uyg-btn uyg-btn--altin" href="<?php echo esc_url($panel); ?>">Panele Giriş Yap <?php echo $ik('ok', 18); ?></a>
-                    <a class="uyg-btn uyg-btn--cizgi" href="<?php echo esc_url($randevu); ?>">MST yazarı olun</a>
+                    <a class="uyg-btn uyg-btn--altin" href="<?php echo esc_url($randevu); ?>">Ücretsiz Ön Görüşme Al <?php echo $ik('ok', 18); ?></a>
+                    <?php if ($wa) : ?><a class="uyg-btn uyg-btn--cizgi" href="<?php echo esc_url($wa); ?>" target="_blank" rel="noopener">WhatsApp'tan Bilgi Al</a><?php endif; ?>
                 </div>
                 <ul class="uyg-hero__cipler uyg-gir" style="--d:1.05s">
                     <li><?php echo $ik('telefon', 16); ?> Web'den ve telefondan</li>
                     <li><?php echo $ik('zil', 16); ?> Anlık bildirimler</li>
                     <li><?php echo $ik('kivilcim', 16); ?> 7/24 AI asistan</li>
                 </ul>
+                <?php // Panel yalnızca MST yazarlarına açık: giriş, deneme izlenimi vermeyecek küçük bir bağlantı ?>
+                <p class="uyg-giris-link uyg-gir" style="--d:1.15s">Zaten MST yazarı mısınız? <a href="<?php echo esc_url($panel); ?>">Panele giriş</a></p>
             </div>
 
             <div class="uyg-hero__gorsel" aria-hidden="true" data-uyg-egim>
@@ -409,12 +411,12 @@ $sss = [
         <div class="uyg-kap uyg-kapanis__in">
             <div>
                 <h2>Kitabınızın yolculuğunu birlikte yönetelim.</h2>
-                <p>MST yazarıysanız hemen panelinize girin. Henüz değilseniz, kitabınızı konuşmak için ücretsiz ön görüşme randevusu alın.</p>
+                <p>Kitabınızı yayımlamayı düşünüyorsanız ücretsiz ön görüşmede yol haritanızı birlikte çıkaralım. MST yazarı olduğunuzda Yazar Paneli'niz size açılır.</p>
             </div>
             <div class="uyg-kapanis__cta">
-                <a class="uyg-btn uyg-btn--altin" href="<?php echo esc_url($panel); ?>">Panele Giriş Yap <?php echo $ik('ok', 18); ?></a>
-                <a class="uyg-btn uyg-btn--cizgi" href="<?php echo esc_url($randevu); ?>">Ücretsiz görüşme randevusu al</a>
+                <a class="uyg-btn uyg-btn--altin" href="<?php echo esc_url($randevu); ?>">Ücretsiz Ön Görüşme Al <?php echo $ik('ok', 18); ?></a>
                 <?php if ($wa) : ?><a class="uyg-kapanis__wa" href="<?php echo esc_url($wa); ?>" target="_blank" rel="noopener"><?php echo MST_Randevu::icon('wa'); ?> Sorunuz mu var? WhatsApp'tan yazın</a><?php endif; ?>
+                <p class="uyg-giris-link">Zaten MST yazarı mısınız? <a href="<?php echo esc_url($panel); ?>">Panele giriş</a></p>
             </div>
         </div>
     </section>
