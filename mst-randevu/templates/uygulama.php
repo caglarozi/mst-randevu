@@ -81,6 +81,8 @@ $sss = [
     <meta charset="<?php bloginfo('charset'); ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="#1a1a1a">
+    <!-- Renkler tasarımın parçası: telefonun "zorla karanlık mod"u sayfayı ters çevirmesin -->
+    <meta name="color-scheme" content="only light">
     <?php echo MST_Randevu::paylasim_meta('uygulama'); ?>
     <script>document.documentElement.classList.add('uyg-js');</script>
     <?php wp_head(); ?>
