@@ -250,7 +250,7 @@
         cal.href = d.takvim; cal.target = '_blank'; cal.rel = 'noopener';
         acts.appendChild(cal);
       }
-      var site = el('a', 'mst-rnd__btn mst-rnd__btn--yesil', 'Siteye Dön');
+      var site = el('a', 'mst-rnd__btn mst-rnd__btn--koyu', 'Siteye Dön');
       site.href = CFG.site || '/';
       acts.appendChild(site);
       done.appendChild(acts);
