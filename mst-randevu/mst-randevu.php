@@ -356,6 +356,37 @@ class MST_Randevu
         return '<svg class="mst-ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' . ($d[$name] ?? '') . '</svg>';
     }
 
+    /**
+     * Paylaşım önizlemesi (WhatsApp, Instagram, Facebook, X): Open Graph + Twitter etiketleri.
+     * Tam sayfa şablonlarının <head>'inde wp_head()'den ÖNCE basılır; SEO eklentisi (Rank Math)
+     * de etiket eklerse platformlar ilk görseli kullandığı için bizimki öne geçer.
+     */
+    public static function paylasim_meta($tur)
+    {
+        $m = $tur === 'uygulama'
+            ? ['MST Yazar Paneli — Kitabınızın tüm yolculuğu tek uygulamada',
+               'Yayın süreci, satışlar, telif, kariyer planı ve 7/24 yapay zekâ Yazar Asistanı tek uygulamada. MST Yayıncılık yazarlarına özel.',
+               'paylasim-uygulama.jpg']
+            : ['Ücretsiz yazar adayı görüşmesi — MST Yayıncılık',
+               'Kitabınızı konuşalım: size uygun saati seçin, editörümüz sizi arasın. Ücretsiz ön değerlendirme.',
+               'paylasim-randevu.jpg'];
+        $gorsel = MST_RANDEVU_URL . 'assets/' . $m[2] . '?ver=' . MST_RANDEVU_VER;
+        $url    = get_permalink() ?: home_url('/');
+        $e = [
+            ['property', 'og:type', 'website'], ['property', 'og:locale', 'tr_TR'],
+            ['property', 'og:site_name', 'MST Yayıncılık'], ['property', 'og:url', $url],
+            ['property', 'og:title', $m[0]], ['property', 'og:description', $m[1]],
+            ['property', 'og:image', $gorsel], ['property', 'og:image:secure_url', $gorsel],
+            ['property', 'og:image:width', '1200'], ['property', 'og:image:height', '630'],
+            ['property', 'og:image:type', 'image/jpeg'], ['property', 'og:image:alt', $m[0]],
+            ['name', 'twitter:card', 'summary_large_image'], ['name', 'twitter:title', $m[0]],
+            ['name', 'twitter:description', $m[1]], ['name', 'twitter:image', $gorsel],
+        ];
+        $h = '';
+        foreach ($e as $x) $h .= '<meta ' . $x[0] . '="' . esc_attr($x[1]) . '" content="' . esc_attr($x[2]) . '">' . "\n    ";
+        return $h;
+    }
+
     /** Yazar Paneli (web uygulaması) adresi. */
     public static function uygulama_url()
     {
