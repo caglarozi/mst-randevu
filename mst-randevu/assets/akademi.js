@@ -1,5 +1,5 @@
 /* MST Yazar Kariyer Akademisi — açılış sahnesi ve bölüm menüsü.
- * - "Yazmak başlangıçtır." daktiloyla yazılır; sahne ışığının huzmesinde toz zerreleri süzülür
+ * - "Yazar Akademisi" bir kez daktiloyla yazılır (döngü yok); sahne ışığının huzmesinde toz zerreleri süzülür
  * - Bölüm menüsünde ekrandaki bölüm işaretlenir
  * - Telefonda uzun müfredat listeleri kapalı başlar, programlar sekmeli görünür
  * Hareketi azalt açıksa daktilo ve toz çalışmaz; sayfa durağan görünür. */
@@ -7,15 +7,35 @@
   'use strict';
   var azHareket = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  // Başlık ("Yazar Akademisi") bir kez daktiloyla yazılır; imleç birkaç kez yanıp söner ve kaybolur.
+  // Metin HTML'de hazır durur (arama motoru ve JS'siz ziyaretçi için); JS yalnızca görünümü canlandırır.
   function daktilo() {
     var el = document.querySelector('[data-akd-daktilo]');
     if (!el || azHareket) return;
-    var metin = el.getAttribute('data-akd-daktilo'), i = 0;
-    el.textContent = '';
+    // Yazılmamış kısım görünmez ama yerini korur: başlık baştan son yerinde durur, sayfa zıplamaz
+    var parcalar = [], yuru = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null), n, dugumler = [];
+    while ((n = yuru.nextNode())) dugumler.push(n);
+    dugumler.forEach(function (d) {
+      var yazildi = document.createElement('span'), kalan = document.createElement('span');
+      kalan.style.visibility = 'hidden'; kalan.textContent = d.nodeValue;
+      d.parentNode.insertBefore(yazildi, d); d.parentNode.insertBefore(kalan, d); d.parentNode.removeChild(d);
+      parcalar.push({ yazildi: yazildi, kalan: kalan, metin: kalan.textContent });
+    });
+    var imlec = document.createElement('i');
+    imlec.className = 'akd-imlec'; imlec.setAttribute('aria-hidden', 'true');
+    var p = 0, k = 0;
+    function yerlestir() { var par = parcalar[p]; par.kalan.parentNode.insertBefore(imlec, par.kalan); }
+    yerlestir();
     setTimeout(function yaz() {
-      i += 1; el.textContent = metin.slice(0, i);
-      if (i < metin.length) setTimeout(yaz, 38 + Math.random() * 40);
-    }, 250);
+      if (p >= parcalar.length) {
+        setTimeout(function () { imlec.classList.add('is-bitti'); setTimeout(function () { imlec.remove(); }, 450); }, 2600);
+        return;
+      }
+      var par = parcalar[p];
+      k += 1; par.yazildi.textContent = par.metin.slice(0, k); par.kalan.textContent = par.metin.slice(k);
+      if (k >= par.metin.length) { p += 1; k = 0; if (p < parcalar.length) yerlestir(); }
+      setTimeout(yaz, 55 + Math.random() * 45);
+    }, 300);
   }
 
   // Işık huzmesinin içinde yavaşça süzülen toz zerreleri (huzme dışına çıkanlar görünmez)
