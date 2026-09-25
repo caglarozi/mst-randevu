@@ -30,7 +30,7 @@ if (!defined('ABSPATH')) {
     <?php
     // Güvence: bir eklenti stil dosyasını kuyruktan düşürdüyse doğrudan ekle
     if (!wp_style_is('mst-randevu', 'done')) {
-        echo '<link rel="stylesheet" id="mst-randevu-yedek-css" href="' . esc_url(MST_RANDEVU_URL . 'assets/randevu.css?ver=' . MST_RANDEVU_VER) . '">' . "\n";
+        echo '<link rel="stylesheet" id="mst-randevu-yedek-css" href="' . esc_url(MST_Randevu::varlik('randevu.css')) . '">' . "\n";
     }
     ?>
 </head>

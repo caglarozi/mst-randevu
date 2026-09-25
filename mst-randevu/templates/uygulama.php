@@ -103,7 +103,7 @@ MST_Randevu::seo_hazirla(); // arama başlığı/açıklaması (wp_head'den önc
     // Güvence: bir eklenti stil dosyalarını kuyruktan düşürdüyse doğrudan ekle
     foreach (['mst-randevu' => 'randevu.css', 'mst-uygulama' => 'uygulama.css'] as $h => $dosya) {
         if (!wp_style_is($h, 'done')) {
-            echo '<link rel="stylesheet" id="' . esc_attr($h) . '-yedek-css" href="' . esc_url(MST_RANDEVU_URL . 'assets/' . $dosya . '?ver=' . MST_RANDEVU_VER) . '">' . "\n";
+            echo '<link rel="stylesheet" id="' . esc_attr($h) . '-yedek-css" href="' . esc_url(MST_Randevu::varlik($dosya)) . '">' . "\n";
         }
     }
     ?>

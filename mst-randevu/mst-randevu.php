@@ -2,7 +2,7 @@
 /**
  * Plugin Name: MST Yazar Adayı Randevu
  * Description: Yazar adaylarının müsait saatlerden görüşme randevusu alması. Kısa kod: [mst_randevu] — ya da sayfa şablonu olarak "MST Randevu (Tam Sayfa)".
- * Version:     1.5.3
+ * Version:     1.5.4
  * Author:      MST Yayıncılık
  * Text Domain: mst-randevu
  * Requires PHP: 7.4
@@ -12,7 +12,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('MST_RANDEVU_VER', '1.5.3');
+define('MST_RANDEVU_VER', '1.5.4');
 define('MST_RANDEVU_DB', 4);
 define('MST_RANDEVU_URL', plugin_dir_url(__FILE__));
 
@@ -180,7 +180,44 @@ class MST_Randevu
         // bu çağrılar hiçbir şey yapmaz.
         if (get_option('mst_randevu_surum') !== MST_RANDEVU_VER) {
             update_option('mst_randevu_surum', MST_RANDEVU_VER);
+            self::eski_varliklari_sil();
             add_action('init', [__CLASS__, 'onbellek_temizle'], 99);
+        }
+    }
+
+    /**
+     * Stil/betik dosyasının adresi. Bazı önbellekler (ör. Hostinger CDN) adresin sonundaki ?ver=
+     * etiketini yok sayıp telefona aylar önceki dosyayı vermeye devam edebiliyor. Bu yüzden dosyalar
+     * her sürümde uploads altında sürüm adlı klasöre kopyalanır ve adres değişir:
+     *   /wp-content/uploads/mst-randevu/1.5.4/randevu.css
+     * Kopyalanamazsa (yazma izni yoksa) eklentideki dosya ?ver= ile kullanılır.
+     */
+    public static function varlik($dosya)
+    {
+        static $kok = null;
+        $kaynak = __DIR__ . '/assets/' . $dosya;
+        $yedek  = MST_RANDEVU_URL . 'assets/' . $dosya . '?ver=' . MST_RANDEVU_VER;
+        if ($kok === null) {
+            $u   = wp_upload_dir(null, false);
+            $kok = empty($u['error']) ? [$u['basedir'] . '/mst-randevu/' . MST_RANDEVU_VER, set_url_scheme($u['baseurl']) . '/mst-randevu/' . MST_RANDEVU_VER] : false;
+        }
+        if (!$kok || !is_readable($kaynak)) return $yedek;
+        $hedef = $kok[0] . '/' . $dosya;
+        if (!file_exists($hedef) || filesize($hedef) !== filesize($kaynak)) {
+            if (!wp_mkdir_p($kok[0]) || !@copy($kaynak, $hedef)) return $yedek;
+        }
+        return $kok[1] . '/' . $dosya;
+    }
+
+    /** Yeni sürüm kurulunca önceki sürümlerin uploads/mst-randevu/<sürüm> kopyaları silinir. */
+    public static function eski_varliklari_sil()
+    {
+        $u = wp_upload_dir(null, false);
+        if (!empty($u['error'])) return;
+        foreach ((array) glob($u['basedir'] . '/mst-randevu/*', GLOB_ONLYDIR) as $klasor) {
+            if (basename($klasor) === MST_RANDEVU_VER || !preg_match('/^\d+\.\d+\.\d+$/', basename($klasor))) continue;
+            foreach ((array) glob($klasor . '/*') as $f) @unlink($f);
+            @rmdir($klasor);
         }
     }
 
@@ -272,10 +309,10 @@ class MST_Randevu
     {
         wp_register_style('mst-randevu-font', 'https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap', [], null);
         // Yazı tipine bağımlı DEĞİL: bir hız/gizlilik eklentisi Google Fonts'u kapatırsa stil dosyası da düşmesin
-        wp_register_style('mst-randevu', MST_RANDEVU_URL . 'assets/randevu.css', [], MST_RANDEVU_VER);
-        wp_register_script('mst-randevu', MST_RANDEVU_URL . 'assets/randevu.js', [], MST_RANDEVU_VER, true);
-        wp_register_style('mst-uygulama', MST_RANDEVU_URL . 'assets/uygulama.css', ['mst-randevu'], MST_RANDEVU_VER);
-        wp_register_script('mst-uygulama', MST_RANDEVU_URL . 'assets/uygulama.js', [], MST_RANDEVU_VER, true);
+        wp_register_style('mst-randevu', self::varlik('randevu.css'), [], null);
+        wp_register_script('mst-randevu', self::varlik('randevu.js'), [], null, true);
+        wp_register_style('mst-uygulama', self::varlik('uygulama.css'), ['mst-randevu'], null);
+        wp_register_script('mst-uygulama', self::varlik('uygulama.js'), [], null, true);
 
         // Yazar Paneli tanıtım sayfası: üst çubuk + mobil menü randevu dosyalarından gelir
         if (self::is_app_page()) {
