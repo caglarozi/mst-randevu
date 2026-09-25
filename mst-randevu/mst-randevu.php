@@ -2,7 +2,7 @@
 /**
  * Plugin Name: MST Yazar Adayı Randevu
  * Description: Yazar adaylarının müsait saatlerden görüşme randevusu alması. Kısa kod: [mst_randevu] — ya da sayfa şablonu olarak "MST Randevu (Tam Sayfa)".
- * Version:     1.5.2
+ * Version:     1.5.3
  * Author:      MST Yayıncılık
  * Text Domain: mst-randevu
  * Requires PHP: 7.4
@@ -12,7 +12,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('MST_RANDEVU_VER', '1.5.2');
+define('MST_RANDEVU_VER', '1.5.3');
 define('MST_RANDEVU_DB', 4);
 define('MST_RANDEVU_URL', plugin_dir_url(__FILE__));
 
@@ -428,7 +428,89 @@ class MST_Randevu
         return $h;
     }
 
-    /** Yazar Paneli (web uygulaması) adresi. */
+    /* ------------------------------------------------------------------ */
+    /*  Arama motoru (SEO): Yazar Paneli tanıtım sayfası                   */
+    /* ------------------------------------------------------------------ */
+
+    /** Aramada görünen başlık ve açıklama; hedef arama "kitap satış takibi" (paylaşım başlığı ayrıdır: paylasim_meta). */
+    const SEO_UYG = [
+        'Kitap Satış Takibi: Kitabınız Kaç Adet Sattı? | MST Yazar Paneli',
+        'Kitabınız hangi platformda kaç adet sattı, stokta kaç tane kaldı, telifiniz ne kadar? MST Yazar Paneli ile kitap satışlarınızı anlık ve şeffaf takip edin.',
+    ];
+
+    /** Rank Math, Yoast ya da All in One SEO kurulu mu? */
+    public static function seo_eklentisi()
+    {
+        return defined('RANK_MATH_VERSION') || defined('WPSEO_VERSION') || defined('AIOSEO_VERSION');
+    }
+
+    /**
+     * Yazar Paneli sayfasının arama başlığı ve açıklaması. Şablonun başında, wp_head()'den önce çağrılır.
+     * SEO eklentisi varsa ve o sayfaya panelden başlık/açıklama yazılmışsa ona dokunulmaz;
+     * boşsa bizimkiler kullanılır. Eklenti yoksa açıklamayı kendimiz basarız (seo_uygulama).
+     */
+    public static function seo_hazirla()
+    {
+        list($baslik, $aciklama) = self::SEO_UYG;
+        $id  = get_queried_object_id();
+        $bos = function ($anahtar) use ($id) { return trim((string) get_post_meta($id, $anahtar, true)) === ''; };
+        add_filter('pre_get_document_title', function ($t) use ($baslik) { return $baslik; }, 20);
+        if ($bos('rank_math_title')) add_filter('rank_math/frontend/title', function () use ($baslik) { return $baslik; });
+        if ($bos('rank_math_description')) add_filter('rank_math/frontend/description', function () use ($aciklama) { return $aciklama; });
+        if ($bos('_yoast_wpseo_title')) add_filter('wpseo_title', function () use ($baslik) { return $baslik; });
+        if ($bos('_yoast_wpseo_metadesc')) add_filter('wpseo_metadesc', function () use ($aciklama) { return $aciklama; });
+    }
+
+    /**
+     * Açıklama etiketi (SEO eklentisi yoksa) + yapılandırılmış veri (JSON-LD): kurum, sayfa yolu,
+     * web uygulaması ve sık sorulan sorular. Google bunlarla sayfanın ne olduğunu ve kime ait
+     * olduğunu kesin anlar. $sss: [[soru, cevap], ...]
+     */
+    public static function seo_uygulama(array $sss)
+    {
+        list($baslik, $aciklama) = self::SEO_UYG;
+        $url  = get_permalink() ?: home_url('/');
+        $site = home_url('/');
+        $tel  = preg_replace('/\D/', '', (string) self::opts()['whatsapp']);
+        $kurum = [
+            '@type' => 'Organization', '@id' => $site . '#mst-yayincilik', 'name' => 'MST Yayıncılık', 'url' => $site,
+            'logo'  => ['@type' => 'ImageObject', 'url' => self::logo_url()],
+        ];
+        if ($tel) $kurum['contactPoint'] = ['@type' => 'ContactPoint', 'telephone' => '+' . $tel, 'contactType' => 'customer service', 'availableLanguage' => 'Turkish'];
+        $grafik = [
+            $kurum,
+            [
+                '@type' => 'WebPage', '@id' => $url . '#sayfa', 'url' => $url, 'name' => $baslik, 'description' => $aciklama,
+                'inLanguage' => 'tr-TR', 'isPartOf' => ['@type' => 'WebSite', 'url' => $site, 'name' => 'MST Yayıncılık'],
+                'publisher' => ['@id' => $site . '#mst-yayincilik'], 'breadcrumb' => ['@id' => $url . '#yol'],
+                'primaryImageOfPage' => MST_RANDEVU_URL . 'assets/paylasim-uygulama.jpg',
+            ],
+            [
+                '@type' => 'BreadcrumbList', '@id' => $url . '#yol',
+                'itemListElement' => [
+                    ['@type' => 'ListItem', 'position' => 1, 'name' => 'Ana sayfa', 'item' => $site],
+                    ['@type' => 'ListItem', 'position' => 2, 'name' => 'MST Yazar Paneli', 'item' => $url],
+                ],
+            ],
+            [
+                '@type' => 'WebApplication', 'name' => 'MST Yazar Paneli', 'url' => self::uygulama_url(),
+                'applicationCategory' => 'BusinessApplication', 'operatingSystem' => 'Web, iOS, Android',
+                'description' => 'Yayın süreci, satışlar, telif, tanıtım çalışmaları, kariyer planı ve Yazar Asistanı; MST Yayıncılık yazarlarına özel.',
+                'inLanguage' => 'tr-TR', 'publisher' => ['@id' => $site . '#mst-yayincilik'],
+            ],
+        ];
+        if ($sss) {
+            $grafik[] = [
+                '@type' => 'FAQPage', '@id' => $url . '#sss',
+                'mainEntity' => array_map(function ($s) {
+                    return ['@type' => 'Question', 'name' => wp_strip_all_tags($s[0]), 'acceptedAnswer' => ['@type' => 'Answer', 'text' => wp_strip_all_tags($s[1])]];
+                }, $sss),
+            ];
+        }
+        $h = self::seo_eklentisi() ? '' : '<meta name="description" content="' . esc_attr($aciklama) . '">' . "\n    ";
+        return $h . '<script type="application/ld+json">' . wp_json_encode(['@context' => 'https://schema.org', '@graph' => $grafik], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . '</script>' . "\n";
+    }
+
     /** Randevu onay ekranındaki Akademi kartının adresi: ayardaki adres, yoksa Akademi şablonlu sayfa. */
     public static function akademi_url()
     {
@@ -437,6 +519,7 @@ class MST_Randevu
         return $u;
     }
 
+    /** Yazar Paneli (web uygulaması) adresi. */
     public static function uygulama_url()
     {
         return self::opts()['uygulama_url'] ?: 'https://app.mstyayincilik.com/';

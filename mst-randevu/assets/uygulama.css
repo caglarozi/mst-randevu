@@ -582,3 +582,45 @@ html { scroll-behavior: smooth; }
   .uyg-peri__poz, .uyg-peri__balon, .uyg-peri.is-balon .uyg-peri__balon { transition: none; }
   .uyg-peri__kanat, .uyg-peri__secim:not([hidden]), .uyg-peri-cagir, .uyg-peri__mesaj, .uyg-peri__mesaj span { animation: none; }
 }
+
+/* ==========================================================================
+   Karanlık mod: yalnızca cihaz/tarayıcı karanlık istediğinde (telefonun karanlık modu
+   ya da "zorla karartma"). <html> "mst-koyu" sınıfını şablonun <head>'indeki küçük betik koyar.
+   Palet aynı (antrasit + altın); açık bölümler ve kartlar koyu tonlara döner.
+   Telefon ekranı ve bildirim/sohbet balonları uygulamanın gerçek görünümü olduğu için açık kalır.
+   ========================================================================== */
+html.mst-koyu body.mst-uyg {
+  color-scheme: dark;
+  --mst-ana: #f1ece2;
+  --mst-ana-2: #ffffff;
+  --mst-ana-acik: #2c2822;
+  --mst-bej: #2a261f;
+  --mst-zemin-sayfa: #121212;
+  --mst-yazi: #ddd8cd;
+  --mst-koyu: #f4f0e8;
+  --mst-soluk: #a39e93;
+  --mst-cizgi: #36322b;
+  --mst-beyaz: #1c1b19;
+  --mst-altin-koyu: #e3a93f;
+}
+/* Açık kalan "ekran" parçaları: açık paletin değerleri geri yüklenir */
+html.mst-koyu .uyg-tel__ekran,
+html.mst-koyu .uyg-yuzen,
+html.mst-koyu .uyg-balon {
+  --mst-ana: #222222; --mst-ana-acik: #f4efe6; --mst-zemin-sayfa: #f7f5ef; --mst-yazi: #333333;
+  --mst-koyu: #1a1a1a; --mst-soluk: #6b6b6b; --mst-cizgi: #e7e3d8; --mst-beyaz: #ffffff; --mst-altin-koyu: #b87d0e;
+  color-scheme: light;
+}
+html.mst-koyu .uyg-seritler .uyg-kap { background: var(--mst-beyaz); border: 1px solid var(--mst-cizgi); box-shadow: 0 20px 50px rgba(0, 0, 0, .5); }
+html.mst-koyu .uyg-panel { background: var(--mst-beyaz); box-shadow: 0 24px 60px rgba(0, 0, 0, .45); }
+html.mst-koyu .uyg-hareketler > div { border-bottom-color: var(--mst-cizgi); }
+html.mst-koyu .uyg-hareketler em, html.mst-koyu .uyg-durum { color: #4cc38a; }
+html.mst-koyu .uyg-cubuklar > div:last-child span { background: linear-gradient(180deg, #f1ece2 0%, #cfc8bb 100%); }
+html.mst-koyu .uyg-sekmeler b { color: #1a1a1a; }
+html.mst-koyu .uyg-rota li.is-bitti .uyg-rota__ic { background: #2d2820; border-color: var(--mst-altin); }
+html.mst-koyu .uyg-ozellik, html.mst-koyu .uyg-adimlar li { background: var(--mst-beyaz); }
+html.mst-koyu .uyg-ozellik:hover { box-shadow: 0 20px 40px rgba(0, 0, 0, .4); }
+html.mst-koyu .uyg-ozellik__ic { background: #2d2820; }
+html.mst-koyu .uyg-plan span.bitti { color: #1a1a1a; }
+html.mst-koyu .uyg-rozetler span { box-shadow: 0 0 0 5px var(--mst-beyaz), 0 0 0 6px var(--mst-cizgi), 0 12px 24px rgba(220, 152, 20, .25); }
+html.mst-koyu .uyg-sss details[open] { background: var(--mst-beyaz); }

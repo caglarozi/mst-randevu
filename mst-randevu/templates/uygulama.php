@@ -75,15 +75,28 @@ $sss = [
     ['Giriş bilgilerimi bulamıyorum, ne yapmalıyım?', 'WhatsApp üzerinden bize yazın; ekibimiz hesabınızla ilgili yardımcı olur.'],
     ['Henüz MST yazarı değilim, paneli görebilir miyim?', 'Panel, yayın sürecindeki yazarlarımıza özeldir. Kitabınızı birlikte yayımlamak için ücretsiz ön görüşme randevusu alabilirsiniz.'],
 ];
+MST_Randevu::seo_hazirla(); // arama başlığı/açıklaması (wp_head'den önce)
 ?><!doctype html>
 <html <?php language_attributes(); ?>>
 <head>
     <meta charset="<?php bloginfo('charset'); ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="#1a1a1a">
-    <!-- Renkler tasarımın parçası: telefonun "zorla karanlık mod"u sayfayı ters çevirmesin -->
-    <meta name="color-scheme" content="only light">
+    <!-- Sayfanın kendi karanlık teması var: tarayıcı renkleri kendisi ters çevirmesin -->
+    <meta name="color-scheme" content="light dark">
+    <script>
+    /* Koyu tema yalnızca cihaz/tarayıcı karanlık istediğinde (karanlık mod ya da zorla karartma):
+       sayfa çizilmeden önce uygulanır, cihaz ayarı değişince de güncellenir. */
+    (function () {
+        if (!window.matchMedia) return;
+        var mq = matchMedia('(prefers-color-scheme: dark)'), kok = document.documentElement;
+        var uygula = function () { kok.classList.toggle('mst-koyu', mq.matches); };
+        uygula();
+        if (mq.addEventListener) mq.addEventListener('change', uygula); else if (mq.addListener) mq.addListener(uygula);
+    })();
+    </script>
     <?php echo MST_Randevu::paylasim_meta('uygulama'); ?>
+    <?php echo MST_Randevu::seo_uygulama($sss); ?>
     <script>document.documentElement.classList.add('uyg-js');</script>
     <?php wp_head(); ?>
     <?php
@@ -460,7 +473,7 @@ $sss = [
         foreach ($pozlar as $p => $bilgi) :
             $yol = MST_RANDEVU_URL . 'assets/peri/' . $p;
             $kare = function ($ek, $sinif) use ($yol) {
-                return '<img class="' . $sinif . '" src="' . esc_url($yol . $ek . '.webp?ver=' . MST_RANDEVU_VER) . '" alt="" width="180" height="130" decoding="async">';
+                return '<img class="' . $sinif . '" src="' . esc_url($yol . $ek . '.webp?ver=' . MST_RANDEVU_VER) . '" alt="" width="180" height="130" decoding="async" fetchpriority="low">';
             }; ?>
             <span class="uyg-peri__poz<?php echo $i++ === 0 ? ' is-aktif' : ''; ?>" data-poz="<?php echo esc_attr($p); ?>" data-yildiz="<?php echo esc_attr($bilgi['yildiz']); ?>">
                 <?php
