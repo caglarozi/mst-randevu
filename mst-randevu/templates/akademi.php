@@ -11,9 +11,7 @@ if (!defined('ABSPATH')) {
 
 $wa      = MST_Randevu::wa_link('Merhaba, Yazar Kariyer Akademisi hakkında bilgi almak istiyorum.');
 $randevu = MST_Randevu::randevu_url();
-$egitim = MST_Akademi::ucretsiz_egitim();
 $donem  = MST_Akademi::donem();
-$ao     = MST_Akademi::opts();
 
 /** Çizgi simgeler (24px ızgara). */
 $ik = function ($n, $boy = 22) {
@@ -187,7 +185,7 @@ $sss = [
 
             <div class="akd-sahne__cta">
                 <a class="uyg-btn uyg-btn--altin" href="#programlar">Programları İnceleyin <?php echo $ik('ok', 18); ?></a>
-                <a class="akd-sahne__link" href="#ucretsiz">Ücretsiz eğitim<?php echo $egitim ? ' <small>' . esc_html($egitim[1]) . '</small>' : ''; ?></a>
+                <a class="uyg-btn uyg-btn--cizgi akd-ucretsiz-btn" href="#ucretsiz"><span class="akd-rozet-ucretsiz">Ücretsiz</span> Başlangıç eğitimi</a>
                 <?php if ($wa) : ?><a class="akd-sahne__link" href="<?php echo esc_url($wa); ?>" target="_blank" rel="noopener">WhatsApp'tan bilgi alın</a><?php endif; ?>
             </div>
         </div>
@@ -355,18 +353,16 @@ $sss = [
                     <h2>Yazarlık Yolculuğunuzun Hangi Aşamasındasınız?</h2>
                     <p>Ücretli programların kısaltılmış hâli değildir. Mevcut durumunuzu görmenizi ve size uygun yolu seçmenizi sağlayan bir başlangıç buluşmasıdır.</p>
                 </header>
-                <div class="akd-tarih">
-                    <?php if ($egitim) : ?>
-                        <span class="akd-tarih__etiket">Sıradaki eğitim</span>
-                        <strong><?php echo esc_html($egitim[1]); ?></strong>
-                        <span><?php echo esc_html(trim($ao['egitim_yeri'] . ($ao['egitim_suresi'] ? ' · ' . $ao['egitim_suresi'] : ''))); ?></span>
-                    <?php else : ?>
-                        <span class="akd-tarih__etiket">Sıradaki eğitim</span>
-                        <strong>Yeni tarih yakında açıklanacak</strong>
-                        <span>WhatsApp'tan yazın; tarih belli olduğunda size haber verelim.</span>
-                    <?php endif; ?>
+                <div class="akd-ucretsiz__vurgu">
+                    <span class="akd-ucretsiz__damga">Ücretsiz</span>
+                    <ul>
+                        <li><?php echo $ik('onay', 16); ?> Katılım tamamen ücretsizdir</li>
+                        <li><?php echo $ik('onay', 16); ?> Çevrim içi ve canlı</li>
+                        <li><?php echo $ik('onay', 16); ?> Sonunda aşamanıza uygun program önerisi</li>
+                    </ul>
+                    <p>Tarih, saat ve katılım bilgisi için bize yazın; size uygun ilk eğitimi birlikte planlayalım.</p>
                 </div>
-                <?php if ($wa) : ?><a class="uyg-btn uyg-btn--altin" href="<?php echo esc_url(MST_Randevu::wa_link('Merhaba, Yazar Kariyer Akademisi ücretsiz eğitimine katılmak istiyorum.')); ?>" target="_blank" rel="noopener">Ücretsiz eğitime katılmak istiyorum <?php echo $ik('ok', 18); ?></a><?php endif; ?>
+                <?php if ($wa) : ?><a class="uyg-btn uyg-btn--altin" href="<?php echo esc_url(MST_Randevu::wa_link('Merhaba, Yazar Kariyer Akademisi ücretsiz eğitimi hakkında bilgi almak istiyorum.')); ?>" target="_blank" rel="noopener"><?php echo MST_Randevu::icon('wa'); ?> Ücretsiz eğitim hakkında bilgi alın</a><?php endif; ?>
             </div>
             <div class="akd-ucretsiz__icerik">
                 <h3>Eğitimde neler var?</h3>
