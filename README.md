@@ -27,6 +27,12 @@ Eklenti kendini bu depodaki GitHub sürümlerinden (Releases) günceller — zip
 - Sürüm numarası artırılmayan değişiklikler siteye gitmez.
 - Dikkat: otomatik güncelleme açıksa `main`'e giren her sürüm doğrudan canlı siteye gider.
 
+## MST Yazar Paneli tanıtım sayfası
+
+Yeni sayfa → *Sayfa Özellikleri → Şablon →* **MST Yazar Paneli Tanıtım (Tam Sayfa)** → Yayımla. Üst çubuk randevu sayfasıyla aynıdır; "Panele Giriş" butonları **Bildirim & Ayarlar → Yazar Paneli adresi**'ne (boşsa `https://app.mstyayincilik.com/`), "MST yazarı olun / randevu" butonları randevu sayfasına gider. Telefon ve paneldeki ekranlar temsili çizimlerdir (gerçek veri değildir).
+
+Sayfada **kitap perisi** maskotu var. Sayfa açılınca sağ alttan uçarak gelir ve rehberlik isteyip istemediğinizi sorar (**Evet / Hayır**). Evet: bölüm değiştikçe o bölümün kutusunun yanına kavis çizerek uçar (girişte telefonun, yayın sürecinde Dağıtım adımının yanı…), sayfa kayarken kutuyu takip eder ve kutusu ekrana girince başının üstünde "•••" işareti belirir; açıklama içeriği kapatmasın diye kendiliğinden açılmaz, periye dokununca açılır (her bölüm için bir kez işaret çıkar). Canlı durur: göz kırpar, el/asa sallar (konuşurken elleriyle anlatır), asasından ışıltı saçar, zıplar, konunca yaylanır, beklerken ara sıra takla atarak tur atar. Balondaki × yalnızca balonu kapatır. Hayır ya da perinin üstündeki ×: el sallayıp vedalaşır ve uçarak gider; sağ altta küçük bir **peri düğmesi** kalır, basınca geri gelir. Cevap o oturum boyunca hatırlanır. Poz ve cümleler şablondaki `$peri('poz', 'cümle', 'kutu seçicisi', 'yer sırası')` çağrılarındadır; her poz `assets/peri/` altında kanat katmanı + gövde kareleri (ana, göz kırpma, ikinci hareket karesi) olarak görsellerdir (`araclar/peri-blender.py` ile Blender'da çizildi); kanatlar çırpar, uçarken hızlanır. "Hareketi azalt" ayarında peri hareketsiz görünür.
+
 ## Yerel önizleme (WordPress olmadan)
 
 ```bash
@@ -35,12 +41,15 @@ node demo-sunucu.js
 
 Ardından http://localhost:8788 — eklentinin kendi CSS/JS'i sahte verilerle çalışır; kayıtlar yalnızca sayfada tutulur.
 
+MST Yazar Paneli tanıtım sayfası: http://localhost:8788/uygulama (`demo/uygulama.html`, `templates/uygulama.php`'nin çıktısından üretilmiştir; şablon değişince yeniden üretilmeli).
+
 ## Dosyalar
 
 | Yol | İçerik |
 |---|---|
 | `mst-randevu/mst-randevu.php` | Eklenti: veritabanı, AJAX, bildirim, yönetim paneli |
 | `mst-randevu/templates/tam-sayfa.php` | "MST Randevu (Tam Sayfa)" sayfa şablonu |
+| `mst-randevu/templates/uygulama.php` + `assets/uygulama.css` | "MST Yazar Paneli Tanıtım (Tam Sayfa)" şablonu — yazar uygulamasının tanıtım sayfası |
 | `mst-randevu/assets/` | CSS, JS, logo |
 | `mst-randevu/lib/plugin-update-checker/` | GitHub'dan güncelleme kütüphanesi (Plugin Update Checker 5.7, MIT) |
 | `.github/workflows/eklenti-surumu.yml` | Sürüm artınca zip'li GitHub sürümü açar |

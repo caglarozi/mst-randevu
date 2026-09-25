@@ -12,6 +12,7 @@ if (!defined('ABSPATH')) {
     <meta charset="<?php bloginfo('charset'); ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="#1a1a1a">
+    <?php echo MST_Randevu::paylasim_meta('randevu'); ?>
     <?php wp_head(); ?>
     <?php
     // Güvence: bir eklenti stil dosyasını kuyruktan düşürdüyse doğrudan ekle
