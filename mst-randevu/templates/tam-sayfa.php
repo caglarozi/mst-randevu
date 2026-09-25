@@ -1,12 +1,15 @@
 <?php
 /**
- * "MST Randevu (Tam Sayfa)" şablonu: temanın üst kısmı yerine MST çubuğu (logo, WhatsApp, Siteye Git).
+ * "MST Randevu (Tam Sayfa)" ve "MST Akademi Ön Görüşme Randevusu (Tam Sayfa)" şablonu: temanın üst kısmı
+ * yerine MST çubuğu (logo, WhatsApp, Siteye Git). Akademi sayfasında saatler ve kişi sınırı ayrıdır.
  * Sayfa içeriği yazılmışsa randevu kutusunun üstünde gösterilir.
  */
 if (!defined('ABSPATH')) {
     exit;
 }
-MST_Randevu::seo_hazirla('randevu'); // arama başlığı/açıklaması (wp_head'den önce)
+// Aynı şablon iki sayfaya hizmet eder: yazar adayı randevusu ve Akademi ön görüşme randevusu
+$akd = MST_Randevu::is_akd_rnd_page();
+MST_Randevu::seo_hazirla($akd ? 'akademi-randevu' : 'randevu'); // arama başlığı/açıklaması (wp_head'den önce)
 ?><!doctype html>
 <html <?php language_attributes(); ?>>
 <head>
@@ -28,8 +31,8 @@ MST_Randevu::seo_hazirla('randevu'); // arama başlığı/açıklaması (wp_head
         if (mq.addEventListener) mq.addEventListener('change', uygula); else if (mq.addListener) mq.addListener(uygula);
     })();
     </script>
-    <?php echo MST_Randevu::paylasim_meta('randevu'); ?>
-    <?php echo MST_Randevu::seo_aciklama('randevu'); ?>
+    <?php echo MST_Randevu::paylasim_meta($akd ? 'akademi' : 'randevu'); ?>
+    <?php echo MST_Randevu::seo_aciklama($akd ? 'akademi-randevu' : 'randevu'); ?>
     <?php wp_head(); ?>
     <?php
     // Güvence: bir eklenti stil dosyasını kuyruktan düşürdüyse doğrudan ekle
@@ -40,7 +43,7 @@ MST_Randevu::seo_hazirla('randevu'); // arama başlığı/açıklaması (wp_head
 </head>
 <body <?php body_class('mst-sayfa mst-sayfa--randevu'); ?>>
 <?php wp_body_open(); ?>
-<?php echo MST_Randevu::header_html(); ?>
+<?php echo $akd ? MST_Randevu::header_html(false, null, 'Merhaba, Yazar Kariyer Akademisi hakkında bilgi almak istiyorum.') : MST_Randevu::header_html(); ?>
 
 <main class="mst-sayfa__main">
     <?php
@@ -51,7 +54,7 @@ MST_Randevu::seo_hazirla('randevu'); // arama başlığı/açıklaması (wp_head
             echo '<div class="mst-sayfa__intro">' . apply_filters('the_content', $icerik) . '</div>';
         }
     }
-    echo MST_Randevu::shortcode();
+    echo MST_Randevu::shortcode(['tur' => $akd ? 'akademi' : 'yazar']);
     ?>
 </main>
 

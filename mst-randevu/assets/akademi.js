@@ -125,8 +125,29 @@
     if (mq.addEventListener) mq.addEventListener('change', uygula); else if (mq.addListener) mq.addListener(uygula);
   }
 
+  // "Bilgi alın" seçimleri: aynı anda tek biri açık; dışarı dokununca ya da Esc ile kapanır
+  function secimler() {
+    var hepsi = [].slice.call(document.querySelectorAll('.akd-secim'));
+    if (!hepsi.length) return;
+    hepsi.forEach(function (d) {
+      d.addEventListener('toggle', function () {
+        if (d.open) hepsi.forEach(function (o) { if (o !== d) o.open = false; });
+      });
+    });
+    document.addEventListener('click', function (e) {
+      hepsi.forEach(function (d) {
+        if (!d.open) return;
+        var panel = d.querySelector('.akd-secim__panel');
+        if (!d.contains(e.target) || (!panel.contains(e.target) && !d.querySelector('summary').contains(e.target))) d.open = false;
+      });
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') hepsi.forEach(function (d) { if (d.open) { d.open = false; d.querySelector('summary').focus(); } });
+    });
+  }
+
   function basla() {
-    daktilo(); toz(); gezinti(); programSekme();
+    daktilo(); toz(); gezinti(); programSekme(); secimler();
     if (window.matchMedia('(max-width: 640px)').matches) {
       document.querySelectorAll('.akd-acilir[open]').forEach(function (d) { d.open = false; });
     }

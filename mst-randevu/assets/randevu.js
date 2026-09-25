@@ -55,6 +55,7 @@
       daysBox.appendChild(el('div', 'mst-rnd__loading', 'Müsait saatler yükleniyor…'));
       timesBox.innerHTML = ''; timesLabel.hidden = true; nextBar.hidden = true; weekNav.hidden = true; chosen = null;
       var fd = new FormData(); fd.append('action', 'mst_randevu_slotlar');
+      fd.append('tur', root.getAttribute('data-tur') || 'yazar'); // yazar adayı / akademi: ayrı saatler
       post(fd).then(function (res) {
         if (!res.success) throw new Error();
         nonce = res.data.nonce; byDay = {}; order = [];

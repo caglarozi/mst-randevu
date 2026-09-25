@@ -11,7 +11,26 @@ if (!defined('ABSPATH')) {
 }
 
 $wa      = MST_Randevu::wa_link('Merhaba, Yazar Kariyer Akademisi hakkında bilgi almak istiyorum.');
-$randevu = MST_Randevu::randevu_url();
+$akd_rnd = MST_Randevu::akademi_randevu_url(); // Akademi ön görüşme randevu sayfası (yoksa boş)
+$randevu = $akd_rnd ?: MST_Randevu::randevu_url();
+
+/**
+ * "Bilgi alın" düğmesi: dokununca iki seçenek açılır: WhatsApp'tan yazmak ya da ön görüşme randevusu
+ * almak (ilgilenilen program randevu formunda seçili gelir). Akademi randevu sayfası yoksa doğrudan WhatsApp.
+ * JS olmadan da çalışır (<details>); telefonda alttan açılan panel olur.
+ */
+$secim = function ($etiket, $wa_metin, $program = '', $wa_ikon = false) use ($akd_rnd) {
+    $wa = MST_Randevu::wa_link($wa_metin);
+    if (!$akd_rnd) {
+        return $wa ? '<a class="uyg-btn uyg-btn--altin" href="' . esc_url($wa) . '" target="_blank" rel="noopener">' . ($wa_ikon ? MST_Randevu::icon('wa') . ' ' : '') . esc_html($etiket) . '</a>' : '';
+    }
+    $rnd = $program ? add_query_arg('program', $program, $akd_rnd) : $akd_rnd;
+    $h  = '<details class="akd-secim"><summary class="uyg-btn uyg-btn--altin">' . esc_html($etiket) . '</summary>';
+    $h .= '<div class="akd-secim__panel"><p class="akd-secim__baslik">Nasıl bilgi almak istersiniz?</p>';
+    if ($wa) $h .= '<a class="akd-secim__secenek" href="' . esc_url($wa) . '" target="_blank" rel="noopener">' . MST_Randevu::icon('wa') . '<span><strong>WhatsApp’tan yazın</strong><small>Sorularınızı yazılı iletin</small></span></a>';
+    $h .= '<a class="akd-secim__secenek" href="' . esc_url($rnd) . '">' . MST_Randevu::icon('saat') . '<span><strong>Ön görüşme randevusu alın</strong><small>Size uygun saatte sizi arayalım</small></span></a>';
+    return $h . '</div></details>';
+};
 $donem  = MST_Akademi::donem();
 
 /** Sade madde listesi (kısa çizgili). */
@@ -293,7 +312,7 @@ MST_Randevu::seo_hazirla('akademi'); // arama başlığı/açıklaması (wp_head
                     <div class="akd-program__alt">
                         <div class="akd-fiyat"><small>Program bedeli</small><strong><?php echo esc_html($p['fiyat']); ?></strong><span><?php echo esc_html($p['fiyat_alt']); ?></span></div>
                         <p class="akd-program__not">Kayıtlar dönem başlangıcında alınır. Reklam bütçesi, prodüksiyon ve yayın hizmetleri program bedeline dahil değildir (<a href="#kapsam">hizmet kapsamı</a>).</p>
-                        <?php if ($wa) : ?><a class="uyg-btn uyg-btn--altin" href="<?php echo esc_url(MST_Randevu::wa_link('Merhaba, ' . MST_Akademi::PROGRAMLAR[$k][0] . ' hakkında bilgi almak istiyorum.')); ?>" target="_blank" rel="noopener">Bu program hakkında bilgi alın</a><?php endif; ?>
+                        <?php echo $secim('Bu program hakkında bilgi alın', 'Merhaba, ' . MST_Akademi::PROGRAMLAR[$k][0] . ' hakkında bilgi almak istiyorum.', $k); ?>
                     </div>
                 </article>
             <?php endforeach; ?>
@@ -337,7 +356,7 @@ MST_Randevu::seo_hazirla('akademi'); // arama başlığı/açıklaması (wp_head
                 <div>
                     <h3>Eğitimin sonunda</h3><?php echo $liste(['Soru-cevap', 'Yazar Kariyer Analizi formu', 'Aşamanıza göre program önerisi', 'Uygun katılımcılar için ön görüşme']); ?>
                     <p class="akd-ucretsiz__not">Katılım ücretsizdir. Tarih ve katılım bilgisi için bize yazın.</p>
-                    <?php if ($wa) : ?><a class="uyg-btn uyg-btn--altin" href="<?php echo esc_url(MST_Randevu::wa_link('Merhaba, Yazar Kariyer Akademisi ücretsiz eğitimi hakkında bilgi almak istiyorum.')); ?>" target="_blank" rel="noopener"><?php echo MST_Randevu::icon('wa'); ?> Ücretsiz eğitim hakkında bilgi alın</a><?php endif; ?>
+                    <?php echo $secim('Ücretsiz eğitim hakkında bilgi alın', 'Merhaba, Yazar Kariyer Akademisi ücretsiz eğitimi hakkında bilgi almak istiyorum.', '', true); ?>
                 </div>
             </div>
         </div>
