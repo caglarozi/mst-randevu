@@ -33,12 +33,11 @@ html { scroll-behavior: smooth; }
    -------------------------------------------------------------------------- */
 .uyg-hero {
   position: relative; overflow: hidden; color: #fff;
-  /* Masa fotoğrafı (kitaplar, defter, altın ışık) sağda; solda metin okunaklı kalsın diye koyulaşan örtü */
+  /* Zemin: koyu antrasit + telefonun arkasında altın ışık. Üstüne uygulama.js hareketli ışık sahnesini
+     (.uyg-hero__isik) çizer; JS çalışmazsa bu geçiş tek başına yeterli görünür */
   background:
-    linear-gradient(90deg, #161616 0%, rgba(22, 22, 22, .94) 30%, rgba(22, 22, 22, .55) 58%, rgba(22, 22, 22, .2) 100%),
-    linear-gradient(0deg, rgba(22, 22, 22, .9) 0%, rgba(22, 22, 22, 0) 32%),
-    url("hero-masa.webp") right center / cover no-repeat,
-    #161616;
+    radial-gradient(55% 75% at 74% 48%, rgba(220, 152, 20, .24) 0%, rgba(220, 152, 20, .08) 45%, rgba(220, 152, 20, 0) 75%),
+    linear-gradient(180deg, #1d1b18 0%, #161616 100%);
   padding: 72px 0 96px;
 }
 .uyg-hero__in { display: grid; grid-template-columns: 1.05fr .95fr; align-items: center; gap: 48px; }
@@ -301,9 +300,8 @@ html { scroll-behavior: smooth; }
   .uyg-hero {
     padding: 48px 0 88px;
     background:
-      linear-gradient(180deg, rgba(22, 22, 22, .96) 0%, rgba(22, 22, 22, .9) 42%, rgba(22, 22, 22, .5) 70%, rgba(22, 22, 22, .85) 100%),
-      url("hero-masa-mobil.webp") 70% 100% / cover no-repeat,
-      #161616;
+      radial-gradient(90% 40% at 50% 74%, rgba(220, 152, 20, .26) 0%, rgba(220, 152, 20, .08) 50%, rgba(220, 152, 20, 0) 80%),
+      linear-gradient(180deg, #1d1b18 0%, #161616 100%);
   }
   .uyg-hero__in, .uyg-iki, .uyg-kapanis__in { grid-template-columns: 1fr; }
   .uyg-hero__metin { text-align: center; }
@@ -353,6 +351,10 @@ html { scroll-behavior: smooth; }
 .uyg-hero::after { width: 420px; height: 420px; bottom: -200px; left: -120px; background: rgba(220, 152, 20, .14); animation: uyg-bulut2 20s ease-in-out infinite alternate; }
 @keyframes uyg-bulut1 { to { transform: translate(-220px, 140px) scale(1.15); } }
 @keyframes uyg-bulut2 { to { transform: translate(260px, -120px) scale(.9); } }
+/* Hareketli ışık sahnesi (uygulama.js): varsa yukarıdaki iki bulutun yerini alır */
+.uyg-hero__isik { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; opacity: 0; transition: opacity 1.4s ease; }
+.uyg-hero__isik.is-hazir { opacity: 1; }
+.uyg-hero.has-isik::before, .uyg-hero.has-isik::after { display: none; }
 .uyg-hero__in { position: relative; z-index: 1; }
 
 /* Genel "aşağıdan gel" */

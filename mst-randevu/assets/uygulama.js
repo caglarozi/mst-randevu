@@ -3,6 +3,7 @@
  * - Sayaç: telefondaki satış sayısı 0'dan yukarı sayar
  * - Canlı bildirim: girişteki bildirim balonu birkaç saniyede bir değişir
  * - 3B eğim: fare girişteki telefonun üstünde gezinince telefon hafifçe eğilir
+ * - Giriş arka planı: fotoğraf yerine telefonun arkasında dolaşan altın ışık, silik kitap deseni, ışıltı tozu
  * - Kitap perisi: önce rehberlik isteyip istemediğinizi sorar. Evet: bölüm değiştikçe o bölümün
  *   kutusunun yanına kavis çizerek uçar (kaydırırken takip eder); her bölüm için "•••" işareti çıkar,
  *   dokununca bir kez anlatır. Göz kırpar, el/asa sallar, zıplar, tur atarken takla atar.
@@ -120,6 +121,238 @@
       alan.style.setProperty('--ry', '0deg');
       alan.style.setProperty('--rx', '0deg');
     });
+  }
+
+  /* ---------- Giriş arka planı: hareketli altın ışık ---------- */
+  // Fotoğraf yerine kodla çizilir: telefonun arkasında yavaşça dolaşan altın ışık bulutları ve ışık
+  // dalgaları (küçük bir tuvale çizilip büyütülür; bu yüzden yumuşak görünür ve ucuzdur), üstünde
+  // çok silik bir açık kitap çizgi deseni ve perinin ışıltı tozu. Fare gezdikçe ışık hafifçe onu izler.
+  var ISIK = {
+    olcek: 0.25,            // ışık tuvalinin çözünürlüğü (küçük = daha yumuşak)
+    toz: 80,                // ışıltı tozu (telefonda yarısı)
+    desen: 0.09,            // kitap deseninin görünürlüğü
+    fare: 40                // ışığın fareye doğru kayması (px)
+  };
+  // Işık bulutları: telefonun merkezine göre konum (ox, oy), yörünge genişliği (hx, hy), hızı (fx, fy)
+  var BULUTLAR = [
+    { k: 0, r: 0.62, a: 0.50, ox: 0, oy: 0, hx: 0.16, hy: 0.10, fx: 0.21, fy: 0.13, faz: 0 },
+    { k: 1, r: 0.42, a: 0.42, ox: 0.14, oy: -0.2, hx: 0.2, hy: 0.14, fx: 0.15, fy: 0.23, faz: 1.7 },
+    { k: 2, r: 0.55, a: 0.38, ox: -0.22, oy: 0.22, hx: 0.18, hy: 0.1, fx: 0.11, fy: 0.17, faz: 3.1 },
+    { k: 3, r: 0.26, a: 0.30, ox: 0.22, oy: 0.18, hx: 0.14, hy: 0.18, fx: 0.26, fy: 0.19, faz: 4.4 },
+    { k: 1, r: 0.34, a: 0.22, ox: -0.06, oy: -0.36, hx: 0.28, hy: 0.07, fx: 0.09, fy: 0.21, faz: 2.2 }
+  ];
+  // Işık dalgaları: telefonun arkasından sağa doğru yükselen, dalgalanan altın şeritler
+  var DALGALAR = [
+    { oy: 0.02, egim: -0.22, genlik: 0.07, sik: 2.3, hiz: 0.35, kalin: 0.05, a: 0.26 },
+    { oy: 0.16, egim: -0.14, genlik: 0.05, sik: 3.2, hiz: -0.27, kalin: 0.034, a: 0.18 }
+  ];
+
+  function heroIsik() {
+    var hero = document.querySelector('.uyg-hero');
+    if (!hero) return;
+    var tuval = document.createElement('canvas'), ctx = tuval.getContext && tuval.getContext('2d');
+    if (!ctx) return;
+    tuval.className = 'uyg-hero__isik';
+    tuval.setAttribute('aria-hidden', 'true');
+    hero.insertBefore(tuval, hero.firstChild);
+    hero.classList.add('has-isik');
+    var tel = hero.querySelector('.uyg-hero__gorsel');
+    var kucuk = document.createElement('canvas'), kc = kucuk.getContext('2d');
+    var desen = document.createElement('canvas');
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var W = 0, H = 0, U = 1, merkez = { x: 0, y: 0 }, dar = false, ortu = null, tozlar = [], serit = [];
+    var fareHedef = { x: 0, y: 0, a: 0 }, fare = { x: 0, y: 0, a: 0 }, gorunur = true, calisiyor = false;
+
+    function kure(renk) {
+      var c = document.createElement('canvas'), g = c.getContext('2d');
+      c.width = c.height = 128;
+      var r = g.createRadialGradient(64, 64, 0, 64, 64, 64);
+      r.addColorStop(0, renk); r.addColorStop(0.45, renk.replace(/[\d.]+\)$/, '0.45)')); r.addColorStop(1, 'rgba(0,0,0,0)');
+      g.fillStyle = r; g.fillRect(0, 0, 128, 128);
+      return c;
+    }
+    var KURELER = [kure('rgba(220,152,20,1)'), kure('rgba(240,180,60,1)'), kure('rgba(184,125,14,1)'), kure('rgba(255,214,130,1)')];
+    function parilti(yildiz) {
+      var c = document.createElement('canvas'), g = c.getContext('2d'), m = 16;
+      c.width = c.height = 32;
+      var r = g.createRadialGradient(m, m, 0, m, m, m);
+      r.addColorStop(0, 'rgba(255,246,220,1)'); r.addColorStop(0.3, 'rgba(240,180,60,.8)'); r.addColorStop(1, 'rgba(220,152,20,0)');
+      g.fillStyle = r; g.beginPath();
+      if (yildiz) for (var k = 0; k < 8; k++) { var a = k * Math.PI / 4, rr = k % 2 ? 3 : m; g.lineTo(m + Math.cos(a) * rr, m + Math.sin(a) * rr); }
+      else g.arc(m, m, m, 0, Math.PI * 2);
+      g.fill();
+      return c;
+    }
+    var PARILTI = [parilti(false), parilti(true)];
+
+    // Çok silik açık kitap: telefonun altında, sayfalarında satır çizgileri
+    function desenCiz() {
+      desen.width = Math.round(W * dpr); desen.height = Math.round(H * dpr);
+      var g = desen.getContext('2d');
+      g.setTransform(dpr, 0, 0, dpr, 0, 0);
+      var bw = Math.min(W * (dar ? 0.95 : 0.6), 760), bh = bw * 0.36;
+      var cx = merkez.x, sy = merkez.y + (tel ? tel.offsetHeight * 0.3 : 120);
+      g.strokeStyle = 'rgba(240,180,60,1)'; g.lineCap = 'round';
+      [-1, 1].forEach(function (s) {
+        g.lineWidth = 1.6;
+        g.beginPath();
+        g.moveTo(cx, sy);
+        g.quadraticCurveTo(cx + s * bw * 0.24, sy - bh * 0.16, cx + s * bw / 2, sy - bh * 0.02);
+        g.lineTo(cx + s * bw / 2, sy + bh);
+        g.quadraticCurveTo(cx + s * bw * 0.24, sy + bh * 0.84, cx, sy + bh * 1.02);
+        g.closePath(); g.stroke();
+        g.lineWidth = 1;
+        for (var i = 1; i < 10; i++) {
+          var t = i / 10, y0 = sy + bh * t;
+          g.beginPath();
+          g.moveTo(cx + s * bw * 0.06, y0 + bh * 0.02);
+          g.quadraticCurveTo(cx + s * bw * 0.25, y0 - bh * 0.15 * (1 - t * 0.6), cx + s * bw * (i === 9 ? 0.3 : 0.44), y0 - bh * 0.01);
+          g.stroke();
+        }
+      });
+      g.beginPath(); g.moveTo(cx, sy); g.lineTo(cx, sy + bh * 1.02); g.lineWidth = 2; g.stroke();
+    }
+
+    function boyutla() {
+      var r = hero.getBoundingClientRect();
+      W = Math.max(1, Math.round(r.width)); H = Math.max(1, Math.round(r.height));
+      dar = W < 860; U = dar ? Math.max(W * 1.35, 520) : Math.min(W, 1000); // telefonda ışık dar ekrana göre büyütülür
+      tuval.width = Math.round(W * dpr); tuval.height = Math.round(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      kucuk.width = Math.max(1, Math.round(W * ISIK.olcek)); kucuk.height = Math.max(1, Math.round(H * ISIK.olcek));
+      if (tel) {
+        // Telefonun giriş animasyonundaki kaymadan etkilenmemek için yerleşim (offset) değerleri
+        var x = 0, y = 0, e = tel;
+        while (e && e !== hero) { x += e.offsetLeft; y += e.offsetTop; e = e.offsetParent; }
+        merkez = { x: x + tel.offsetWidth / 2, y: y + tel.offsetHeight / 2 };
+      } else merkez = { x: W * 0.72, y: H * 0.5 };
+      // Metin tarafı koyu ve sakin kalsın: masaüstünde soldan, telefonda üstten koyulaşan örtü
+      if (dar) {
+        var ust = tel ? Math.max(0.2, Math.min(0.8, (merkez.y - (tel.offsetHeight / 2) - 40) / H)) : 0.5;
+        ortu = ctx.createLinearGradient(0, 0, 0, H);
+        ortu.addColorStop(0, 'rgba(22,22,22,.9)'); ortu.addColorStop(ust, 'rgba(22,22,22,.6)'); ortu.addColorStop(Math.min(1, ust + 0.12), 'rgba(22,22,22,0)');
+      } else {
+        ortu = ctx.createLinearGradient(0, 0, W, 0);
+        ortu.addColorStop(0, 'rgba(22,22,22,.92)'); ortu.addColorStop(0.36, 'rgba(22,22,22,.7)'); ortu.addColorStop(0.56, 'rgba(22,22,22,0)');
+      }
+      serit = DALGALAR.map(function (d) {
+        var x0 = merkez.x - U * 0.85, x1 = W + 40, gr = kc.createLinearGradient(x0 * ISIK.olcek, 0, x1 * ISIK.olcek, 0);
+        gr.addColorStop(0, 'rgba(240,180,60,0)'); gr.addColorStop(0.35, 'rgba(240,180,60,1)'); gr.addColorStop(0.7, 'rgba(220,152,20,.8)'); gr.addColorStop(1, 'rgba(220,152,20,0)');
+        return { x0: x0, x1: x1, renk: gr };
+      });
+      var adet = Math.round(ISIK.toz * (dar ? 0.5 : 1));
+      tozlar = [];
+      for (var i = 0; i < adet; i++) tozlar.push(yeniToz(true));
+      desenCiz();
+    }
+    function yeniToz(ilk) {
+      // Çoğu telefonun çevresinde, sağ tarafta yoğun
+      var x = merkez.x + (Math.random() - 0.5) * (dar ? W * 1.1 : W * 0.75);
+      return {
+        x: Math.max(0, Math.min(W, x)), y: ilk ? Math.random() * H : H + 10,
+        hiz: 5 + Math.random() * 14, boy: 3 + Math.random() * 7, faz: Math.random() * 6.28, sik: 0.8 + Math.random() * 2.2,
+        derin: 0.3 + Math.random() * 0.7, p: PARILTI[Math.random() < 0.22 ? 1 : 0]
+      };
+    }
+
+    function ciz(t, dt) {
+      var s = t / 1000, o = ISIK.olcek;
+      fare.x += (fareHedef.x - fare.x) * 0.05; fare.y += (fareHedef.y - fare.y) * 0.05; fare.a += (fareHedef.a - fare.a) * 0.05;
+      var mx = merkez.x + fare.x * ISIK.fare, my = merkez.y + fare.y * ISIK.fare;
+      // 1) Işık: küçük tuvale bulutlar ve dalgalar
+      kc.setTransform(1, 0, 0, 1, 0, 0);
+      kc.globalCompositeOperation = 'source-over';
+      kc.clearRect(0, 0, kucuk.width, kucuk.height);
+      kc.globalCompositeOperation = 'lighter';
+      BULUTLAR.forEach(function (b) {
+        var x = mx + (b.ox + b.hx * Math.sin(s * b.fx + b.faz)) * U;
+        var y = my + (b.oy + b.hy * Math.sin(s * b.fy + b.faz * 1.3)) * U * (dar ? 1.4 : 1);
+        var R = b.r * U * (1 + 0.12 * Math.sin(s * 0.23 + b.faz));
+        kc.globalAlpha = b.a * (0.85 + 0.15 * Math.sin(s * 0.4 + b.faz));
+        kc.drawImage(KURELER[b.k], (x - R) * o, (y - R) * o, 2 * R * o, 2 * R * o);
+      });
+      DALGALAR.forEach(function (d, i) {
+        var sr = serit[i], adim = 12, x, ust = [], alt = [];
+        for (x = sr.x0; x <= sr.x1; x += adim) {
+          var c = merkez.y + d.oy * U + d.egim * (x - merkez.x) + Math.sin(x / U * d.sik + s * d.hiz) * d.genlik * U;
+          var k = d.kalin * U * (0.55 + 0.45 * Math.sin(x / U * 1.7 - s * 0.3 + i));
+          ust.push([x, c - k]); alt.push([x, c + k]);
+        }
+        kc.globalAlpha = d.a;
+        kc.fillStyle = sr.renk;
+        kc.beginPath();
+        ust.forEach(function (n, j) { if (j) kc.lineTo(n[0] * o, n[1] * o); else kc.moveTo(n[0] * o, n[1] * o); });
+        for (var j = alt.length - 1; j >= 0; j--) kc.lineTo(alt[j][0] * o, alt[j][1] * o);
+        kc.closePath(); kc.fill();
+      });
+      // Fare hero'nun içindeyse imlecin çevresinde hafif bir ışık
+      if (fare.a > 0.01) {
+        var fr = U * 0.22;
+        kc.globalAlpha = 0.22 * fare.a;
+        kc.drawImage(KURELER[3], (fare.px - fr) * o, (fare.py - fr) * o, 2 * fr * o, 2 * fr * o);
+      }
+      kc.globalAlpha = 1;
+      // 2) Ana tuval: ışığı büyüterek çiz, üstüne desen, toz ve örtü
+      ctx.clearRect(0, 0, W, H);
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.imageSmoothingEnabled = true;
+      ctx.drawImage(kucuk, 0, 0, W, H);
+      ctx.globalAlpha = ISIK.desen * (0.7 + 0.3 * Math.sin(s * 0.5));
+      ctx.drawImage(desen, fare.x * 10, fare.y * 10, W, H);
+      ctx.globalCompositeOperation = 'lighter';
+      tozlar.forEach(function (p, i) {
+        if (dt) {
+          p.y -= p.hiz * dt; p.x += Math.sin(s * 0.6 + p.faz) * 6 * dt;
+          if (p.y < -12) tozlar[i] = p = yeniToz(false);
+        }
+        var par = 0.5 + 0.5 * Math.sin(s * p.sik + p.faz);
+        ctx.globalAlpha = 0.15 + 0.75 * par * par;
+        var b = p.boy * (0.7 + 0.3 * par);
+        ctx.drawImage(p.p, p.x + fare.x * 18 * p.derin - b / 2, p.y + fare.y * 18 * p.derin - b / 2, b, b);
+      });
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = ortu; ctx.fillRect(0, 0, W, H);
+    }
+
+    var son = 0;
+    function dongu(t) {
+      if (!gorunur || document.hidden) { calisiyor = false; return; }
+      var dt = son ? Math.min(0.05, (t - son) / 1000) : 0; son = t;
+      ciz(t, dt);
+      requestAnimationFrame(dongu);
+    }
+    function baslat() {
+      if (calisiyor || azHareket) return;
+      calisiyor = true; son = 0; requestAnimationFrame(dongu);
+    }
+
+    try {
+      boyutla();
+      ciz(7000, 0);
+      tuval.classList.add('is-hazir');
+    } catch (e) { tuval.remove(); hero.classList.remove('has-isik'); return; }
+    var zaman = 0;
+    var yenile = function () {
+      clearTimeout(zaman);
+      zaman = setTimeout(function () { boyutla(); if (azHareket) ciz(7000, 0); }, 150);
+    };
+    window.addEventListener('resize', yenile);
+    if ('ResizeObserver' in window) new ResizeObserver(yenile).observe(hero);
+    if (azHareket) return; // hareketi azalt: tek, durağan bir kare
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (g) { gorunur = g[0].isIntersecting; if (gorunur) baslat(); }).observe(hero);
+    }
+    document.addEventListener('visibilitychange', function () { if (!document.hidden) baslat(); });
+    if (window.matchMedia('(hover: hover)').matches) {
+      hero.addEventListener('pointermove', function (ev) {
+        var r = hero.getBoundingClientRect();
+        fareHedef.x = (ev.clientX - r.left) / r.width - 0.5; fareHedef.y = (ev.clientY - r.top) / r.height - 0.5; fareHedef.a = 1;
+        fare.px = ev.clientX - r.left; fare.py = ev.clientY - r.top;
+      });
+      hero.addEventListener('pointerleave', function () { fareHedef.x = fareHedef.y = fareHedef.a = 0; });
+    }
+    baslat();
   }
 
   /* ---------- Kitap perisi ---------- */
@@ -589,6 +822,7 @@
   }
 
   function basla() {
+    heroIsik();
     belirmeyiKur();
     sayaclar();
     canliBildirim();
