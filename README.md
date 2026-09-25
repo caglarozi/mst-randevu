@@ -47,7 +47,7 @@ Sayfada **kitap perisi** maskotu var. Sayfa açılınca sağ alttan uçarak geli
 Yeni sayfa → başlık (ör. “Yazar Kariyer Akademisi”) → *Şablon →* **MST Yazar Kariyer Akademisi (Tam Sayfa)** → Yayımla.
 
 - Yalnızca bilgi sayfasıdır; başvuru formu yoktur. İletişim WhatsApp (her programda o programın adıyla hazır mesaj) ve ücretsiz ön görüşme randevusu üzerinden yürür.
-- Açılış bir **sahne**: “Yazmak başlangıçtır.” daktiloyla yazılır, sahne ışığı yanar ve “Görünür olmak kariyerdir.” ışığın altında parlar.
+- Açılış bir **sahne**: “Yazar Akademisi” bir kez daktiloyla yazılır (döngü yok), sahne ışığı yanar; altında “MST Yayıncılık” imzası belirir.
 - Bölümler: neden akademi, eğitim yaklaşımı ve kurallar, 12 temel alan, üç program (her programda fiyat en sonda), karşılaştırma, ücretsiz eğitim, güven, kalite standardı ve kapsam sınırları, SSS, iletişim. Girişten sonra üstte sabit bir bölüm menüsü vardır.
 - **Yazar Randevu → Akademi Ayarları**: ücretsiz eğitim tarihi (geçince kendiliğinden “yeni tarih yakında” yazar), yeri, süresi ve sonraki dönem başlangıcı.
 
