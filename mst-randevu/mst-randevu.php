@@ -2,7 +2,7 @@
 /**
  * Plugin Name: MST Yazar Adayı Randevu
  * Description: Yazar adaylarının müsait saatlerden görüşme randevusu alması. Kısa kod: [mst_randevu] — ya da sayfa şablonu olarak "MST Randevu (Tam Sayfa)".
- * Version:     1.5.1
+ * Version:     1.5.2
  * Author:      MST Yayıncılık
  * Text Domain: mst-randevu
  * Requires PHP: 7.4
@@ -12,7 +12,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('MST_RANDEVU_VER', '1.5.1');
+define('MST_RANDEVU_VER', '1.5.2');
 define('MST_RANDEVU_DB', 4);
 define('MST_RANDEVU_URL', plugin_dir_url(__FILE__));
 
@@ -389,8 +389,6 @@ class MST_Randevu
             'tel'  => '<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/>',
             'onay' => '<path d="M20 6 9 17l-5-5"/>',
             'dis'  => '<path d="M14 4h6v6M20 4l-9 9M19 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h5"/>',
-            'ay'   => '<path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/>',
-            'gunes' => '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
         ];
         return '<svg class="mst-ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' . ($d[$name] ?? '') . '</svg>';
     }
@@ -455,7 +453,7 @@ class MST_Randevu
      * Üst çubuk. $giris: Yazar Paneli tanıtım sayfasında altın "Ön Görüşme Al" (randevu) butonu da eklenir.
      * $buton: [metin, adres] verilirse altın buton onunla çizilir; $wa_metin: WhatsApp'ta hazır mesaj.
      */
-    public static function header_html($giris = false, $buton = null, $wa_metin = null, $tema = false)
+    public static function header_html($giris = false, $buton = null, $wa_metin = null)
     {
         $home = home_url('/');
         if ($giris && !$buton) $buton = ['Ön Görüşme Al', self::randevu_url()];
@@ -463,7 +461,6 @@ class MST_Randevu
         ob_start(); ?>
         <header class="mst-top">
             <div class="mst-top__in">
-                <?php if ($tema) : ?><button type="button" class="mst-top__tema" data-mst-tema aria-label="Açık / koyu görünüm" title="Açık / koyu görünüm"><span class="mst-tema-ay"><?php echo self::icon('ay'); ?></span><span class="mst-tema-gunes"><?php echo self::icon('gunes'); ?></span></button><?php endif; ?>
                 <a class="mst-top__logo" href="<?php echo esc_url($home); ?>" aria-label="Ana sayfa">
                     <img src="<?php echo esc_url(self::logo_url()); ?>" alt="MST" width="50" height="50">
                 </a>
