@@ -8,7 +8,7 @@ Yazar adaylarının müsait saatlerden görüşme randevusu aldığı WordPress 
 - Her randevuda e-posta ve (tanımlıysa) webhook bildirimi gider; webhook ile MST CRM'e aday kaydı düşer (aşağıya bakın).
 - Telefonda tam uyumlu: saat seçilince ekranın altında sabit "Devam Et" çubuğu çıkar. Mobil menüdeki WhatsApp düğmesi çubuğun gri tonundadır (yalnızca simgesi yeşil).
 - Randevu alınınca onay ekranında **Yazar Kariyer Akademisi** kartı çıkar. Adres: **Bildirim & Ayarlar → Akademi adresi**; boşsa "MST Yazar Kariyer Akademisi (Tam Sayfa)" şablonlu yayımlanmış sayfa. İkisi de yoksa kart görünmez.
-- **Karanlık mod:** yalnızca cihaz/tarayıcı karanlık istediğinde (telefonun karanlık modu ya da tarayıcının "zorla karartma"sı) randevu sayfası kendi koyu temasına (antrasit + altın) geçer; böylece tarayıcı renkleri ters çevirip sayfayı bozmaz. Diğer durumlarda sayfa açık renktedir; ayrı bir açık/koyu düğmesi yoktur.
+- **Karanlık mod:** iPhone, Chrome ve diğer normal tarayıcılarda sayfa telefon karanlık modda olsa bile hep açık renktedir ve zorla karartılmaz (`color-scheme: only light`). Bu talimatı dinlemeyip sayfayı zorla karartan tarayıcılarda (Samsung İnternet, Xiaomi, Huawei, Oppo, Opera) karanlık moddayken kendi koyu temamız (antrasit + altın) devreye girer; böylece renkler bozulmaz. Düğme yoktur.
 
 ## Kurulum
 
@@ -34,7 +34,7 @@ Eklenti kendini bu depodaki GitHub sürümlerinden (Releases) günceller — zip
 
 Yeni sayfa → *Sayfa Özellikleri → Şablon →* **MST Yazar Paneli Tanıtım (Tam Sayfa)** → Yayımla. Üst çubuk randevu sayfasıyla aynıdır. Panel yalnızca MST yazarlarına açık olduğu için ana butonlar ziyaretçiyi **ücretsiz ön görüşmeye** (randevu sayfası) ve WhatsApp'a yönlendirir; mevcut yazarlar için yalnızca küçük bir "Zaten MST yazarı mısınız? Panele giriş" bağlantısı vardır (**Bildirim & Ayarlar → Yazar Paneli adresi**, boşsa `https://app.mstyayincilik.com/`). Telefon ve paneldeki ekranlar temsili çizimlerdir (gerçek veri değildir).
 
-**Karanlık mod:** yalnızca cihaz/tarayıcı karanlık istediğinde (telefonun karanlık modu ya da "zorla karartma") açık bölümler ve kartlar koyu tonlara döner; telefon ekranı çizimi ve bildirim/sohbet balonları uygulamanın gerçek görünümü olduğu için açık kalır. Düğme yoktur.
+**Karanlık mod:** randevu sayfasıyla aynı kural (yalnızca sayfayı zorla karartan tarayıcılarda, karanlık moddayken); açık bölümler ve kartlar koyu tonlara döner; telefon ekranı çizimi ve bildirim/sohbet balonları uygulamanın gerçek görünümü olduğu için açık kalır. Düğme yoktur.
 
 **Arama motoru (SEO):** genel "kitap satış takibi" aramasını hedefler; arama başlığı "Kitap Satış Takibi: Kitabınız Kaç Adet Sattı? | MST Yazar Paneli" ve açıklaması `MST_Randevu::SEO_UYG`'dedir. Rank Math / Yoast kuruluysa ve o sayfaya panelden başlık/açıklama yazılmışsa onlara dokunulmaz, boşsa bunlar kullanılır. Sayfada yapılandırılmış veri (JSON-LD) vardır: kurum, sayfa yolu, web uygulaması ve sık sorulan sorular. Google'ın zengin sonuç testiyle kontrol edilebilir: https://search.google.com/test/rich-results
 

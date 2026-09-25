@@ -82,13 +82,15 @@ MST_Randevu::seo_hazirla(); // arama başlığı/açıklaması (wp_head'den önc
     <meta charset="<?php bloginfo('charset'); ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="#1a1a1a">
-    <!-- Sayfanın kendi karanlık teması var: tarayıcı renkleri kendisi ters çevirmesin -->
-    <meta name="color-scheme" content="light dark">
+    <!-- Normal tarayıcılarda sayfa hep açık renkte açılır ve zorla karartılmaz ("only light").
+         Bu talimatı dinlemeyip sayfayı zorla karartan tarayıcılarda (Samsung İnternet, Xiaomi, Huawei,
+         Oppo, Opera) karanlık moddayken kendi koyu temamız devreye girer; böylece renkler bozulmaz. -->
+    <meta name="color-scheme" content="only light" id="mst-renk-semasi">
     <script>
-    /* Koyu tema yalnızca cihaz/tarayıcı karanlık istediğinde (karanlık mod ya da zorla karartma):
-       sayfa çizilmeden önce uygulanır, cihaz ayarı değişince de güncellenir. */
     (function () {
-        if (!window.matchMedia) return;
+        var zorlayan = /SamsungBrowser|MiuiBrowser|HuaweiBrowser|HeyTapBrowser|\bOPR\//.test(navigator.userAgent || '');
+        if (!zorlayan || !window.matchMedia) return;
+        document.getElementById('mst-renk-semasi').content = 'light dark';
         var mq = matchMedia('(prefers-color-scheme: dark)'), kok = document.documentElement;
         var uygula = function () { kok.classList.toggle('mst-koyu', mq.matches); };
         uygula();
