@@ -48,9 +48,7 @@ Yeni sayfa → başlık (ör. “Yazar Kariyer Akademisi”) → *Şablon →* *
 
 - Yalnızca bilgi sayfasıdır; başvuru formu yoktur. İletişim WhatsApp (her programda o programın adıyla hazır mesaj) ve ücretsiz ön görüşme randevusu üzerinden yürür.
 - Açılış bir **sahne**: “Yazmak başlangıçtır.” daktiloyla yazılır, sahne ışığı yanar ve “Görünür olmak kariyerdir.” ışığın altında parlar.
-- Sahnenin altında üç programın “jeneriği” vardır; birine basınca o programın sekmesi açılır.
-- Bölümler: neden akademi, eğitim döngüsü ve kurallar, 12 temel alan (içindekiler sayfası gibi), programlar (kontenjan/görüşme grafiği + sekmeli program kitapçıkları; fiyat her programın sonunda), karşılaştırma, ücretsiz eğitim (davetiye bileti), güven, kalite standardı (%80 / %70 halkaları) ve kapsam sınırları, SSS, “Sahne hazır.” kapanışı. Girişten sonra üstte sabit bir bölüm menüsü vardır; `#program-temel`, `#program-marka`, `#program-mentorluk` adresleri ilgili programı açar.
-- Vurgular Cormorant Garamond italik, künye ve numaralar IBM Plex Mono (yalnızca bu sayfada yüklenir).
+- Bölümler: neden akademi, eğitim yaklaşımı ve kurallar, 12 temel alan, üç program (her programda fiyat en sonda), karşılaştırma, ücretsiz eğitim, güven, kalite standardı ve kapsam sınırları, SSS, iletişim. Girişten sonra üstte sabit bir bölüm menüsü vardır.
 - **Yazar Randevu → Akademi Ayarları**: ücretsiz eğitim tarihi (geçince kendiliğinden “yeni tarih yakında” yazar), yeri, süresi ve sonraki dönem başlangıcı.
 
 ## Yerel önizleme (WordPress olmadan)
@@ -58,6 +56,8 @@ Yeni sayfa → başlık (ör. “Yazar Kariyer Akademisi”) → *Şablon →* *
 ```bash
 node demo-sunucu.js
 ```
+
+Windows'ta kısaca: `onizleme.bat`'a çift tıklayın (masaüstüne kısayolu konabilir). En güncel `main-dayiyo`'yu indirir, önizleme kapalıysa açar ve Akademi sayfasını gösterir.
 
 Ardından http://localhost:8788 — eklentinin kendi CSS/JS'i sahte verilerle çalışır; kayıtlar yalnızca sayfada tutulur.
 

@@ -1,9 +1,8 @@
-/* MST Yazar Kariyer Akademisi — açılış sahnesi, program sekmeleri ve bölüm menüsü.
+/* MST Yazar Kariyer Akademisi — açılış sahnesi ve bölüm menüsü.
  * - "Yazmak başlangıçtır." daktiloyla yazılır; sahne ışığının huzmesinde toz zerreleri süzülür
- * - Programlar sekmeli; jenerik bağlantıları ve #program-x adresi ilgili programı açar
- * - Bölümler kaydırınca belirir; grafik çubukları ve belge halkaları o an dolar
  * - Bölüm menüsünde ekrandaki bölüm işaretlenir
- * Hareketi azalt açıksa daktilo, toz ve belirme çalışmaz; sayfa durağan görünür. */
+ * - Telefonda uzun müfredat listeleri kapalı başlar, programlar sekmeli görünür
+ * Hareketi azalt açıksa daktilo ve toz çalışmaz; sayfa durağan görünür. */
 (function () {
   'use strict';
   var azHareket = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -73,72 +72,44 @@
     linkler.forEach(function (l) { var b = document.getElementById(l.getAttribute('data-akd-gez')); if (b) io.observe(b); });
   }
 
-  // Program sekmeleri: bir anda tek program kitapçığı görünür; jenerik bağlantıları ve #program-x adresi de sekmeyi açar
-  function sekmeler() {
-    var dugmeler = [].slice.call(document.querySelectorAll('[data-akd-sekme]'));
-    var paneller = [].slice.call(document.querySelectorAll('[data-akd-panel]'));
-    if (!dugmeler.length) return;
-    function ac(k, odak) {
-      if (!document.querySelector('[data-akd-panel="' + k + '"]')) return false;
-      dugmeler.forEach(function (d) {
-        var bu = d.getAttribute('data-akd-sekme') === k;
-        d.setAttribute('aria-selected', bu ? 'true' : 'false');
-        d.tabIndex = bu ? 0 : -1;
-        if (bu && odak) d.focus();
-      });
-      paneller.forEach(function (p) {
-        var bu = p.getAttribute('data-akd-panel') === k;
-        if (bu && p.hidden) { p.classList.remove('is-geldi'); void p.offsetWidth; p.classList.add('is-geldi'); }
-        p.hidden = !bu;
-      });
-      return true;
+  // Telefonda programlar sekmeli: aynı anda tek program görünür, üstteki 01/02/03 etiketleriyle geçilir.
+  // Bilgisayarda üç program alt alta açık kalır (etiketler yalnızca ilgili programa kaydırır).
+  function programSekme() {
+    var bolum = document.getElementById('programlar');
+    var sekmeler = bolum ? [].slice.call(bolum.querySelectorAll('.akd-program-sekme a')) : [];
+    var programlar = bolum ? [].slice.call(bolum.querySelectorAll('.akd-program')) : [];
+    if (!sekmeler.length || sekmeler.length !== programlar.length) return;
+    var mq = window.matchMedia('(max-width: 640px)'), secili = 0;
+    function goster(i) {
+      secili = i;
+      sekmeler.forEach(function (a, k) { a.setAttribute('aria-selected', k === i ? 'true' : 'false'); a.tabIndex = k === i ? 0 : -1; });
+      programlar.forEach(function (p, k) { p.classList.toggle('is-gizli', k !== i); });
     }
-    dugmeler.forEach(function (d, i) {
-      d.addEventListener('click', function () { ac(d.getAttribute('data-akd-sekme')); });
-      d.addEventListener('keydown', function (e) {
-        var y = e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1 : e.key === 'ArrowLeft' || e.key === 'ArrowUp' ? -1 : 0;
-        if (!y) return;
-        e.preventDefault();
-        ac(dugmeler[(i + y + dugmeler.length) % dugmeler.length].getAttribute('data-akd-sekme'), true);
-      });
-    });
-    document.querySelectorAll('[data-akd-sekme-ac]').forEach(function (a) {
+    function uygula() {
+      bolum.classList.toggle('akd-sekmeli', mq.matches);
+      if (mq.matches) goster(secili);
+      else programlar.forEach(function (p) { p.classList.remove('is-gizli'); });
+    }
+    sekmeler.forEach(function (a, i) {
       a.addEventListener('click', function (e) {
-        if (!ac(a.getAttribute('data-akd-sekme-ac'))) return;
+        if (!mq.matches) return;
         e.preventDefault();
-        var hedef = document.querySelector('.akd-sekmeler') || document.getElementById('programlar');
-        hedef.scrollIntoView({ behavior: azHareket ? 'auto' : 'smooth', block: 'start' });
-        if (history.replaceState) history.replaceState(null, '', '#program-' + a.getAttribute('data-akd-sekme-ac'));
+        goster(i);
+        var bar = bolum.querySelector('.akd-program-sekme');
+        window.scrollTo({ top: bar.getBoundingClientRect().top + window.pageYOffset - 140, behavior: azHareket ? 'auto' : 'smooth' });
       });
     });
-    function adres() {
-      var m = /^#program-([a-z]+)$/.exec(location.hash);
-      if (m && ac(m[1])) { var s = document.querySelector('.akd-sekmeler'); if (s) s.scrollIntoView(); }
-    }
-    ac(dugmeler[0].getAttribute('data-akd-sekme'));
-    adres();
-    window.addEventListener('hashchange', adres);
-  }
-
-  // Kaydırınca belirme. Sınıf yalnızca gözlemci varsa eklenir; o zamana kadar her şey görünür durur.
-  function belir() {
-    var ogeler = document.querySelectorAll('[data-akd-belir]');
-    if (!ogeler.length || !('IntersectionObserver' in window) || azHareket) return;
-    var io = new IntersectionObserver(function (girdiler) {
-      girdiler.forEach(function (g) {
-        if (g.isIntersecting) { g.target.classList.add('is-gorunur'); io.unobserve(g.target); }
-      });
-    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
-    var ekranAlti = window.innerHeight;
-    ogeler.forEach(function (o) {
-      // İlk ekranda zaten görünenler bekletilmez
-      if (o.getBoundingClientRect().top < ekranAlti) o.classList.add('is-gorunur'); else io.observe(o);
-    });
-    document.documentElement.classList.add('akd-belir-hazir');
+    var m = /^#program-(.+)$/.exec(location.hash);
+    if (m) programlar.forEach(function (p, i) { if (p.id === 'program-' + m[1]) secili = i; });
+    uygula();
+    if (mq.addEventListener) mq.addEventListener('change', uygula); else if (mq.addListener) mq.addListener(uygula);
   }
 
   function basla() {
-    sekmeler(); belir(); daktilo(); toz(); gezinti();
+    daktilo(); toz(); gezinti(); programSekme();
+    if (window.matchMedia('(max-width: 640px)').matches) {
+      document.querySelectorAll('.akd-acilir[open]').forEach(function (d) { d.open = false; });
+    }
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', basla); else basla();
 })();
