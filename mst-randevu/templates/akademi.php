@@ -226,7 +226,6 @@ $sss = [
                     <?php foreach (['Kimlik ve hedef okur', 'Marka ve profil', 'İçerik sistemi', 'Video ve yapay zekâ', 'Lansman ve PR', 'Topluluk ve satış'] as $c) : ?>
                         <li><?php echo esc_html($c); ?></li>
                     <?php endforeach; ?>
-                    <small>Belirli bir sırayla</small>
                 </ol>
             </div>
         </div>
@@ -319,11 +318,11 @@ $sss = [
                         <summary>Program çıktıları <small><?php echo count($p['ciktilar']); ?> çalışma dosyası</small></summary>
                         <?php echo $liste($p['ciktilar'], 'akd-ciktilar'); ?>
                     </details>
-                    <footer class="akd-program__alt">
+                    <div class="akd-program__alt">
                         <div class="akd-fiyat"><small>Program bedeli</small><strong><?php echo esc_html($p['fiyat']); ?></strong><span><?php echo esc_html($p['fiyat_alt']); ?></span></div>
                         <p class="akd-program__not">Kayıtlar dönem başlangıcında alınır; dönem ortasında katılımcı eklenmez. Reklam bütçesi, prodüksiyon ve yayın hizmetleri fiyata dahil değildir. <a href="#kapsam">Kapsam</a></p>
                         <?php if ($wa) : ?><a class="uyg-btn uyg-btn--altin" href="<?php echo esc_url(MST_Randevu::wa_link('Merhaba, ' . MST_Akademi::PROGRAMLAR[$k][0] . ' hakkında bilgi almak istiyorum.')); ?>" target="_blank" rel="noopener">Bu program hakkında bilgi alın <?php echo $ik('ok', 18); ?></a><?php endif; ?>
-                    </footer>
+                    </div>
                 </article>
             <?php endforeach; ?>
         </div>
@@ -336,7 +335,6 @@ $sss = [
                 <span class="uyg-ust"><?php echo $ik('grafik', 18); ?> Karşılaştırma</span>
                 <h2>Programlar yan yana</h2>
             </header>
-            <p class="akd-tablo-ipucu" aria-hidden="true">Programları görmek için tabloyu yana kaydırın →</p>
             <div class="akd-tablo-kap">
                 <table class="akd-tablo">
                     <thead><tr><th scope="col">Özellik</th><?php foreach (MST_Akademi::PROGRAMLAR as $k => $p) : ?><th scope="col" class="akd-tablo--<?php echo esc_attr($k); ?>"><?php echo esc_html($p[1]); ?></th><?php endforeach; ?></tr></thead>
@@ -346,6 +344,16 @@ $sss = [
                         <?php endforeach; ?>
                     </tbody>
                 </table>
+            </div>
+            <div class="akd-kiyas" aria-hidden="true">
+                <?php $sira = 0; foreach (MST_Akademi::PROGRAMLAR as $k => $p) : $sira++; ?>
+                    <div class="akd-kiyas__kart akd-kiyas__kart--<?php echo esc_attr($k); ?>">
+                        <strong class="akd-kiyas__ad"><span><?php echo esc_html($programlar[$k]['no']); ?></span> <?php echo esc_html($p[1]); ?></strong>
+                        <dl>
+                            <?php foreach ($karsilastirma as $sat) : ?><div><dt><?php echo esc_html($sat[0]); ?></dt><dd><?php echo esc_html($sat[$sira]); ?></dd></div><?php endforeach; ?>
+                        </dl>
+                    </div>
+                <?php endforeach; ?>
             </div>
             <p class="akd-dipnot">Tüm fiyatlara KDV eklenir.</p>
         </div>
@@ -360,19 +368,6 @@ $sss = [
                     <h2>Yazarlık Yolculuğunuzun Hangi Aşamasındasınız?</h2>
                     <p>Ücretli programların kısaltılmış hâli değildir. Mevcut durumunuzu görmenizi ve size uygun yolu seçmenizi sağlayan bir başlangıç buluşmasıdır.</p>
                 </header>
-                <div class="akd-bilet" aria-label="Ücretsiz başlangıç eğitimi davetiyesi">
-                    <div class="akd-bilet__ana">
-                        <span class="akd-bilet__ust">MST Yayıncılık · Davetiye</span>
-                        <strong class="akd-bilet__baslik">Ücretsiz Başlangıç Eğitimi</strong>
-                        <dl>
-                            <div><dt>Katılım</dt><dd>Ücretsiz</dd></div>
-                            <div><dt>Yer</dt><dd>Çevrim içi, canlı</dd></div>
-                            <div><dt>Sonunda</dt><dd>Aşamanıza uygun program önerisi</dd></div>
-                            <div><dt>Tarih</dt><dd>Bilgi için bize yazın</dd></div>
-                        </dl>
-                    </div>
-                    <div class="akd-bilet__kocan" aria-hidden="true"><span>Ücretsiz</span></div>
-                </div>
                 <?php if ($wa) : ?><a class="uyg-btn uyg-btn--altin" href="<?php echo esc_url(MST_Randevu::wa_link('Merhaba, Yazar Kariyer Akademisi ücretsiz eğitimi hakkında bilgi almak istiyorum.')); ?>" target="_blank" rel="noopener"><?php echo MST_Randevu::icon('wa'); ?> Ücretsiz eğitim hakkında bilgi alın</a><?php endif; ?>
             </div>
             <div class="akd-ucretsiz__icerik">
@@ -410,26 +405,27 @@ $sss = [
     <section class="uyg-bolum" id="kapsam">
         <div class="uyg-kap">
             <header class="uyg-baslik">
-                <span class="uyg-ust"><?php echo $ik('yildiz', 18); ?> Kalite standardı ve kapsam</span>
-                <h2>Neyi vaat ettiğimizi ve etmediğimizi açıkça yazıyoruz.</h2>
+                <span class="uyg-ust"><?php echo $ik('yildiz', 18); ?> Kalite standartları</span>
+                <h2>Kalite Standartları ve Hizmet Kapsamı</h2>
+                <p>Programlarımızın koşulları, kazanımları ve kapsam dışında kalan hizmetler aşağıda tanımlanmıştır.</p>
             </header>
             <div class="akd-kapsam">
                 <div class="akd-kapsam__kart">
                     <h3><?php echo $ik('yildiz', 20); ?> Program Tamamlama Belgesi</h3>
-                    <p>En az <b>%80 devam</b> sağlayan ve görevlerin en az <b>%70’ini</b> tamamlayan katılımcılara <em>MST Yayıncılık Yazar Kariyer Akademisi Program Tamamlama Belgesi</em> verilir. Resmî veya üniversite onaylı sertifika değildir.</p>
-                    <?php echo $liste(['Ders kayıtları program seviyesine göre sınırlı süreyle sunulur ve üçüncü kişilerle paylaşılamaz.', 'Grup içinde paylaşılan eser ve fikirlerin gizliliği korunur.', 'Bireysel görüşme süreleri ve adetleri her programda açıkça belirtilir.', 'Telafi dersi, iptal ve iade koşulları kayıt sözleşmesinde yer alır.']); ?>
+                    <p>En az <b>%80 devam</b> ve görevlerin en az <b>%70’ini tamamlama</b> şartını sağlayan katılımcılara <em>MST Yayıncılık Yazar Kariyer Akademisi Program Tamamlama Belgesi</em> düzenlenir. Belge, resmî veya üniversite onaylı sertifika niteliği taşımaz.</p>
+                    <?php echo $liste(['Ders kayıtları: Program seviyesine göre belirlenen süre boyunca erişime açıktır; üçüncü kişilerle paylaşılamaz.', 'Gizlilik: Grup çalışmalarında paylaşılan eser ve fikirler gizli tutulur.', 'Bireysel görüşmeler: Süre ve adetler her programda ayrıca belirtilir.', 'Telafi, iptal ve iade: Koşullar kayıt sözleşmesinde düzenlenir.']); ?>
                 </div>
                 <div class="akd-kapsam__kart akd-kapsam__kart--sinir">
-                    <h3><?php echo $ik('carpi', 20); ?> Eğitimler garanti vermez</h3>
+                    <h3><?php echo $ik('carpi', 20); ?> Sonuç Taahhüdü</h3>
+                    <p>Programlar aşağıdaki sonuçlara ilişkin taahhüt içermez; sonuçlar katılımcının uygulama düzenine, eserine ve hedef kitlesine göre farklılık gösterir.</p>
                     <ul class="akd-sinir">
-                        <?php foreach (['Kitap satışı', 'Takipçi veya erişim', 'Basında yayın', 'Yayınevi tarafından kitap kabulü'] as $x) : ?><li><?php echo esc_html($x); ?> garantisi verilmez.</li><?php endforeach; ?>
+                        <?php foreach (['Kitap satış adedi', 'Takipçi sayısı ve erişim', 'Basın ve medyada yer alma', 'Yayınevi tarafından kabul'] as $x) : ?><li><?php echo esc_html($x); ?></li><?php endforeach; ?>
                     </ul>
-                    <p class="akd-kapsam__not">Sonuçlar katılımcının uygulama düzenine, eserine ve hedef kitlesine göre değişir.</p>
-                    <h3 class="akd-kapsam__ara"><?php echo $ik('carpi', 20); ?> Fiyata dahil değildir</h3>
+                    <h3 class="akd-kapsam__ara"><?php echo $ik('carpi', 20); ?> Program Bedeline Dahil Olmayan Hizmetler</h3>
                     <ul class="akd-sinir">
-                        <?php foreach (['Reklam bütçesi ve reklam yönetimi', 'Profesyonel video çekimi', 'Ücretli basın ve medya yayınları', 'Web sitesi yapımı (ayrıca fiyatlandırılır)', 'Kitap basımı ve yayın sözleşmesi (eğitim paketlerinden ayrıdır)'] as $x) : ?><li><?php echo esc_html($x); ?></li><?php endforeach; ?>
+                        <?php foreach (['Reklam bütçesi ve reklam yönetimi', 'Profesyonel video prodüksiyonu', 'Ücretli basın ve medya yayınları', 'Web sitesi tasarımı ve yapımı', 'Kitap basımı ve yayın sözleşmesi'] as $x) : ?><li><?php echo esc_html($x); ?></li><?php endforeach; ?>
                     </ul>
-                    <p class="akd-kapsam__not">Eğitim içerikleri ve çalışma dosyaları izinsiz çoğaltılamaz.</p>
+                    <p class="akd-kapsam__not">Eğitim içerikleri ve çalışma dosyaları MST Yayıncılık’ın izni olmadan çoğaltılamaz ve paylaşılamaz.</p>
                 </div>
             </div>
         </div>
@@ -469,13 +465,22 @@ $sss = [
         if ($icerik !== '') echo '<section class="uyg-bolum"><div class="uyg-kap uyg-dar uyg-icerik">' . apply_filters('the_content', $icerik) . '</div></section>';
     }
     ?>
-    <footer class="akd-alt">
-        <div class="uyg-kap">
-            <span>© <?php echo esc_html(wp_date('Y')); ?> MST Yayıncılık · Yazar Kariyer Akademisi</span>
-            <a href="<?php echo esc_url(MST_Randevu::kvkk_url()); ?>">KVKK Aydınlatma Metni</a>
-            <a href="<?php echo esc_url(home_url('/')); ?>">mstyayincilik.com</a>
+    <div class="akd-alt" role="contentinfo">
+        <div class="uyg-kap akd-alt__in">
+            <a class="akd-alt__marka" href="<?php echo esc_url(home_url('/')); ?>">
+                <img src="<?php echo esc_url(MST_Randevu::logo_url()); ?>" alt="" width="40" height="40" loading="lazy">
+                <span><strong>MST Yayıncılık</strong><small>Yazar Kariyer Akademisi</small></span>
+            </a>
+            <nav class="akd-alt__linkler" aria-label="Alt menü">
+                <a href="#programlar">Programlar</a>
+                <a href="#ucretsiz">Ücretsiz eğitim</a>
+                <a href="#sss">SSS</a>
+                <a href="<?php echo esc_url(MST_Randevu::kvkk_url()); ?>">KVKK Aydınlatma Metni</a>
+                <a href="<?php echo esc_url(home_url('/')); ?>">mstyayincilik.com</a>
+            </nav>
+            <p class="akd-alt__telif">© <?php echo esc_html(wp_date('Y')); ?> MST Yayıncılık. Tüm hakları saklıdır.</p>
         </div>
-    </footer>
+    </div>
 </main>
 
 <?php wp_footer(); ?>

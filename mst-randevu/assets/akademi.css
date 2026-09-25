@@ -9,7 +9,8 @@
   --akd-bordo: #7a2233;
   --akd-krem: #f7f5ef;
 }
-html { scroll-behavior: smooth; }
+/* Zemin koyu: telefonda sayfanın üstünde/altında (çekince) beyaz şerit görünmesin */
+html { scroll-behavior: smooth; background: #161616; }
 
 /* Lacivert akademi bölümleri */
 .akd-lacivert { background: linear-gradient(160deg, #0f1830 0%, var(--akd-lacivert) 55%, var(--akd-lacivert-2) 100%); color: rgba(255, 255, 255, .82); }
@@ -257,40 +258,25 @@ body.admin-bar .akd-gezinti { top: 108px; }
 .akd-tablo thead .akd-tablo--marka { box-shadow: inset 0 -3px 0 var(--mst-altin); }
 .akd-tablo tbody th { font-weight: 800; color: var(--mst-koyu); background: var(--akd-krem); width: 22%; }
 .akd-tablo td { font-weight: 600; color: var(--mst-yazi); }
+/* Telefonda tablo yerine program kartları: yana kaydırma gerekmez */
+.akd-kiyas { display: none; }
+.akd-kiyas__kart { border-radius: 20px; border: 1px solid var(--mst-cizgi); background: #fff; overflow: hidden; }
+.akd-kiyas__ad { display: flex; align-items: center; gap: 10px; padding: 14px 18px; background: var(--mst-ana); color: #fff; font-family: var(--mst-font-baslik); font-size: 17px; }
+.akd-kiyas__ad span { color: var(--mst-altin); }
+.akd-kiyas__kart--marka .akd-kiyas__ad { box-shadow: inset 0 -3px 0 var(--mst-altin); }
+.akd-kiyas__kart--mentorluk .akd-kiyas__ad { box-shadow: inset 0 -3px 0 var(--akd-bordo); }
+.akd-kiyas dl { margin: 0; padding: 4px 18px 8px; }
+.akd-kiyas dl div { display: grid; grid-template-columns: 42% 1fr; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--mst-cizgi); }
+.akd-kiyas dl div:last-child { border-bottom: 0; }
+.akd-kiyas dt { font-size: 13.5px; font-weight: 800; color: var(--mst-soluk); }
+.akd-kiyas dd { margin: 0; font-size: 15px; font-weight: 700; color: var(--mst-koyu); }
+.akd-kiyas dl div:last-child dd { font-family: var(--mst-font-baslik); font-size: 18px; }
 .akd-tablo tbody tr:last-child td { font-family: var(--mst-font-baslik); font-weight: 700; font-size: 17px; color: var(--mst-koyu); }
 .akd-dipnot { margin: 14px 0 0; text-align: center; font-size: 14px; color: var(--mst-soluk); }
 
 /* --------------------------------------------------------------------------
    Ücretsiz eğitim
    -------------------------------------------------------------------------- */
-/* Ücretsiz eğitim: davetiye bileti (krem kâğıt, çentikli kenarlar, dikey "Ücretsiz" koçanı) */
-.akd-bilet {
-  position: relative; display: grid; grid-template-columns: 1fr 76px; margin: 0 0 30px; transform: rotate(-2deg);
-  filter: drop-shadow(0 30px 40px rgba(0, 0, 0, .45)); transition: transform .5s cubic-bezier(.2, .8, .2, 1);
-}
-.akd-bilet:hover { transform: rotate(0); }
-.akd-bilet__ana, .akd-bilet__kocan { position: relative; }
-.akd-bilet__ana {
-  display: grid; gap: 14px; padding: 30px 30px 26px; border-radius: 6px 0 0 6px; background: #f7f5ef; color: #161616;
-  -webkit-mask: radial-gradient(circle at 100% 0, transparent 12px, #000 12.5px) top / 100% 51% no-repeat, radial-gradient(circle at 100% 100%, transparent 12px, #000 12.5px) bottom / 100% 51% no-repeat;
-  mask: radial-gradient(circle at 100% 0, transparent 12px, #000 12.5px) top / 100% 51% no-repeat, radial-gradient(circle at 100% 100%, transparent 12px, #000 12.5px) bottom / 100% 51% no-repeat;
-}
-.akd-bilet__ana::before { content: ""; position: absolute; inset: 10px; border: 1px solid rgba(168, 112, 10, .35); border-radius: 3px; pointer-events: none; }
-.akd-bilet__ust { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: #a8700a; }
-.akd-bilet__baslik { font-family: var(--mst-font-baslik); font-weight: 700; font-size: 26px; line-height: 1.15; letter-spacing: -.015em; color: #161616; }
-.akd-bilet dl { display: grid; margin: 0; border-top: 1px solid #e3ddcf; }
-.akd-bilet dl div { display: grid; grid-template-columns: 76px 1fr; gap: 12px; padding: 10px 0; border-bottom: 1px solid #e3ddcf; }
-.akd-bilet dt { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: #6d6a63; padding-top: 3px; }
-.akd-bilet dd { margin: 0; font-weight: 700; font-size: 15px; color: #161616; }
-.akd-bilet__kocan {
-  display: grid; place-items: center; border-radius: 0 6px 6px 0; background: var(--mst-altin);
-  -webkit-mask: radial-gradient(circle at 0 0, transparent 12px, #000 12.5px) top / 100% 51% no-repeat, radial-gradient(circle at 0 100%, transparent 12px, #000 12.5px) bottom / 100% 51% no-repeat;
-  mask: radial-gradient(circle at 0 0, transparent 12px, #000 12.5px) top / 100% 51% no-repeat, radial-gradient(circle at 0 100%, transparent 12px, #000 12.5px) bottom / 100% 51% no-repeat;
-}
-.akd-bilet__kocan::before { content: ""; position: absolute; left: 0; top: 16px; bottom: 16px; border-left: 2px dashed rgba(22, 19, 13, .35); }
-.akd-bilet__kocan span {
-  writing-mode: vertical-rl; transform: rotate(180deg); font-family: "IBM Plex Mono", ui-monospace, monospace; font-weight: 500; font-size: 14px; letter-spacing: .4em; text-transform: uppercase; color: #16130d;
-}
 .akd-ucretsiz .uyg-btn--altin .mst-ic { width: 20px; height: 20px; }
 /* Girişteki ikinci düğme: bilet. Solda kesik çizgiyle ayrılmış "Ücretsiz" koçanı */
 .akd-bilet-btn {
@@ -338,9 +324,18 @@ body.admin-bar .akd-gezinti { top: 108px; }
 .akd-iletisim__butonlar .mst-ic { width: 20px; height: 20px; }
 
 .uyg-bolum--acik .uyg-sss details { background: #fff; border-color: var(--mst-cizgi); }
-.akd-alt { background: #121212; color: rgba(255, 255, 255, .55); font-size: 13.5px; padding: 26px 0; }
-.akd-alt .uyg-kap { display: flex; flex-wrap: wrap; gap: 8px 22px; align-items: center; }
-.akd-alt span { margin-right: auto; }
+/* Alt bilgi (kurumsal): logo + ad, bağlantılar, telif satırı; ortalı */
+.akd-alt { background: #111; color: rgba(255, 255, 255, .55); padding: 44px 0 30px; border-top: 1px solid rgba(220, 152, 20, .25); }
+.akd-alt__in { display: grid; justify-items: center; gap: 22px; text-align: center; }
+.akd .akd-alt__marka { display: inline-flex; align-items: center; gap: 12px; color: #fff !important; text-decoration: none; }
+.akd-alt__marka img { width: 40px; height: 40px; display: block; }
+.akd-alt__marka span { display: grid; text-align: left; line-height: 1.25; }
+.akd-alt__marka strong { font-family: var(--mst-font-baslik); font-size: 16px; }
+.akd-alt__marka small { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--mst-altin); }
+.akd-alt__linkler { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 24px; }
+.akd .akd-alt__linkler a { padding: 8px 0; font-size: 14px; font-weight: 700; color: rgba(255, 255, 255, .72) !important; text-decoration: none; }
+.akd .akd-alt__linkler a:hover { color: var(--mst-altin) !important; }
+.akd .akd-alt__telif { margin: 0; padding-top: 20px; width: 100%; border-top: 1px solid rgba(255, 255, 255, .08); font-size: 13px; color: rgba(255, 255, 255, .45); }
 .akd-alt a { color: rgba(255, 255, 255, .75) !important; }
 
 /* --------------------------------------------------------------------------
@@ -377,10 +372,13 @@ body.admin-bar .akd-gezinti { top: 108px; }
   .akd-kapsam { grid-template-columns: 1fr; }
 }
 @media (max-width: 640px) {
-  .akd-bilet { transform: none; grid-template-columns: 1fr 56px; }
-  .akd-bilet__ana { padding: 24px 22px 20px; }
-  .akd-bilet__baslik { font-size: 22px; }
-  .akd-bilet dl div { grid-template-columns: 66px 1fr; }
+  .akd-tablo-kap { display: none; }
+  .akd-kiyas { display: grid; gap: 14px; }
+  /* Dağınık başlıklar: telefonda üst üste binmeden, taşmadan bulut gibi */
+  .akd-duzen__daginik { height: auto; display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 10px; padding: 6px 4px 34px; }
+  .akd-duzen__daginik span { position: static !important; }
+  .akd-duzen__daginik span:nth-child(odd) { transform: rotate(-4deg); }
+  .akd-duzen__daginik span:nth-child(even) { transform: rotate(4deg); }
   .akd-sahne__cta .uyg-btn, .akd-bilet-btn { width: 100%; }
   .akd-bilet-btn__metin { flex: 1; justify-content: center; }
   .akd .akd-imza { gap: 10px; font-size: 11px; letter-spacing: .1em; }
@@ -396,16 +394,10 @@ body.admin-bar .akd-gezinti { top: 108px; }
   .akd-mufredat li { grid-template-columns: 1fr; gap: 4px; }
   .akd-kapsam__kart, .akd-ucretsiz__icerik { padding: 22px 18px; }
   .akd-tablo th, .akd-tablo td { padding: 12px 14px; }
-  /* Karşılaştırma: ilk sütun sabit, diğerleri yana kayar */
-  .akd-tablo { min-width: 560px; font-size: 14px; }
-  .akd-tablo thead th:first-child, .akd-tablo tbody th { position: sticky; left: 0; z-index: 1; width: 112px; min-width: 112px; box-shadow: 6px 0 10px -6px rgba(0, 0, 0, .18); }
-  .akd-tablo thead th:first-child { background: var(--mst-ana); }
-  .akd .akd-tablo-ipucu { display: block; margin: -12px 0 12px; text-align: center; font-size: 13px; font-weight: 700; color: var(--mst-altin-koyu); }
   /* Parmakla rahat basılsın */
   .akd-program__not a { display: inline-block; padding: 8px 2px; }
-  .akd-alt a { display: inline-block; padding: 10px 0; }
+  .akd-alt__linkler { gap: 0 18px; }
 }
-.akd-tablo-ipucu { display: none; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .akd-cark span, .akd-imlec { animation: none !important; }
