@@ -385,7 +385,16 @@ body.admin-bar .akd-gezinti { top: 108px; }
   .akd-mufredat li { grid-template-columns: 1fr; gap: 4px; }
   .akd-kapsam__kart, .akd-ucretsiz__icerik { padding: 22px 18px; }
   .akd-tablo th, .akd-tablo td { padding: 12px 14px; }
+  /* Karşılaştırma: ilk sütun sabit, diğerleri yana kayar */
+  .akd-tablo { min-width: 560px; font-size: 14px; }
+  .akd-tablo thead th:first-child, .akd-tablo tbody th { position: sticky; left: 0; z-index: 1; width: 112px; min-width: 112px; box-shadow: 6px 0 10px -6px rgba(0, 0, 0, .18); }
+  .akd-tablo thead th:first-child { background: var(--mst-ana); }
+  .akd .akd-tablo-ipucu { display: block; margin: -12px 0 12px; text-align: center; font-size: 13px; font-weight: 700; color: var(--mst-altin-koyu); }
+  /* Parmakla rahat basılsın */
+  .akd-program__not a { display: inline-block; padding: 8px 2px; }
+  .akd-alt a { display: inline-block; padding: 10px 0; }
 }
+.akd-tablo-ipucu { display: none; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .akd-cark span, .akd-imlec { animation: none !important; }

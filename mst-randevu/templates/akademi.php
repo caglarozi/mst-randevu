@@ -56,6 +56,13 @@ $bolumler = [
 
 $dongu = ['Analiz', 'Eğitim', 'Uygulama', 'Değerlendirme', 'Yeni plan'];
 
+$alanlar = [
+    ['kisi', 'Yazar kimliği ve konumlandırma'], ['hedef', 'Hedef okur ve okur psikolojisi'], ['kalem', 'Yazma disiplini ve eser planlama'],
+    ['dosya', 'Dosya sunumu, özet ve tanıtım metni'], ['profil', 'Kişisel marka ve profil mimarisi'], ['takvim', 'İçerik stratejisi ve yayın takvimi'],
+    ['kamera', 'Kısa video, kamera ve anlatım'], ['kivilcim', 'Yapay zekâ ile içerik üretimi'], ['roket', 'Kitap lansmanı ve kampanya planı'],
+    ['mikrofon', 'PR, medya ve röportaj hazırlığı'], ['kisiler', 'Topluluk, etkinlik ve okur bağı'], ['grafik', 'Satış kanalları ve performans takibi'],
+];
+
 $programlar = [
     'temel' => [
         'no' => '01', 'seviye' => 'Başlangıç',
@@ -329,6 +336,7 @@ $sss = [
                 <span class="uyg-ust"><?php echo $ik('grafik', 18); ?> Karşılaştırma</span>
                 <h2>Programlar yan yana</h2>
             </header>
+            <p class="akd-tablo-ipucu" aria-hidden="true">Programları görmek için tabloyu yana kaydırın →</p>
             <div class="akd-tablo-kap">
                 <table class="akd-tablo">
                     <thead><tr><th scope="col">Özellik</th><?php foreach (MST_Akademi::PROGRAMLAR as $k => $p) : ?><th scope="col" class="akd-tablo--<?php echo esc_attr($k); ?>"><?php echo esc_html($p[1]); ?></th><?php endforeach; ?></tr></thead>
