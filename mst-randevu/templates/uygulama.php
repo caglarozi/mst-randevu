@@ -90,25 +90,38 @@ $sss = [
 
 <main class="uyg">
 
-    <!-- ============ Giriş ============ -->
+    <!-- ============ Giriş: baskı provası / mizanpaj masası ============ -->
     <section class="uyg-hero">
+        <span class="uyg-kesim uyg-kesim--1" aria-hidden="true"></span><span class="uyg-kesim uyg-kesim--2" aria-hidden="true"></span>
+        <span class="uyg-kesim uyg-kesim--3" aria-hidden="true"></span><span class="uyg-kesim uyg-kesim--4" aria-hidden="true"></span>
+
         <div class="uyg-kap uyg-hero__in">
             <div class="uyg-hero__metin">
-                <span class="uyg-rozet"><?php echo $ik('kivilcim', 16); ?> MST Yazar Paneli</span>
-                <h1>Kitabınızın tüm yolculuğu <em>tek uygulamada.</em></h1>
-                <p class="uyg-hero__alt">Yayın sürecinden satışlara, telif kazancından kariyer planınıza kadar her şeyi anlık takip edin. 7/24 yapay zekâ destekli Yazar Asistanı her an yanınızda.</p>
+                <p class="uyg-kunye"><span>MST Yayıncılık</span><span>Yazar Paneli</span><span>Web &amp; mobil</span></p>
+                <h1>Kitabınızın bütün hikâyesi, <em>tek ekranda.</em></h1>
+                <p class="uyg-hero__alt">Editör masasından kitapçı rafına, ilk satıştan telif ödemesine kadar kitabınızın başına gelen her şeyi anlık izleyin. Yanınızda 7/24 yapay zekâ destekli Yazar Asistanı.</p>
                 <div class="uyg-hero__cta">
-                    <a class="uyg-btn uyg-btn--altin" href="<?php echo esc_url($panel); ?>">Panele Giriş Yap <?php echo $ik('ok', 18); ?></a>
-                    <a class="uyg-btn uyg-btn--cizgi" href="<?php echo esc_url($randevu); ?>">MST yazarı olun</a>
+                    <a class="uyg-btn uyg-btn--baski" href="<?php echo esc_url($panel); ?>">Panele Giriş Yap <?php echo $ik('ok', 18); ?></a>
+                    <a class="uyg-hero__ikincil" href="<?php echo esc_url($randevu); ?>">Henüz MST yazarı değil misiniz? <b>Ücretsiz görüşme alın</b> <?php echo $ik('ok', 16); ?></a>
                 </div>
-                <ul class="uyg-hero__cipler">
-                    <li><?php echo $ik('telefon', 16); ?> Web'den ve telefondan</li>
-                    <li><?php echo $ik('zil', 16); ?> Anlık bildirimler</li>
-                    <li><?php echo $ik('kivilcim', 16); ?> 7/24 AI asistan</li>
-                </ul>
+
+                <ol class="uyg-cetvel" aria-label="Yayın aşamaları (örnek)">
+                    <?php foreach ($asamalar as $i => $a) : ?>
+                        <li class="<?php echo $a[2] ? 'is-' . esc_attr($a[2]) : ''; ?>"><i></i><span><?php echo esc_html(sprintf('%02d', $i + 1)); ?></span><?php echo esc_html($a[1]); ?></li>
+                    <?php endforeach; ?>
+                </ol>
             </div>
 
-            <div class="uyg-hero__gorsel" aria-hidden="true">
+            <div class="uyg-sahne" aria-hidden="true">
+                <span class="uyg-kayit uyg-kayit--1"></span><span class="uyg-kayit uyg-kayit--2"></span>
+                <div class="uyg-kitap">
+                    <div class="uyg-kitap__kapak">
+                        <small>MST Yayıncılık</small>
+                        <strong>Kitabınızın<br><em>Adı</em></strong>
+                        <span class="uyg-kitap__yazar">Yazar Adı Soyadı</span>
+                        <span class="uyg-kitap__barkod"><i></i><b>ISBN 978-000-00-0000-0</b></span>
+                    </div>
+                </div>
                 <div class="uyg-tel">
                     <div class="uyg-tel__ekran">
                         <div class="uyg-tel__ust"><span>Merhaba, Yazarımız 👋</span><?php echo $ik('zil', 18); ?></div>
@@ -130,18 +143,30 @@ $sss = [
                         <div class="uyg-tel__etiket">Örnek görünüm</div>
                     </div>
                 </div>
-                <div class="uyg-yuzen uyg-yuzen--1"><?php echo $ik('zil', 16); ?> <span><b>Yeni aşama:</b> Kapak tasarımı başladı</span></div>
-                <div class="uyg-yuzen uyg-yuzen--2"><?php echo $ik('yildiz', 16); ?> <span><b>Rozet kazandınız:</b> İlk 30 gün</span></div>
+                <div class="uyg-not"><span class="uyg-not__bant"></span><small>09:41 · Bildirim</small><b>Yeni aşama:</b> Kapak tasarımı başladı.</div>
+            </div>
+        </div>
+
+        <div class="uyg-akis" aria-hidden="true">
+            <div class="uyg-akis__serit">
+                <?php for ($t = 0; $t < 2; $t++) : ?>
+                    <span>D&amp;R <b>+17 adet</b></span><span>Yeni aşama <b>Baskı</b></span><span>Kitapyurdu <b>+24 adet</b></span>
+                    <span>Telif <b>ödendi</b></span><span>Akademi <b>Kişisel marka · 3. ders</b></span><span>Rozet <b>İlk 30 gün</b></span>
+                    <span>Kampanya <b>Reels yayında</b></span><span>Stok <b>360 adet depoda</b></span>
+                <?php endfor; ?>
             </div>
         </div>
     </section>
 
-    <!-- ============ Modül şeridi ============ -->
-    <nav class="uyg-seritler" aria-label="Özellikler">
+    <!-- ============ İçindekiler (bölüm menüsü) ============ -->
+    <nav class="uyg-icindekiler" aria-label="İçindekiler">
         <div class="uyg-kap">
-            <?php foreach ($moduller as $m) : ?>
-                <a href="<?php echo esc_attr($m[0]); ?>"><?php echo $ik($m[1], 18); ?><span><?php echo esc_html($m[2]); ?></span></a>
-            <?php endforeach; ?>
+            <h2 class="uyg-icindekiler__baslik">İçindekiler</h2>
+            <ol>
+                <?php foreach ($moduller as $i => $m) : ?>
+                    <li><a href="<?php echo esc_attr($m[0]); ?>"><span class="uyg-icindekiler__no"><?php echo esc_html(sprintf('%02d', $i + 1)); ?></span><span class="uyg-icindekiler__ad"><?php echo esc_html($m[2]); ?></span><span class="uyg-icindekiler__nokta"></span><span class="uyg-icindekiler__s">s. <?php echo esc_html(sprintf('%02d', $i + 2)); ?></span></a></li>
+                <?php endforeach; ?>
+            </ol>
         </div>
     </nav>
 

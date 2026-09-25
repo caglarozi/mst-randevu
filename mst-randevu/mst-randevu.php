@@ -238,11 +238,13 @@ class MST_Randevu
         // Yazı tipine bağımlı DEĞİL: bir hız/gizlilik eklentisi Google Fonts'u kapatırsa stil dosyası da düşmesin
         wp_register_style('mst-randevu', MST_RANDEVU_URL . 'assets/randevu.css', [], MST_RANDEVU_VER);
         wp_register_script('mst-randevu', MST_RANDEVU_URL . 'assets/randevu.js', [], MST_RANDEVU_VER, true);
+        wp_register_style('mst-uygulama-font', 'https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500;1,9..144,600&family=IBM+Plex+Mono:wght@500;600&display=swap', [], null);
         wp_register_style('mst-uygulama', MST_RANDEVU_URL . 'assets/uygulama.css', ['mst-randevu'], MST_RANDEVU_VER);
 
         // Yazar Paneli tanıtım sayfası: üst çubuk + mobil menü randevu dosyalarından gelir
         if (self::is_app_page()) {
             wp_enqueue_style('mst-randevu-font');
+            wp_enqueue_style('mst-uygulama-font');
             wp_enqueue_style('mst-uygulama');
             wp_enqueue_script('mst-randevu');
             return;
@@ -303,7 +305,7 @@ class MST_Randevu
     public static function isolate_styles()
     {
         if (!self::is_full_page() && !self::is_app_page()) return;
-        $keep = ['mst-randevu', 'mst-randevu-font', 'mst-uygulama', 'admin-bar', 'dashicons'];
+        $keep = ['mst-randevu', 'mst-randevu-font', 'mst-uygulama', 'mst-uygulama-font', 'admin-bar', 'dashicons'];
         foreach (wp_styles()->queue as $handle) {
             if (!in_array($handle, $keep, true)) wp_dequeue_style($handle);
         }
