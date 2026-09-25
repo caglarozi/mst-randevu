@@ -48,7 +48,8 @@ Yeni sayfa → başlık (ör. “Yazar Kariyer Akademisi”) → *Şablon →* *
 
 - Yalnızca bilgi sayfasıdır; başvuru formu yoktur. İletişim WhatsApp (her programda o programın adıyla hazır mesaj) ve ücretsiz ön görüşme randevusu üzerinden yürür.
 - Açılış bir **sahne**: “MST Yayıncılık” bir kez daktiloyla yazılır (döngü yok), ardından sahne ışığı yanar ve “Yazar Akademisi” ışığın altında parlar.
-- Bölümler: neden akademi, eğitim yaklaşımı ve kurallar, 12 temel alan, üç program (her programda fiyat en sonda), karşılaştırma, ücretsiz eğitim, güven, kalite standardı ve kapsam sınırları, SSS, iletişim. Girişten sonra üstte sabit bir bölüm menüsü vardır.
+- Bölümler kitap bölümü gibi numaralıdır (I–IX): neden akademi, eğitim yaklaşımı ve kurallar, 12 temel alan (içindekiler listesi), üç program (her programda fiyat en sonda), karşılaştırma, ücretsiz eğitim, neden MST, kalite standartları ve hizmet kapsamı, SSS. Simge kutuları, kart ızgaraları ve parlama efektleri bilinçli olarak kullanılmaz.
+- **SEO:** arama başlığı "Yazar Kariyer Akademisi: Yazarlık Eğitimi | MST Yayıncılık" ve açıklaması `MST_Randevu::SEO['akademi']`'dadır (Rank Math'te sayfaya başlık/açıklama yazılmışsa onlar kullanılır). Yapılandırılmış veri: kurum, sayfa yolu, üç program (Course: fiyat, süre, çevrim içi) ve SSS.
 - **Yazar Randevu → Akademi Ayarları**: ücretsiz eğitim tarihi (geçince kendiliğinden “yeni tarih yakında” yazar), yeri, süresi ve sonraki dönem başlangıcı.
 
 ## Yerel önizleme (WordPress olmadan)
