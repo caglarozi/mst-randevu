@@ -182,8 +182,19 @@ $enCok = max(array_column($programlar, 'kontenjan'));
     <meta charset="<?php bloginfo('charset'); ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="#111111">
-    <!-- Renkler tasarımın parçası: telefonun "zorla karanlık mod"u sayfayı ters çevirmesin -->
-    <meta name="color-scheme" content="only light">
+    <!-- Sayfanın kendi karanlık teması var: tarayıcı renkleri kendisi ters çevirmesin -->
+    <meta name="color-scheme" content="light dark">
+    <script>
+    /* Koyu tema yalnızca cihaz/tarayıcı karanlık istediğinde (karanlık mod ya da zorla karartma):
+       sayfa çizilmeden önce uygulanır, cihaz ayarı değişince de güncellenir. */
+    (function () {
+        if (!window.matchMedia) return;
+        var mq = matchMedia('(prefers-color-scheme: dark)'), kok = document.documentElement;
+        var uygula = function () { kok.classList.toggle('mst-koyu', mq.matches); };
+        uygula();
+        if (mq.addEventListener) mq.addEventListener('change', uygula); else if (mq.addListener) mq.addListener(uygula);
+    })();
+    </script>
     <?php echo MST_Randevu::paylasim_meta('akademi'); ?>
     <script>document.documentElement.classList.add('akd-js');</script>
     <?php wp_head(); ?>
