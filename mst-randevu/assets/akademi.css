@@ -266,7 +266,7 @@ body.admin-bar .akd-gezinti { top: 108px; }
 }
 .akd-bilet__ana::before { content: ""; position: absolute; inset: 10px; border: 1px solid rgba(168, 112, 10, .35); border-radius: 3px; pointer-events: none; }
 .akd-bilet__ust { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: #a8700a; }
-.akd-bilet__baslik { font-family: "Cormorant Garamond", Georgia, "Times New Roman", serif; font-style: italic; font-weight: 600; font-size: 32px; line-height: 1.1; color: #161616; }
+.akd-bilet__baslik { font-family: var(--mst-font-baslik); font-weight: 700; font-size: 26px; line-height: 1.15; letter-spacing: -.015em; color: #161616; }
 .akd-bilet dl { display: grid; margin: 0; border-top: 1px solid #e3ddcf; }
 .akd-bilet dl div { display: grid; grid-template-columns: 76px 1fr; gap: 12px; padding: 10px 0; border-bottom: 1px solid #e3ddcf; }
 .akd-bilet dt { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: #6d6a63; padding-top: 3px; }
@@ -368,7 +368,7 @@ body.admin-bar .akd-gezinti { top: 108px; }
 @media (max-width: 640px) {
   .akd-bilet { transform: none; grid-template-columns: 1fr 56px; }
   .akd-bilet__ana { padding: 24px 22px 20px; }
-  .akd-bilet__baslik { font-size: 27px; }
+  .akd-bilet__baslik { font-size: 22px; }
   .akd-bilet dl div { grid-template-columns: 66px 1fr; }
   .akd-sahne__cta .uyg-btn, .akd-bilet-btn { width: 100%; }
   .akd-bilet-btn__metin { flex: 1; justify-content: center; }
