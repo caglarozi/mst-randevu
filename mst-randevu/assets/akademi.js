@@ -1,5 +1,5 @@
 /* MST Yazar Kariyer Akademisi — açılış sahnesi ve bölüm menüsü.
- * - "Yazar Akademisi" bir kez daktiloyla yazılır (döngü yok); sahne ışığının huzmesinde toz zerreleri süzülür
+ * - "MST Yayıncılık" bir kez daktiloyla yazılır (döngü yok), altında "Yazar Akademisi" ışıkla yanar; sahne ışığının huzmesinde toz zerreleri süzülür
  * - Bölüm menüsünde ekrandaki bölüm işaretlenir
  * - Telefonda uzun müfredat listeleri kapalı başlar, programlar sekmeli görünür
  * Hareketi azalt açıksa daktilo ve toz çalışmaz; sayfa durağan görünür. */
@@ -7,7 +7,7 @@
   'use strict';
   var azHareket = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // Başlık ("Yazar Akademisi") bir kez daktiloyla yazılır; imleç birkaç kez yanıp söner ve kaybolur.
+  // Üst satır ("MST Yayıncılık") bir kez daktiloyla yazılır; imleç birkaç kez yanıp söner ve kaybolur.
   // Metin HTML'de hazır durur (arama motoru ve JS'siz ziyaretçi için); JS yalnızca görünümü canlandırır.
   function daktilo() {
     var el = document.querySelector('[data-akd-daktilo]');
