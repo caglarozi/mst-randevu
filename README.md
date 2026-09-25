@@ -29,7 +29,7 @@ Eklenti kendini bu depodaki GitHub sürümlerinden (Releases) günceller — zip
 
 ## MST Yazar Paneli tanıtım sayfası
 
-Yeni sayfa → *Sayfa Özellikleri → Şablon →* **MST Yazar Paneli Tanıtım (Tam Sayfa)** → Yayımla. Üst çubuk randevu sayfasıyla aynıdır; "Panele Giriş" butonları **Bildirim & Ayarlar → Yazar Paneli adresi**'ne (boşsa `https://app.mstyayincilik.com/`), "MST yazarı olun / randevu" butonları randevu sayfasına gider. Telefon ve paneldeki ekranlar "Örnek görünüm" etiketli temsili çizimlerdir.
+Yeni sayfa → *Sayfa Özellikleri → Şablon →* **MST Yazar Paneli Tanıtım (Tam Sayfa)** → Yayımla. Üst çubuk randevu sayfasıyla aynıdır; "Panele Giriş" butonları **Bildirim & Ayarlar → Yazar Paneli adresi**'ne (boşsa `https://app.mstyayincilik.com/`), "MST yazarı olun / randevu" butonları randevu sayfasına gider. Telefon ve paneldeki ekranlar temsili çizimlerdir (gerçek veri değildir).
 
 ## Yerel önizleme (WordPress olmadan)
 

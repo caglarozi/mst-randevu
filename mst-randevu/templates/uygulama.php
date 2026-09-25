@@ -2,7 +2,7 @@
 /**
  * "MST Yazar Paneli Tanıtım (Tam Sayfa)" şablonu: yazarların kullandığı web uygulamasının
  * (MST Yazar Paneli) tanıtım sayfası. Üst çubuk randevu sayfasıyla ortaktır.
- * Telefon içindeki ekranlar temsili çizimdir ("Örnek görünüm" etiketli); gerçek veri değildir.
+ * Telefon ve panellerdeki ekranlar temsili çizimdir; gerçek veri değildir.
  */
 if (!defined('ABSPATH')) {
     exit;
@@ -96,7 +96,6 @@ $sss = [
     <section class="uyg-hero">
         <div class="uyg-kap uyg-hero__in">
             <div class="uyg-hero__metin">
-                <span class="uyg-rozet uyg-gir" style="--d:.05s"><?php echo $ik('kivilcim', 16); ?> MST Yazar Paneli</span>
                 <h1 aria-label="Kitabınızın tüm yolculuğu tek uygulamada."><span class="uyg-k" style="--i:0">Kitabınızın</span> <span class="uyg-k" style="--i:1">tüm</span> <span class="uyg-k" style="--i:2">yolculuğu</span> <em class="uyg-k uyg-parilti" style="--i:3">tek uygulamada.</em></h1>
                 <p class="uyg-hero__alt uyg-gir" style="--d:.75s">Yayın sürecinden satışlara, telif kazancından kariyer planınıza kadar her şeyi anlık takip edin. 7/24 yapay zekâ destekli Yazar Asistanı her an yanınızda.</p>
                 <div class="uyg-hero__cta uyg-gir" style="--d:.9s">
@@ -129,7 +128,6 @@ $sss = [
                             <div class="uyg-gorev uyg-gorev--bitti"><?php echo $ik('onay', 14); ?> Kapak önerisine yorum yap</div>
                             <div class="uyg-gorev"><i></i> Instagram'da ilk tanıtım gönderisi</div>
                         </div>
-                        <div class="uyg-tel__etiket">Örnek görünüm</div>
                     </div>
                 </div>
                 <div class="uyg-yuzen uyg-yuzen--1"><?php echo $ik('zil', 16); ?> <span data-uyg-canli><b>Yeni aşama:</b> Kapak tasarımı başladı</span></div>
@@ -184,7 +182,7 @@ $sss = [
                 <?php echo $liste([
                     'Toplam kitap satışını görüntüleyin',
                     'Satışların hangi platformlardan geldiğini takip edin',
-                    'D&R, Kitapyurdu ve diğer satış kanallarındaki performansı izleyin',
+                    'D&R, Kitapyurdu, Trendyol, Hepsiburada, n11 ve web sitemizdeki satış performansını izleyin',
                     'Günlük, aylık ve dönemsel satış raporlarına ulaşın',
                     'Kitabınızın güncel stok durumunu takip edin',
                     'Dağıtıma çıkan ve kalan kitap adetlerini görüntüleyin',
@@ -198,7 +196,7 @@ $sss = [
                     <?php endforeach; ?>
                 </div>
                 <div class="uyg-kanallar">
-                    <?php foreach ([['D&R', 42], ['Kitapyurdu', 35], ['Diğer kanallar', 23]] as $k) : ?>
+                    <?php foreach ([['D&R', 24], ['Kitapyurdu', 21], ['Trendyol', 17], ['Web sitemiz', 15], ['Hepsiburada', 13], ['n11', 10]] as $k) : ?>
                         <div><span><?php echo esc_html($k[0]); ?></span><div class="uyg-ilerleme"><span style="width:<?php echo (int) $k[1]; ?>%"></span></div><b>%<?php echo (int) $k[1]; ?></b></div>
                     <?php endforeach; ?>
                 </div>
@@ -206,7 +204,6 @@ $sss = [
                     <div><small>Dağıtımda</small><strong>640</strong></div>
                     <div><small>Depoda kalan</small><strong>360</strong></div>
                 </div>
-                <div class="uyg-panel__etiket">Örnek görünüm</div>
             </div>
         </div>
     </section>
@@ -234,12 +231,11 @@ $sss = [
                     <span>Bir sonraki ödeme dönemi</span>
                 </div>
                 <div class="uyg-hareketler">
-                    <div><span>Telif ödemesi</span><em>Ödendi</em></div>
-                    <div><span>Telif ödemesi</span><em>Ödendi</em></div>
+                    <div><span>Telif ödemesi · 2. dönem</span><em>Ödendi</em></div>
+                    <div><span>Satış hareketi · Trendyol</span><em class="gri">+31 adet</em></div>
                     <div><span>Satış hareketi · Kitapyurdu</span><em class="gri">+24 adet</em></div>
-                    <div><span>Satış hareketi · D&amp;R</span><em class="gri">+17 adet</em></div>
+                    <div><span>Satış hareketi · Web sitemiz</span><em class="gri">+12 adet</em></div>
                 </div>
-                <div class="uyg-panel__etiket">Örnek görünüm</div>
             </div>
         </div>
     </section>
@@ -270,7 +266,6 @@ $sss = [
                     <div><small>Tıklama</small><strong>—</strong></div>
                 </div>
                 <p class="uyg-panel__not">Kampanyanız yayına girdiğinde sonuçlar burada görünür.</p>
-                <div class="uyg-panel__etiket">Örnek görünüm</div>
             </div>
         </div>
     </section>
@@ -333,7 +328,6 @@ $sss = [
                 <div class="uyg-balon">Üç fikir hazırladım ✨<br>1. “İlk cümle” — kitabın ilk satırını sesli okuyun.<br>2. Kapak tasarımının öncesi/sonrası.<br>3. Yazarken dinlediğiniz şarkıyla 15 saniyelik masa başı çekimi.</div>
                 <div class="uyg-balon uyg-balon--ben">İkincisi için açıklama yazar mısın?</div>
                 <div class="uyg-balon uyg-balon--yaziyor"><i></i><i></i><i></i></div>
-                <div class="uyg-panel__etiket">Örnek görünüm</div>
             </div>
         </div>
     </section>
