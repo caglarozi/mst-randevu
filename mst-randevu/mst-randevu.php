@@ -2,7 +2,7 @@
 /**
  * Plugin Name: MST Yazar Adayı Randevu
  * Description: Yazar adaylarının müsait saatlerden görüşme randevusu alması. Kısa kod: [mst_randevu] — ya da sayfa şablonu olarak "MST Randevu (Tam Sayfa)".
- * Version:     1.4.1
+ * Version:     1.4.2
  * Author:      MST Yayıncılık
  * Text Domain: mst-randevu
  * Requires PHP: 7.4
@@ -12,7 +12,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('MST_RANDEVU_VER', '1.4.1');
+define('MST_RANDEVU_VER', '1.4.2');
 define('MST_RANDEVU_DB', 2);
 define('MST_RANDEVU_URL', plugin_dir_url(__FILE__));
 
@@ -400,7 +400,7 @@ class MST_Randevu
         return $p ? get_permalink($p[0]) : home_url('/');
     }
 
-    /** Üst çubuk. $giris: Yazar Paneli tanıtım sayfasında altın "Panele Giriş" butonu da eklenir. */
+    /** Üst çubuk. $giris: Yazar Paneli tanıtım sayfasında altın "Ön Görüşme Al" (randevu) butonu da eklenir. */
     public static function header_html($giris = false)
     {
         $home = home_url('/');
@@ -415,7 +415,7 @@ class MST_Randevu
                 <div class="mst-top__cta" id="mst-top-menu">
                     <?php if ($wa) : ?><a class="mst-top__btn mst-top__btn--wa" href="<?php echo esc_url($wa); ?>" target="_blank" rel="noopener" aria-label="WhatsApp'tan yazın"><?php echo self::icon('wa'); ?><span>WhatsApp</span></a><?php endif; ?>
                     <a class="mst-top__btn<?php echo $giris ? ' mst-top__btn--mobil' : ''; ?>" href="<?php echo esc_url($home); ?>"><span>Siteye Git</span><?php echo self::icon('dis'); ?></a>
-                    <?php if ($giris) : ?><a class="mst-top__btn mst-top__btn--altin" href="<?php echo esc_url(self::uygulama_url()); ?>"><span>Panele Giriş</span></a><?php endif; ?>
+                    <?php if ($giris) : ?><a class="mst-top__btn mst-top__btn--altin" href="<?php echo esc_url(self::randevu_url()); ?>"><span>Ön Görüşme Al</span></a><?php endif; ?>
                 </div>
             </div>
         </header>
@@ -1004,7 +1004,7 @@ class MST_Randevu
                 <p class="description">Sayfa düzenleyicide <strong>Sayfa Özellikleri → Şablon → "MST Randevu (Tam Sayfa)"</strong> seçilirse temanın üst kısmı yerine MST logosu, WhatsApp ve "Siteye Git" çubuğu kullanılır.</p>
                 <table class="form-table">
                     <tr><th>WhatsApp numarası</th><td><input type="text" name="whatsapp" class="regular-text" value="<?php echo esc_attr($o['whatsapp']); ?>" placeholder="905XXXXXXXXX"><p class="description">Ülke koduyla, boşluksuz. Boş bırakılırsa WhatsApp butonları gizlenir.</p></td></tr>
-                    <tr><th>Yazar Paneli adresi</th><td><input type="url" name="uygulama_url" class="large-text" value="<?php echo esc_attr($o['uygulama_url']); ?>" placeholder="Boş = https://app.mstyayincilik.com/"><p class="description">"MST Yazar Paneli Tanıtım (Tam Sayfa)" şablonundaki "Panele Giriş" butonları buraya gider.</p></td></tr>
+                    <tr><th>Yazar Paneli adresi</th><td><input type="url" name="uygulama_url" class="large-text" value="<?php echo esc_attr($o['uygulama_url']); ?>" placeholder="Boş = https://app.mstyayincilik.com/"><p class="description">"MST Yazar Paneli Tanıtım (Tam Sayfa)" şablonundaki "Zaten MST yazarı mısınız? Panele giriş" bağlantıları buraya gider.</p></td></tr>
                     <tr><th>Logo adresi</th><td><input type="url" name="logo_url" class="large-text" value="<?php echo esc_attr($o['logo_url']); ?>" placeholder="Boş = eklentideki MST logosu"></td></tr>
                 </table>
                 <h2>Metinler</h2>

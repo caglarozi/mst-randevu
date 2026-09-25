@@ -287,6 +287,11 @@ html { scroll-behavior: smooth; }
 .uyg-kapanis__cta { display: grid; gap: 12px; }
 .uyg-kapanis__wa { display: inline-flex; align-items: center; justify-content: center; gap: 8px; color: rgba(255, 255, 255, .8) !important; font-weight: 700; font-size: 14px; margin-top: 4px; }
 .uyg-kapanis__wa .mst-ic { color: #25d366; }
+/* Mevcut yazarlar için sade giriş bağlantısı (deneme/kayıt izlenimi vermesin) */
+.uyg-giris-link, .uyg .uyg-hero .uyg-giris-link { margin: 20px 0 0; font-size: 14px; color: rgba(255, 255, 255, .55); }
+.uyg-kapanis .uyg-giris-link { margin-top: 6px; font-size: 13px; color: rgba(255, 255, 255, .5); text-align: center; }
+.uyg-giris-link a { color: rgba(255, 255, 255, .85) !important; font-weight: 700; text-decoration: underline; text-decoration-color: rgba(220, 152, 20, .6); text-underline-offset: 3px; }
+.uyg-giris-link a:hover, .uyg-giris-link a:focus-visible { color: var(--mst-altin) !important; }
 
 /* --------------------------------------------------------------------------
    Tablet & mobil
