@@ -4,7 +4,8 @@
  * - Canlı bildirim: girişteki bildirim balonu birkaç saniyede bir değişir
  * - 3B eğim: fare girişteki telefonun üstünde gezinince telefon hafifçe eğilir
  * - Kitap perisi: önce rehberlik isteyip istemediğinizi sorar. Evet: bölüm değiştikçe o bölümün
- *   kutusunun yanına kavis çizerek uçar (kaydırırken takip eder), her bölümü bir kez anlatır.
+ *   kutusunun yanına kavis çizerek uçar (kaydırırken takip eder); her bölüm için "•••" işareti çıkar,
+ *   dokununca bir kez anlatır. Göz kırpar, el/asa sallar, zıplar, tur atarken takla atar.
  *   Hayır ya da ×: vedalaşıp uçarak gider, köşede geri çağırma düğmesi kalır (cevap o oturumda hatırlanır).
  *   Arkasında ışıltı izi bırakır
  * Hareketi azalt (prefers-reduced-motion) açıksa hepsi atlanır ve her şey hemen görünür. */
@@ -211,6 +212,13 @@
           ekle(k.x, k.y, Math.cos(a) * v, Math.sin(a) * v - 40, 8 + Math.random() * 14);
         }
       },
+      // Belirli bir noktadan (asanın yıldızı) ışıltı saç
+      nokta: function (x, y, adet, guc) {
+        for (var i = 0; i < (adet || 1); i++) {
+          var a = Math.random() * Math.PI * 2, v = (guc || 40) * (0.4 + Math.random());
+          ekle(x, y, Math.cos(a) * v, Math.sin(a) * v - 20, 5 + Math.random() * 8);
+        }
+      },
       bitir: function () { yay = false; },
       baslat: function () {
         yay = true; onceki = null;
@@ -228,8 +236,6 @@
     var balon = kutu.querySelector('.uyg-peri__balon'), secim = kutu.querySelector('.uyg-peri__secim');
     var resimler = kutu.querySelectorAll('.uyg-peri__poz'), tuval = document.querySelector('.uyg-peri-iz');
     var ust = document.querySelector('.mst-top');
-    // Telefonda bölüm açıklamaları kendiliğinden açılmaz (içeriği kapatmasın): perinin üstünde 💬 belirir, dokununca açılır
-    var dar = window.matchMedia('(max-width: 640px)');
     var yazilan = document.createElement('span'), kalan = document.createElement('span');
     kalan.className = 'uyg-peri__kalan';
     soz.appendChild(yazilan); soz.appendChild(kalan);
@@ -238,7 +244,20 @@
     var mod = 'yok', aktif = null, bekleyen = null, yazi = 0, gizle = 0, gosterildi = new Set(), dongu = false;
     var W = window.innerWidth, H = window.innerHeight;
     var konum = { x: W + 60, y: H * 0.5 }, gecis = null, turum = null, bakis = 1, yonAn = 1, egimAci = 0, sonTur = performance.now();
-    var iz = null;
+    var iz = null, aktifPoz = resimler[0];
+    // Canlılık: göz kırpma, el/asa sallama (iki kare arasında gidip gelir), zıplama, konunca sekme
+    var elBitis = 0, kirpBitis = 0, sonrakiKirp = performance.now() + 1800, zipla = null, sekme = -1e9;
+    var sonrakiEylem = performance.now() + 4000, sonDikkat = 0;
+    function el(sure) { elBitis = Math.max(elBitis, performance.now() + sure); }
+    function ziplat() { if (!zipla) zipla = performance.now(); }
+    function yildizNokta() {
+      // Asanın yıldızının ekrandaki yeri (pozun iki karesi için görüntüde yüzde olarak kayıtlı)
+      var v = (aktifPoz.getAttribute('data-yildiz') || '').split(';')[aktifPoz.classList.contains('is-hareket') ? 1 : 0];
+      if (!v) return null;
+      var p = v.split(','), r = govde.getBoundingClientRect(), px = +p[0];
+      if (yonAn < 0) px = 100 - px;
+      return { x: r.left + px / 100 * r.width, y: r.top + (+p[1]) / 100 * r.height };
+    }
 
     function hatirla(d) { try { sessionStorage.setItem('mst_peri', d); } catch (e) { /* depolama kapalı */ } }
     function hatirlanan() { try { return sessionStorage.getItem('mst_peri'); } catch (e) { return null; } }
@@ -283,9 +302,9 @@
       };
     }
 
-    function ciz(x, y, aci, yon) {
+    function ciz(x, y, aci, yon, ex, ey) {
       kutu.style.transform = 'translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,0)';
-      govde.style.transform = 'rotate(' + aci.toFixed(2) + 'deg) scaleX(' + (+yon).toFixed(3) + ')';
+      govde.style.transform = 'rotate(' + aci.toFixed(2) + 'deg) scale(' + ((+yon) * (ex || 1)).toFixed(3) + ',' + (ey || 1).toFixed(3) + ')';
     }
     // Balon perinin üstünde (yer yoksa altında) açılır ve ekranın dışına taşmaz; kuyruğu periyi gösterir
     function balonYerlestir() {
@@ -317,8 +336,9 @@
         bitti();
         return;
       }
-      // Daktilo: balon baştan tam boyutta açılır, yazı içinde belirir
+      // Daktilo: balon baştan tam boyutta açılır, yazı içinde belirir; yazarken elleriyle anlatır
       var i = 0;
+      el(metin.length * 24 + 300);
       yazilan.textContent = ''; kalan.textContent = metin;
       balonYerlestir(); kutu.classList.add('is-balon');
       yazi = setInterval(function () {
@@ -326,16 +346,23 @@
         if (i >= metin.length) { clearInterval(yazi); bitti(); }
       }, 24);
     }
-    function isaret(acik) { kutu.classList.toggle('is-mesaj', !!acik); }
-    // Bölümün mesajı yalnızca bir kez söylenir (telefonda yalnızca 💬 işareti belirir)
+    // Okunmamış mesaj işareti: belirince dikkat çekmek için el sallayıp zıplar
+    function isaret(acik) {
+      kutu.classList.toggle('is-mesaj', !!acik);
+      if (acik && !azHareket) { el(1300); ziplat(); sonDikkat = performance.now(); }
+    }
+    // Bölüm açıklaması kendiliğinden açılmaz (içeriği kapatmasın): "•••" işareti belirir, dokununca açılır
     function ilkKezSoyle(b) {
       if (!b || gosterildi.has(b)) return;
       gosterildi.add(b);
-      if (dar.matches) { isaret(true); return; }
-      konus(b.getAttribute('data-peri-soz'));
+      isaret(true);
     }
     function pozVer(poz) {
-      resimler.forEach(function (r) { r.classList.toggle('is-aktif', r.getAttribute('data-poz') === poz); });
+      resimler.forEach(function (r) {
+        var bu = r.getAttribute('data-poz') === poz;
+        r.classList.toggle('is-aktif', bu);
+        if (bu) aktifPoz = r;
+      });
     }
     function yumusak(u) { return u < 0.5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2; }
     function uc(bitince) {
@@ -354,24 +381,25 @@
         x = gecis.a.x + (h.x - gecis.a.x) * e;
         y = gecis.a.y + (h.y - gecis.a.y) * e - Math.sin(Math.PI * u) * gecis.kavis;
         ucuyor = true;
-        if (u >= 1) { var f = gecis.bitince; gecis = null; sonTur = t; if (f) f(); }
+        if (u >= 1) { var f = gecis.bitince; gecis = null; sonTur = t; sekme = t; if (f) f(); }
       } else {
         // Kutuyu takip et (sayfa kayarken peri de yanında uçar)
         x = konum.x + (h.x - konum.x) * 0.16;
         y = konum.y + (h.y - konum.y) * 0.16;
         if (Math.abs(h.x - x) + Math.abs(h.y - y) > 30) ucuyor = true;
-        if (mod === 'rehber' && !turum && !kutu.classList.contains('is-balon') && t - sonTur > 14000) turum = { t0: t, yon: x + boy().w / 2 > W / 2 ? -1 : 1 };
+        if (mod === 'rehber' && !turum && !kutu.classList.contains('is-balon') && t - sonTur > 14000) { turum = { t0: t, yon: x + boy().w / 2 > W / 2 ? -1 : 1 }; el(1800); }
       }
       if (mod === 'yok') { dongu = false; return; } // uçuş bitince gizlendiyse
       var dx = x - onceki.x;
       konum = { x: x, y: y };
       // Beklerken olduğu yerde küçük bir tur (halka) atar
-      var tx = 0, ty = 0;
+      var tx = 0, ty = 0, takla = 0;
       if (turum) {
         var v = Math.min(1, (t - turum.t0) / 1800), a = yumusak(v) * Math.PI * 2;
         tx = Math.sin(a) * 70 * turum.yon; ty = -(1 - Math.cos(a)) * 50;
+        takla = -360 * yumusak(v) * turum.yon; // tur atarken takla da atar
         ucuyor = true;
-        if (v >= 1) { turum = null; sonTur = t; }
+        if (v >= 1) { turum = null; sonTur = t; sekme = t; }
       }
       // Yön: tüm pozlar sola dönük çizildi; sağa bakması gerekince aynalanır.
       // Gerçek uçuşta (bölüm değişimi, tur) gittiği yöne; dururken ve kutuyu takip ederken kutusuna,
@@ -389,7 +417,39 @@
       kutu.classList.toggle('is-ucuyor', ucuyor);
       var s = t / 1000, egimHedef = ucusta ? Math.max(-18, Math.min(18, dx * 1.2)) : 0;
       egimAci += (egimHedef + Math.sin(s * 1.7) * 3 - egimAci) * 0.12;
-      ciz(x + tx + Math.sin(s * 1.3) * 4, y + ty + Math.sin(s * 2.1) * 3, egimAci, yonAn);
+
+      // Beklerken ara sıra bir şey yapar: el/asa sallar, zıplar ya da asasından ışıltı saçar
+      var bosta = !ucusta && !kutu.classList.contains('is-balon');
+      if (bosta && t > sonrakiEylem) {
+        var r = Math.random();
+        if (r < 0.4) el(1100); else if (r < 0.7) ziplat();
+        else { var yp = yildizNokta(); if (yp && iz) iz.nokta(yp.x, yp.y, 14, 90); el(500); }
+        sonrakiEylem = t + 3200 + Math.random() * 3300;
+      }
+      if (kutu.classList.contains('is-mesaj') && bosta && t - sonDikkat > 7000) { el(900); ziplat(); sonDikkat = t; }
+      // Zıplama: çömelip sıçrar, inerken yaylanır
+      var zy = 0, ex = 1, ey = 1;
+      if (zipla) {
+        var zu = (t - zipla) / 520;
+        if (zu >= 1) { zipla = null; sekme = t; }
+        else if (zu < 0.15) { var c = Math.sin(zu / 0.15 * Math.PI); ey -= 0.12 * c; ex += 0.1 * c; }
+        else { var hu = (zu - 0.15) / 0.85; zy = -22 * Math.sin(Math.PI * hu); ey += 0.08 * Math.sin(Math.PI * hu); ex -= 0.05 * Math.sin(Math.PI * hu); }
+      }
+      // Konunca sekme (yaylanarak oturur)
+      var sd = t - sekme;
+      if (sd < 450) { var q = Math.sin(sd / 55) * Math.exp(-sd / 130) * 0.16; ey -= q; ex += q; }
+      // Uçarken hafifçe uzar, süzülürken nefes alır gibi esner
+      if (ucusta) { ey *= 1.05; ex *= 0.96; }
+      else { ey *= 1 + 0.025 * Math.cos(s * 2.1); ex *= 1 - 0.02 * Math.cos(s * 2.1); }
+      // Göz kırpma (ara sıra çift)
+      if (t > sonrakiKirp) { kirpBitis = t + 130; sonrakiKirp = t + (Math.random() < 0.25 ? 320 : 2400 + Math.random() * 3200); }
+      aktifPoz.classList.toggle('is-kirp', t < kirpBitis);
+      // El/asa sallama: iki kare arasında gidip gelir; sallarken asadan ışıltı dökülür
+      var sallar = t < elBitis;
+      aktifPoz.classList.toggle('is-hareket', sallar && Math.floor(t / 230) % 2 === 1);
+      if (iz && !gecis && Math.random() < (sallar ? 0.3 : 0.04)) { var yn = yildizNokta(); if (yn) iz.nokta(yn.x, yn.y, 1, 30); }
+
+      ciz(x + tx + Math.sin(s * 1.3) * 4, y + ty + zy + Math.sin(s * 2.1) * 3, egimAci + takla, yonAn, ex, ey);
       if (mod === 'rehber' && bekleyen && !gecis) {
         if (bekleyen !== aktif) bekleyen = null;
         else if (h.gorunur) { ilkKezSoyle(bekleyen); bekleyen = null; }
@@ -440,6 +500,7 @@
         pozVer('selam');
         var sor = function () {
           if (iz) iz.patla(24);
+          el(2200); ziplat();
           konus(SORU, 0, function () { secim.hidden = false; balonYerlestir(); });
         };
         if (azHareket) { sabitCiz(); sor(); } else { ciz(konum.x, konum.y, 0, yonAn); donguBaslat(); uc(sor); }
@@ -493,6 +554,7 @@
         mod = 'rehber';
         pozVer('sevinc');
         if (iz) iz.patla(30);
+        ziplat(); el(1500);
         var b = aktif || simdikiBolum();
         gosterildi.add(b);
         konus('Harika! Aşağı kaydırın, her bölümde yanınızda olacağım.', undefined, null);

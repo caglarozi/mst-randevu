@@ -1,11 +1,11 @@
 # MST "Kitap perisi" maskotu — Blender (bpy) ile modelleme + poz render
-# Çalıştırma: pip install bpy pillow; python3 araclar/peri-blender.py  (PNG çıktıları bu klasöre yazılır;
+# Çalıştırma: pip install bpy pillow; python3 araclar/peri-blender.py [-- poz ... --yalniz-ek]  (PNG'ler bu klasöre yazılır;
 # sayfadaki görseller bunlardan kırpılıp 360px WebP olarak mst-randevu/assets/peri/ altına konur)
 import bpy, bmesh, math, sys, os
 from mathutils import Vector
 
 OUT = os.path.dirname(os.path.abspath(__file__))
-POZLAR_ISTENEN = sys.argv[sys.argv.index('--') + 1:] if '--' in sys.argv else []
+POZLAR_ISTENEN = [a for a in (sys.argv[sys.argv.index('--') + 1:] if '--' in sys.argv else []) if not a.startswith('--')]
 R = math.radians
 
 
@@ -206,6 +206,9 @@ for s, x in (('L', -0.2), ('R', 0.2)):
     YUZ['mutlu' + s] = yay('mutlu' + s, govde, (x, ey - 0.01, 0.13), 0.1, 0.022, 'agiz', ust=True)
     YUZ['yanak' + s] = kure('yanak' + s, govde, (x * 1.62, ey + 0.005, -0.03), (0.07, 0.012, 0.045), 'yanak')
 YUZ['gulus'] = yay('gulus', govde, (0, ey - 0.005, -0.06), 0.085, 0.02, 'agiz', ust=False)
+# Göz kırpma karesi için kapalı gözler (‿ ‿)
+for s_, x_ in (('L', -0.2), ('R', 0.2)):
+    YUZ['kapali' + s_] = yay('kapali' + s_, govde, (x_, ey - 0.012, 0.16), 0.105, 0.022, 'agiz', ust=False)
 # Açık ağız (D şekli)
 bpy.ops.mesh.primitive_cylinder_add(vertices=48, radius=0.1, depth=0.03)
 ag = bpy.context.object; ag.name = 'acik_agiz'
@@ -276,6 +279,7 @@ isik('kontur2', (-2.4, 2.6, 0.8), 500, 2.0, '#fff1d6')
 
 # ---------------- pozlar ----------------
 # kol: (dışa açılma, öne, dirsek bükümü) derece; asa: (hangi el, asanın ele göre açısı) veya None
+# ek: ikinci hareket karesi (sayfada iki kare arasında gidip gelerek el sallama / asa sallama olur)
 POZLAR = {
     'selam': dict(L=(35, 10, -15), R=(150, 5, -35), asa=('L', (-25,)), yuz='acik', bak=(0, 0), govde=(0, 0, -30), kanat=1.0),
     'goster': dict(L=(88, 18, -8), R=(22, 5, -20), asa=('L', (-80,)), yuz='gulus', bak=(-0.035, 0.005), govde=(0, 7, -26), kanat=0.8),
@@ -283,6 +287,14 @@ POZLAR = {
     'sevinc': dict(L=(150, 5, 10), R=(150, 5, 10), asa=('R', (15,)), yuz='mutlu_acik', bak=(0, 0), govde=(0, 0, -28), kanat=1.3),
     'goz_kirp': dict(L=(40, 10, -20), R=(125, 25, -60), asa=('R', (30,)), yuz='kirp', bak=(0, 0), govde=(0, -5, -32), kanat=1.0),
 }
+EK = {
+    'selam': dict(R=(118, 5, 5)),
+    'goster': dict(L=(104, 18, -28), asa=('L', (-55,))),
+    'dusun': dict(L=(30, 60, -108), asa=('R', (10,))),
+    'sevinc': dict(L=(118, 8, 45), R=(118, 8, 45), asa=('R', (-15,))),
+    'goz_kirp': dict(R=(145, 20, -25), asa=('R', (0,))),
+}
+YALNIZ_EK = '--yalniz-ek' in sys.argv
 
 
 def poz_uygula(p):
@@ -326,26 +338,53 @@ def poz_uygula(p):
 import json
 from bpy_extras.object_utils import world_to_camera_view
 KANATLAR = [o for o in sc.objects if o.name.startswith('kanat') and o.type == 'MESH']
-merkez = {}
+merkez, yildiz = {}, {}
+YILDIZ = sc.objects['asa_yildiz']
+
+
+def goruntu(nokta):
+    v = world_to_camera_view(sc, sc.camera, nokta)
+    return (v.x * sc.render.resolution_x, (1 - v.y) * sc.render.resolution_y)
+
+
+def govde_render(dosya):
+    """Kanatlar gizli gövde render'ı"""
+    gizli = {o.name: o.hide_render for o in sc.objects}
+    for k in KANATLAR: k.hide_render = True
+    sc.render.filepath = os.path.join(OUT, dosya)
+    bpy.ops.render.render(write_still=True)
+    for o in sc.objects: o.hide_render = gizli[o.name]
+
+
 for ad, p in POZLAR.items():
     if POZLAR_ISTENEN and ad not in POZLAR_ISTENEN:
         continue
     poz_uygula(p)
     bpy.context.view_layer.update()
-    # Kanat çırpma ekseni: kanatların gövdeye bağlandığı nokta (görüntüde yüzde olarak)
-    kok_nokta = govde.matrix_world @ Vector((0, 0.24, 0.12))
-    v = world_to_camera_view(sc, sc.camera, kok_nokta)
-    merkez[ad] = (v.x * sc.render.resolution_x, (1 - v.y) * sc.render.resolution_y)
-    # 1) Gövde (kanatsız)  2) Yalnız kanatlar — sayfada kanatlar ayrı katman olarak çırpılır
-    gizli = {o.name: o.hide_render for o in sc.objects}
-    for k in KANATLAR: k.hide_render = True
-    sc.render.filepath = os.path.join(OUT, ad + '-govde.png')
-    bpy.ops.render.render(write_still=True)
-    for o in sc.objects:
-        if o.type in ('MESH', 'CURVE'): o.hide_render = True
-    for k in KANATLAR: k.hide_render = False
-    sc.render.filepath = os.path.join(OUT, ad + '-kanat.png')
-    bpy.ops.render.render(write_still=True)
-    for o in sc.objects: o.hide_render = gizli[o.name]
+    # Kanat çırpma ekseni: kanatların gövdeye bağlandığı nokta (görüntüde piksel)
+    merkez[ad] = goruntu(govde.matrix_world @ Vector((0, 0.24, 0.12)))
+    yildiz[ad] = [goruntu(YILDIZ.matrix_world.translation)]
+    if not YALNIZ_EK:
+        # 1) Gövde (kanatsız)  2) Yalnız kanatlar — sayfada kanatlar ayrı katman olarak çırpılır
+        govde_render(ad + '-govde.png')
+        gizli = {o.name: o.hide_render for o in sc.objects}
+        for o in sc.objects:
+            if o.type in ('MESH', 'CURVE'): o.hide_render = True
+        for k in KANATLAR: k.hide_render = False
+        sc.render.filepath = os.path.join(OUT, ad + '-kanat.png')
+        bpy.ops.render.render(write_still=True)
+        for o in sc.objects: o.hide_render = gizli[o.name]
+    # 3) Göz kırpma karesi (gözleri zaten kapalı olan sevinç pozunda yok)
+    if p['yuz'] != 'mutlu_acik':
+        for n in ('goz', 'bebek', 'par', 'par2', 'mutlu'):
+            for s_ in 'LR': YUZ[n + s_].hide_render = True
+        YUZ['kapaliL'].hide_render = YUZ['kapaliR'].hide_render = False
+        govde_render(ad + '-kirp.png')
+    # 4) İkinci hareket karesi
+    p2 = dict(p, **EK[ad])
+    poz_uygula(p2)
+    bpy.context.view_layer.update()
+    yildiz[ad].append(goruntu(YILDIZ.matrix_world.translation))
+    govde_render(ad + '-govde2.png')
     print('RENDER', ad)
-json.dump(merkez, open(os.path.join(OUT, 'kanat-merkez.json'), 'w'))
+json.dump({'merkez': merkez, 'yildiz': yildiz}, open(os.path.join(OUT, 'peri-veri.json'), 'w'))

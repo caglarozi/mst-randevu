@@ -460,6 +460,7 @@ html { scroll-behavior: smooth; }
 .uyg-peri__govde {
   pointer-events: auto; position: relative; display: block; width: 112px; height: 81px; padding: 0; margin: 0;
   border: 0; background: none; cursor: pointer; -webkit-tap-highlight-color: transparent;
+  transform-origin: 50% 68%;
 }
 .uyg-peri__govde:focus-visible { outline: 2px solid var(--mst-altin, #dc9814); outline-offset: 4px; border-radius: 20px; }
 .uyg-peri__ic {
@@ -473,6 +474,12 @@ html { scroll-behavior: smooth; }
 }
 .uyg-peri__poz.is-aktif { opacity: 1; transform: none; }
 .uyg-peri__poz img { position: absolute; inset: 0; width: 100%; height: 100%; }
+/* Kareler: göz kırpma (is-kirp) ve el/asa sallamanın ikinci karesi (is-hareket) */
+.uyg-peri__beden--kirp, .uyg-peri__beden--2 { visibility: hidden; }
+.uyg-peri__poz.is-kirp .uyg-peri__beden--kirp { visibility: visible; }
+.uyg-peri__poz.is-kirp .uyg-peri__beden--ana { visibility: hidden; }
+.uyg-peri__poz.is-hareket .uyg-peri__beden--2 { visibility: visible; }
+.uyg-peri__poz.is-hareket .uyg-peri__beden--ana, .uyg-peri__poz.is-hareket .uyg-peri__beden--kirp { visibility: hidden; }
 /* Kanat çırpma: kanat katmanı gövdenin arkasında, bağlandığı noktadan daralıp açılır */
 .uyg-peri__kanat { transform-origin: 56% 45%; animation: uyg-peri-cirp .24s ease-in-out infinite alternate; }
 .uyg-peri.is-ucuyor .uyg-peri__kanat { animation-duration: .11s; }
