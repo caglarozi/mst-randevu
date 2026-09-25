@@ -173,6 +173,17 @@ body.admin-bar .akd-gezinti { top: 108px; }
 }
 .akd-program-sekme a span { font-family: var(--mst-font-baslik); color: var(--mst-altin); }
 .akd-program-sekme a:hover { border-color: var(--mst-altin); background: rgba(220, 152, 20, .08); }
+/* Telefonda sekmeli programlar (akademi.js "akd-sekmeli" ekler) */
+.akd-sekmeli .akd-program.is-gizli { display: none; }
+.akd-sekmeli .akd-program:not(.is-gizli) { animation: akd-yukari .35s ease both; }
+.akd-sekmeli .akd-program-sekme { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; margin: -8px 0 18px; }
+.akd .akd-sekmeli .akd-program-sekme a {
+  display: grid; justify-items: center; align-content: center; gap: 2px; min-height: 64px; padding: 8px 6px; margin: 0;
+  border-radius: 16px; text-align: center; font-size: 12.5px; line-height: 1.25; white-space: normal;
+}
+.akd-sekmeli .akd-program-sekme a span { font-size: 15px; }
+.akd .akd-sekmeli .akd-program-sekme a[aria-selected="true"] { background: var(--mst-altin); border-color: var(--mst-altin); color: #1a1a1a !important; }
+.akd-sekmeli .akd-program-sekme a[aria-selected="true"] span { color: #1a1a1a; }
 
 .akd-program {
   background: #fff; color: var(--mst-yazi); border-radius: 30px; padding: 44px; margin-bottom: 28px;

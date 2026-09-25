@@ -1,7 +1,7 @@
 /* MST Yazar Kariyer Akademisi — açılış sahnesi ve bölüm menüsü.
  * - "Yazmak başlangıçtır." daktiloyla yazılır; sahne ışığının huzmesinde toz zerreleri süzülür
  * - Bölüm menüsünde ekrandaki bölüm işaretlenir
- * - Telefonda uzun müfredat listeleri kapalı başlar
+ * - Telefonda uzun müfredat listeleri kapalı başlar, programlar sekmeli görünür
  * Hareketi azalt açıksa daktilo ve toz çalışmaz; sayfa durağan görünür. */
 (function () {
   'use strict';
@@ -72,8 +72,41 @@
     linkler.forEach(function (l) { var b = document.getElementById(l.getAttribute('data-akd-gez')); if (b) io.observe(b); });
   }
 
+  // Telefonda programlar sekmeli: aynı anda tek program görünür, üstteki 01/02/03 etiketleriyle geçilir.
+  // Bilgisayarda üç program alt alta açık kalır (etiketler yalnızca ilgili programa kaydırır).
+  function programSekme() {
+    var bolum = document.getElementById('programlar');
+    var sekmeler = bolum ? [].slice.call(bolum.querySelectorAll('.akd-program-sekme a')) : [];
+    var programlar = bolum ? [].slice.call(bolum.querySelectorAll('.akd-program')) : [];
+    if (!sekmeler.length || sekmeler.length !== programlar.length) return;
+    var mq = window.matchMedia('(max-width: 640px)'), secili = 0;
+    function goster(i) {
+      secili = i;
+      sekmeler.forEach(function (a, k) { a.setAttribute('aria-selected', k === i ? 'true' : 'false'); a.tabIndex = k === i ? 0 : -1; });
+      programlar.forEach(function (p, k) { p.classList.toggle('is-gizli', k !== i); });
+    }
+    function uygula() {
+      bolum.classList.toggle('akd-sekmeli', mq.matches);
+      if (mq.matches) goster(secili);
+      else programlar.forEach(function (p) { p.classList.remove('is-gizli'); });
+    }
+    sekmeler.forEach(function (a, i) {
+      a.addEventListener('click', function (e) {
+        if (!mq.matches) return;
+        e.preventDefault();
+        goster(i);
+        var bar = bolum.querySelector('.akd-program-sekme');
+        window.scrollTo({ top: bar.getBoundingClientRect().top + window.pageYOffset - 140, behavior: azHareket ? 'auto' : 'smooth' });
+      });
+    });
+    var m = /^#program-(.+)$/.exec(location.hash);
+    if (m) programlar.forEach(function (p, i) { if (p.id === 'program-' + m[1]) secili = i; });
+    uygula();
+    if (mq.addEventListener) mq.addEventListener('change', uygula); else if (mq.addListener) mq.addListener(uygula);
+  }
+
   function basla() {
-    daktilo(); toz(); gezinti();
+    daktilo(); toz(); gezinti(); programSekme();
     if (window.matchMedia('(max-width: 640px)').matches) {
       document.querySelectorAll('.akd-acilir[open]').forEach(function (d) { d.open = false; });
     }
