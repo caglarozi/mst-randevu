@@ -2,7 +2,7 @@
 /**
  * Plugin Name: MST Yazar Adayı Randevu
  * Description: Yazar adaylarının müsait saatlerden görüşme randevusu alması. Kısa kod: [mst_randevu] — ya da sayfa şablonu olarak "MST Randevu (Tam Sayfa)".
- * Version:     1.5.11
+ * Version:     1.5.12
  * Author:      MST Yayıncılık
  * Text Domain: mst-randevu
  * Requires PHP: 7.4
@@ -12,7 +12,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('MST_RANDEVU_VER', '1.5.11');
+define('MST_RANDEVU_VER', '1.5.12');
 define('MST_RANDEVU_DB', 4);
 define('MST_RANDEVU_URL', plugin_dir_url(__FILE__));
 
@@ -461,7 +461,7 @@ class MST_Randevu
             ['name', 'twitter:card', 'summary_large_image'], ['name', 'twitter:title', $m[0]],
             ['name', 'twitter:description', $m[1]], ['name', 'twitter:image', $gorsel],
         ];
-        $h = $tur === 'akademi' ? '<meta name="description" content="' . esc_attr($m[1]) . '">' . "\n    " : '';
+        $h = '';
         foreach ($e as $x) $h .= '<meta ' . $x[0] . '="' . esc_attr($x[1]) . '" content="' . esc_attr($x[2]) . '">' . "\n    ";
         return $h;
     }
@@ -474,11 +474,16 @@ class MST_Randevu
      * Aramada (Google) görünen başlık ve açıklama; paylaşım başlığı ayrıdır (paylasim_meta).
      * randevu: yazar adayları "kitap yayınlatmak / bastırmak" diye arıyor.
      * uygulama: yayınevlerinde bu hizmetin adı "yazar paneli"; yazarlar satış ve telif takibi arıyor.
+     * akademi: "yazarlık eğitimi / yazarlık kursu" aramaları.
      */
     const SEO = [
         'randevu'  => [
             'Kitap Yayınlatmak İstiyorum: Ücretsiz Ön Görüşme | MST Yayıncılık',
             'Kitap yayınlatmak ya da bastırmak mı istiyorsunuz? Size uygun saati seçin, yayın danışmanımız sizi arasın; dosyanızı ve yayın sürecini ücretsiz konuşalım.',
+        ],
+        'akademi'  => [
+            'Yazar Kariyer Akademisi: Yazarlık Eğitimi | MST Yayıncılık',
+            'Yazarlar için online yazarlık ve kariyer eğitimi: yazar kimliği, hedef okur, sosyal medya, kitap lansmanı ve PR. Üç seviyeli program, ücretsiz başlangıç eğitimi.',
         ],
         'uygulama' => [
             'Yazar Paneli: Kitap Satış ve Telif Takibi | MST Yayıncılık',
@@ -585,6 +590,53 @@ class MST_Randevu
             ];
         }
         return self::seo_aciklama('uygulama') . '<script type="application/ld+json">' . wp_json_encode(['@context' => 'https://schema.org', '@graph' => $grafik], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . '</script>' . "\n";
+    }
+
+    /**
+     * Akademi sayfası yapılandırılmış verisi (JSON-LD): kurum, sayfa, sayfa yolu, üç program (Course:
+     * süre, kontenjan, çevrim içi canlı ders, fiyat) ve SSS. Google kurs ve SSS sonuçları için okur.
+     * $programlar: [anahtar => ['kimler', 'fiyat_sayi', 'sure_iso', ...]], $sss: [[soru, cevap], ...]
+     */
+    public static function seo_akademi(array $programlar, array $sss)
+    {
+        list($baslik, $aciklama) = self::SEO['akademi'];
+        $url   = get_permalink() ?: home_url('/');
+        $site  = home_url('/');
+        $kurum = ['@type' => 'EducationalOrganization', '@id' => $site . '#mst-yayincilik', 'name' => 'MST Yayıncılık', 'url' => $site, 'logo' => self::logo_url()];
+        $grafik = [
+            $kurum,
+            [
+                '@type' => 'WebPage', '@id' => $url . '#sayfa', 'url' => $url, 'name' => $baslik, 'description' => $aciklama, 'inLanguage' => 'tr-TR',
+                'isPartOf' => ['@type' => 'WebSite', 'url' => $site, 'name' => 'MST Yayıncılık'], 'publisher' => ['@id' => $site . '#mst-yayincilik'],
+                'breadcrumb' => ['@id' => $url . '#yol'], 'primaryImageOfPage' => MST_RANDEVU_URL . 'assets/paylasim-akademi.jpg',
+            ],
+            [
+                '@type' => 'BreadcrumbList', '@id' => $url . '#yol',
+                'itemListElement' => [
+                    ['@type' => 'ListItem', 'position' => 1, 'name' => 'Ana sayfa', 'item' => $site],
+                    ['@type' => 'ListItem', 'position' => 2, 'name' => 'Yazar Kariyer Akademisi', 'item' => $url],
+                ],
+            ],
+        ];
+        foreach ($programlar as $k => $p) {
+            if (!class_exists('MST_Akademi') || empty(MST_Akademi::PROGRAMLAR[$k])) continue;
+            $grafik[] = [
+                '@type' => 'Course', '@id' => $url . '#program-' . $k, 'name' => MST_Akademi::PROGRAMLAR[$k][0], 'description' => $p['kimler'] . ' ' . $p['hedef'],
+                'url' => $url . '#program-' . $k, 'inLanguage' => 'tr', 'provider' => ['@id' => $site . '#mst-yayincilik'],
+                'educationalLevel' => $p['seviye'], 'teaches' => array_values(array_map(function ($m) { return $m[1]; }, $p['mufredat'])),
+                'offers' => [['@type' => 'Offer', 'category' => 'Paid', 'price' => $p['fiyat_sayi'], 'priceCurrency' => 'TRY', 'url' => $url . '#program-' . $k, 'availability' => 'https://schema.org/InStock']],
+                'hasCourseInstance' => [['@type' => 'CourseInstance', 'courseMode' => 'Online', 'courseWorkload' => $p['sure_iso'], 'inLanguage' => 'tr']],
+            ];
+        }
+        if ($sss) {
+            $grafik[] = [
+                '@type' => 'FAQPage', '@id' => $url . '#sss',
+                'mainEntity' => array_map(function ($s) {
+                    return ['@type' => 'Question', 'name' => wp_strip_all_tags($s[0]), 'acceptedAnswer' => ['@type' => 'Answer', 'text' => wp_strip_all_tags($s[1])]];
+                }, $sss),
+            ];
+        }
+        return self::seo_aciklama('akademi') . '<script type="application/ld+json">' . wp_json_encode(['@context' => 'https://schema.org', '@graph' => $grafik], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . '</script>' . "\n";
     }
 
     /** Randevu onay ekranındaki Akademi kartının adresi: ayardaki adres, yoksa Akademi şablonlu sayfa. */
