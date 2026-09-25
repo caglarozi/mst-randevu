@@ -31,6 +31,8 @@ Eklenti kendini bu depodaki GitHub sürümlerinden (Releases) günceller — zip
 
 Yeni sayfa → *Sayfa Özellikleri → Şablon →* **MST Yazar Paneli Tanıtım (Tam Sayfa)** → Yayımla. Üst çubuk randevu sayfasıyla aynıdır; "Panele Giriş" butonları **Bildirim & Ayarlar → Yazar Paneli adresi**'ne (boşsa `https://app.mstyayincilik.com/`), "MST yazarı olun / randevu" butonları randevu sayfasına gider. Telefon ve paneldeki ekranlar temsili çizimlerdir (gerçek veri değildir).
 
+Sağ altta **kitap perisi** maskotu süzülür: kaydırdıkça bölümden bölüme uçar, pozunu değiştirir, arkasında ışıltı parçacıkları bırakır ve konuşma balonunda o bölümü anlatır. Poz ve cümleler şablondaki `$peri('poz', 'cümle')` çağrılarındadır; pozlar `assets/peri/` altındaki görsellerdir (Blender ile çizildi). Ziyaretçi × ile kapatırsa o oturumda bir daha çıkmaz; "hareketi azalt" ayarında hareketsiz görünür.
+
 ## Yerel önizleme (WordPress olmadan)
 
 ```bash

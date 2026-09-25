@@ -39,6 +39,10 @@ $ik = function ($n, $boy = 22) {
     ];
     return '<svg class="uyg-ic" width="' . (int) $boy . '" height="' . (int) $boy . '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' . ($d[$n] ?? '') . '</svg>';
 };
+// Kitap perisi: bölüme girilince perinin pozu ve söyleyeceği cümle
+$peri = function ($poz, $soz) {
+    return 'data-peri-poz="' . esc_attr($poz) . '" data-peri-soz="' . esc_attr($soz) . '"';
+};
 
 /** Madde listesi (altın onay işaretli). */
 $liste = function (array $maddeler) use ($ik) {
@@ -93,7 +97,7 @@ $sss = [
 <main class="uyg">
 
     <!-- ============ Giriş ============ -->
-    <section class="uyg-hero">
+    <section class="uyg-hero" <?php echo $peri('selam', 'Merhaba! Ben kitap perisi. Aşağı kaydırın, Yazar Paneli\'ni birlikte gezelim.'); ?>>
         <div class="uyg-kap uyg-hero__in">
             <div class="uyg-hero__metin">
                 <h1 aria-label="Kitabınızın tüm yolculuğu tek uygulamada."><span class="uyg-k" style="--i:0">Kitabınızın</span> <span class="uyg-k" style="--i:1">tüm</span> <span class="uyg-k" style="--i:2">yolculuğu</span> <em class="uyg-k uyg-parilti" style="--i:3">tek uygulamada.</em></h1>
@@ -146,7 +150,7 @@ $sss = [
     </nav>
 
     <!-- ============ 1. Yayın süreci ============ -->
-    <section class="uyg-bolum" id="surec">
+    <section class="uyg-bolum" id="surec" <?php echo $peri('goster', 'Editörden baskıya, kitabınızın her adımını buradan anlık izlersiniz.'); ?>>
         <div class="uyg-kap">
             <header class="uyg-baslik">
                 <span class="uyg-ust"><?php echo $ik('rota', 18); ?> Yayın süreci</span>
@@ -171,7 +175,7 @@ $sss = [
     </section>
 
     <!-- ============ 2. Satış & stok ============ -->
-    <section class="uyg-bolum uyg-bolum--acik" id="satis">
+    <section class="uyg-bolum uyg-bolum--acik" id="satis" <?php echo $peri('goster', 'D&R\'dan Trendyol\'a, hangi mağazada kaç adet sattığınız tek ekranda!'); ?>>
         <div class="uyg-kap uyg-iki">
             <div>
                 <header class="uyg-baslik uyg-baslik--sol">
@@ -209,7 +213,7 @@ $sss = [
     </section>
 
     <!-- ============ 3. Telif ============ -->
-    <section class="uyg-bolum" id="telif">
+    <section class="uyg-bolum" id="telif" <?php echo $peri('sevinc', 'Hak edişleriniz ve ödemeleriniz burada; her kuruşu görürsünüz.'); ?>>
         <div class="uyg-kap uyg-iki uyg-iki--ters">
             <div>
                 <header class="uyg-baslik uyg-baslik--sol">
@@ -241,7 +245,7 @@ $sss = [
     </section>
 
     <!-- ============ 4. Reklam & tanıtım ============ -->
-    <section class="uyg-bolum uyg-bolum--acik" id="tanitim">
+    <section class="uyg-bolum uyg-bolum--acik" id="tanitim" <?php echo $peri('goster', 'Kitabınız için yapılan her tanıtım çalışması önünüzde.'); ?>>
         <div class="uyg-kap uyg-iki">
             <div>
                 <header class="uyg-baslik uyg-baslik--sol">
@@ -271,7 +275,7 @@ $sss = [
     </section>
 
     <!-- ============ 5. Kariyer & Akademi ============ -->
-    <section class="uyg-bolum" id="kariyer">
+    <section class="uyg-bolum" id="kariyer" <?php echo $peri('dusun', '“Bugün ne yapmalıyım?” diye düşünmeyin; sıradaki adımınız hazır.'); ?>>
         <div class="uyg-kap">
             <header class="uyg-baslik">
                 <span class="uyg-ust"><?php echo $ik('hedef', 18); ?> Kariyer planı & Yazar Kariyer Akademisi</span>
@@ -305,7 +309,7 @@ $sss = [
     </section>
 
     <!-- ============ 6. AI Yazar Asistanı ============ -->
-    <section class="uyg-bolum uyg-bolum--koyu" id="asistan">
+    <section class="uyg-bolum uyg-bolum--koyu" id="asistan" <?php echo $peri('goz-kirp', 'Gece yarısı bir fikir mi lazım? Asistanınız hep uyanık.'); ?>>
         <div class="uyg-kap uyg-iki">
             <div>
                 <header class="uyg-baslik uyg-baslik--sol">
@@ -333,7 +337,7 @@ $sss = [
     </section>
 
     <!-- ============ 7. Başarı & topluluk ============ -->
-    <section class="uyg-bolum" id="topluluk">
+    <section class="uyg-bolum" id="topluluk" <?php echo $peri('sevinc', 'Diğer MST yazarlarıyla tanışın, birlikte büyüyün!'); ?>>
         <div class="uyg-kap">
             <header class="uyg-baslik">
                 <span class="uyg-ust"><?php echo $ik('kisiler', 18); ?> Başarı & topluluk</span>
@@ -371,7 +375,7 @@ $sss = [
     </section>
 
     <!-- ============ Tek uygulama ============ -->
-    <section class="uyg-bolum uyg-bolum--acik">
+    <section class="uyg-bolum uyg-bolum--acik" <?php echo $peri('goster', 'Başlamak çok kolay: üç adımda panelinizdesiniz.'); ?>>
         <div class="uyg-kap">
             <header class="uyg-baslik">
                 <span class="uyg-ust"><?php echo $ik('telefon', 18); ?> Nasıl başlanır?</span>
@@ -386,7 +390,7 @@ $sss = [
     </section>
 
     <!-- ============ SSS ============ -->
-    <section class="uyg-bolum" id="sss">
+    <section class="uyg-bolum" id="sss" <?php echo $peri('dusun', 'Aklınıza takılan bir şey mi var? Cevaplar burada.'); ?>>
         <div class="uyg-kap uyg-dar">
             <header class="uyg-baslik"><h2>Sık sorulan sorular</h2></header>
             <div class="uyg-sss">
@@ -398,7 +402,7 @@ $sss = [
     </section>
 
     <!-- ============ Kapanış ============ -->
-    <section class="uyg-kapanis">
+    <section class="uyg-kapanis" <?php echo $peri('goz-kirp', 'Hadi, ilk adımı atın; gerisini birlikte hallederiz!'); ?>>
         <div class="uyg-kap uyg-kapanis__in">
             <div>
                 <h2>Kitabınızın yolculuğunu birlikte yönetelim.</h2>
@@ -421,6 +425,22 @@ $sss = [
     }
     ?>
 </main>
+
+<!-- Kitap perisi: kaydırdıkça bölümleri tanıtan maskot (uygulama.js) -->
+<canvas class="uyg-peri-iz" aria-hidden="true"></canvas>
+<div class="uyg-peri" data-uyg-peri hidden>
+    <div class="uyg-peri__balon" role="status" aria-live="polite">
+        <p data-uyg-peri-soz></p>
+        <button type="button" class="uyg-peri__kapat" aria-label="Kitap perisini gizle">&times;</button>
+    </div>
+    <button type="button" class="uyg-peri__govde" aria-label="Kitap perisi: mesajı göster">
+        <span class="uyg-peri__ic">
+        <?php foreach (['selam', 'goster', 'dusun', 'sevinc', 'goz-kirp'] as $i => $p) : ?>
+            <img src="<?php echo esc_url(MST_RANDEVU_URL . 'assets/peri/' . $p . '.webp?ver=' . MST_RANDEVU_VER); ?>" alt="" width="180" height="130" decoding="async" data-poz="<?php echo esc_attr($p); ?>"<?php echo $i === 0 ? ' class="is-aktif"' : ''; ?>>
+        <?php endforeach; ?>
+        </span>
+    </button>
+</div>
 
 <?php wp_footer(); ?>
 </body>

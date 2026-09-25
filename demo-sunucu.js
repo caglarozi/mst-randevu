@@ -9,7 +9,7 @@
 //   node demo-sunucu.js --crm ANAHTAR --crm-url https://…/randevu
 const http = require('http'), fs = require('fs'), path = require('path');
 const root = __dirname;
-const types = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8' };
+const types = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.webp': 'image/webp', '.png': 'image/png', '.jpg': 'image/jpeg' };
 
 const arg = ad => { const i = process.argv.indexOf(ad); return i > -1 ? process.argv[i + 1] : ''; };
 const CRM_ANAHTAR = arg('--crm');
