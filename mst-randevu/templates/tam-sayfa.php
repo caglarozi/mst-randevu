@@ -6,6 +6,7 @@
 if (!defined('ABSPATH')) {
     exit;
 }
+MST_Randevu::seo_hazirla('randevu'); // arama başlığı/açıklaması (wp_head'den önce)
 ?><!doctype html>
 <html <?php language_attributes(); ?>>
 <head>
@@ -28,6 +29,7 @@ if (!defined('ABSPATH')) {
     })();
     </script>
     <?php echo MST_Randevu::paylasim_meta('randevu'); ?>
+    <?php echo MST_Randevu::seo_aciklama('randevu'); ?>
     <?php wp_head(); ?>
     <?php
     // Güvence: bir eklenti stil dosyasını kuyruktan düşürdüyse doğrudan ekle

@@ -2,7 +2,7 @@
 /**
  * Plugin Name: MST Yazar Adayı Randevu
  * Description: Yazar adaylarının müsait saatlerden görüşme randevusu alması. Kısa kod: [mst_randevu] — ya da sayfa şablonu olarak "MST Randevu (Tam Sayfa)".
- * Version:     1.5.5
+ * Version:     1.5.6
  * Author:      MST Yayıncılık
  * Text Domain: mst-randevu
  * Requires PHP: 7.4
@@ -12,7 +12,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('MST_RANDEVU_VER', '1.5.5');
+define('MST_RANDEVU_VER', '1.5.6');
 define('MST_RANDEVU_DB', 4);
 define('MST_RANDEVU_URL', plugin_dir_url(__FILE__));
 
@@ -469,10 +469,20 @@ class MST_Randevu
     /*  Arama motoru (SEO): Yazar Paneli tanıtım sayfası                   */
     /* ------------------------------------------------------------------ */
 
-    /** Aramada görünen başlık ve açıklama; hedef arama "kitap satış takibi" (paylaşım başlığı ayrıdır: paylasim_meta). */
-    const SEO_UYG = [
-        'Kitap Satış Takibi: Kitabınız Kaç Adet Sattı? | MST Yazar Paneli',
-        'Kitabınız hangi platformda kaç adet sattı, stokta kaç tane kaldı, telifiniz ne kadar? MST Yazar Paneli ile kitap satışlarınızı anlık ve şeffaf takip edin.',
+    /**
+     * Aramada (Google) görünen başlık ve açıklama; paylaşım başlığı ayrıdır (paylasim_meta).
+     * randevu: yazar adayları "kitap yayınlatmak / bastırmak" diye arıyor.
+     * uygulama: yayınevlerinde bu hizmetin adı "yazar paneli"; yazarlar satış ve telif takibi arıyor.
+     */
+    const SEO = [
+        'randevu'  => [
+            'Kitap Yayınlatmak İstiyorum: Ücretsiz Ön Görüşme | MST Yayıncılık',
+            'Kitap yayınlatmak ya da bastırmak mı istiyorsunuz? Size uygun saati seçin, yayın danışmanımız sizi arasın; dosyanızı ve yayın sürecini ücretsiz konuşalım.',
+        ],
+        'uygulama' => [
+            'Yazar Paneli: Kitap Satış ve Telif Takibi | MST Yayıncılık',
+            'Kitabınız hangi platformda kaç adet sattı, telifiniz ne kadar, yayın süreci hangi aşamada? MST Yazar Paneli ile hepsini telefonunuzdan anında takip edin.',
+        ],
     ];
 
     /** Rank Math, Yoast ya da All in One SEO kurulu mu? */
@@ -482,13 +492,13 @@ class MST_Randevu
     }
 
     /**
-     * Yazar Paneli sayfasının arama başlığı ve açıklaması. Şablonun başında, wp_head()'den önce çağrılır.
+     * Randevu / Yazar Paneli sayfasının arama başlığı ve açıklaması. Şablonun başında, wp_head()'den önce çağrılır.
      * SEO eklentisi varsa ve o sayfaya panelden başlık/açıklama yazılmışsa ona dokunulmaz;
      * boşsa bizimkiler kullanılır. Eklenti yoksa açıklamayı kendimiz basarız (seo_uygulama).
      */
-    public static function seo_hazirla()
+    public static function seo_hazirla($tur)
     {
-        list($baslik, $aciklama) = self::SEO_UYG;
+        list($baslik, $aciklama) = self::SEO[$tur];
         $id  = get_queried_object_id();
         $bos = function ($anahtar) use ($id) { return trim((string) get_post_meta($id, $anahtar, true)) === ''; };
         add_filter('pre_get_document_title', function ($t) use ($baslik) { return $baslik; }, 20);
@@ -498,6 +508,12 @@ class MST_Randevu
         if ($bos('_yoast_wpseo_metadesc')) add_filter('wpseo_metadesc', function () use ($aciklama) { return $aciklama; });
     }
 
+    /** Açıklama etiketi; SEO eklentisi varsa onu o basar (seo_hazirla'daki filtrelerle), biz basmayız. */
+    public static function seo_aciklama($tur)
+    {
+        return self::seo_eklentisi() ? '' : '<meta name="description" content="' . esc_attr(self::SEO[$tur][1]) . '">' . "\n    ";
+    }
+
     /**
      * Açıklama etiketi (SEO eklentisi yoksa) + yapılandırılmış veri (JSON-LD): kurum, sayfa yolu,
      * web uygulaması ve sık sorulan sorular. Google bunlarla sayfanın ne olduğunu ve kime ait
@@ -505,7 +521,7 @@ class MST_Randevu
      */
     public static function seo_uygulama(array $sss)
     {
-        list($baslik, $aciklama) = self::SEO_UYG;
+        list($baslik, $aciklama) = self::SEO['uygulama'];
         $url  = get_permalink() ?: home_url('/');
         $site = home_url('/');
         $tel  = preg_replace('/\D/', '', (string) self::opts()['whatsapp']);
@@ -544,8 +560,7 @@ class MST_Randevu
                 }, $sss),
             ];
         }
-        $h = self::seo_eklentisi() ? '' : '<meta name="description" content="' . esc_attr($aciklama) . '">' . "\n    ";
-        return $h . '<script type="application/ld+json">' . wp_json_encode(['@context' => 'https://schema.org', '@graph' => $grafik], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . '</script>' . "\n";
+        return self::seo_aciklama('uygulama') . '<script type="application/ld+json">' . wp_json_encode(['@context' => 'https://schema.org', '@graph' => $grafik], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . '</script>' . "\n";
     }
 
     /** Randevu onay ekranındaki Akademi kartının adresi: ayardaki adres, yoksa Akademi şablonlu sayfa. */
