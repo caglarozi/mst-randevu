@@ -441,59 +441,73 @@ body.admin-bar .mst-top { top: 32px; }
 
 /* --------------------------------------------------------------------------
    Karanlık mod (yalnızca tam sayfa randevu şablonunda)
-   Telefon/tarayıcı karanlık moddaysa sayfa kendi koyu temasına geçer; böylece
-   "zorla karartma" renkleri ters çevirip garip göstermez. Palet aynı: antrasit + altın.
+   <html> "mst-koyu" sınıfını alınca sayfa kendi koyu temasına geçer (palet aynı: antrasit + altın).
+   Sınıfı şablonun <head>'indeki küçük betik koyar: ziyaretçi üst çubuktaki güneş/ay düğmesiyle
+   seçtiyse o, seçmediyse telefonun/tarayıcının ayarı. Böylece "zorla karartma" sayfayı bozmaz.
    -------------------------------------------------------------------------- */
-@media (prefers-color-scheme: dark) {
-  body.mst-sayfa--randevu {
-    color-scheme: dark;
-    --mst-ana: #f1ece2;          /* koyu zeminde metin ve çizgi rengi */
-    --mst-ana-2: #ffffff;
-    --mst-ana-acik: #2c2822;
-    --mst-bej: #2a261f;
-    --mst-zemin-sayfa: #121212;
-    --mst-yazi: #ddd8cd;
-    --mst-koyu: #f4f0e8;
-    --mst-soluk: #a39e93;
-    --mst-cizgi: #36322b;
-    --mst-beyaz: #1c1b19;
-    --mst-hata: #ff8a80;
-  }
-  .mst-sayfa--randevu .mst-rnd { box-shadow: 0 18px 50px rgba(0, 0, 0, .45); }
-  .mst-sayfa--randevu .mst-rnd__aside { background: linear-gradient(180deg, #201f1c 0%, #1c1b19 100%); }
-  .mst-sayfa--randevu .mst-rnd__avatar { background: #2a2620; box-shadow: 0 0 0 3px #1c1b19, 0 0 0 4px var(--mst-cizgi); }
-  .mst-sayfa--randevu .mst-rnd__meta-ic { color: var(--mst-altin); }
-  /* Seçili gün/saat ve koyu düğmeler: açık metin yerine altın zemin */
-  .mst-sayfa--randevu .mst-rnd__day[aria-pressed="true"],
-  .mst-sayfa--randevu .mst-rnd__time[aria-pressed="true"],
-  .mst-sayfa--randevu .mst-rnd__time.is-az[aria-pressed="true"] { background: var(--mst-altin); border-color: var(--mst-altin); color: #1a1a1a; box-shadow: 0 6px 16px rgba(220, 152, 20, .25); }
-  .mst-sayfa--randevu .mst-rnd__time.is-az[aria-pressed="true"] small { color: #1a1a1a; }
-  .mst-sayfa--randevu .mst-rnd__time.is-az[aria-pressed="true"] small::before { background: #1a1a1a; }
-  .mst-sayfa--randevu .mst-rnd__day.is-dolu[aria-pressed="true"] .mst-rnd__day-count { color: #7a1208; }
-  .mst-sayfa--randevu .mst-rnd__time { border-color: #3d3931; }
-  .mst-sayfa--randevu .mst-rnd__time.is-az { border-color: #6b4a14; background: #2b2113; }
-  .mst-sayfa--randevu .mst-rnd__time.is-az small { color: #ffb347; }
-  .mst-sayfa--randevu .mst-rnd__time.is-az:not([aria-pressed="true"]):hover { background: #35281a; }
-  .mst-sayfa--randevu .mst-rnd__time.is-dolu,
-  .mst-sayfa--randevu .mst-rnd__time.is-dolu:hover { color: #ff7a70; border-color: #5c2420; background: #2a1715; }
-  .mst-sayfa--randevu .mst-rnd__time.is-dolu small { color: #ff7a70; }
-  .mst-sayfa--randevu .mst-rnd__day.is-dolu .mst-rnd__day-count { color: #ff7a70; }
-  .mst-sayfa--randevu .mst-rnd__steps li.is-done span { color: #1a1a1a; }
-  .mst-sayfa--randevu .mst-rnd__steps li.is-active span { color: #1a1a1a; }
-  .mst-sayfa--randevu .mst-rnd__btn { color: #1a1a1a; }
-  .mst-sayfa--randevu .mst-rnd__btn--koyu,
-  .mst-sayfa--randevu .mst-rnd__btn--koyu:hover { background: #f1ece2; color: #1a1a1a; }
-  .mst-sayfa--randevu .mst-rnd__btn--ghost { color: var(--mst-ana); }
-  .mst-sayfa--randevu .mst-rnd__field input, .mst-sayfa--randevu .mst-rnd__field textarea { background: #151413; }
-  .mst-sayfa--randevu .mst-rnd__field input:focus, .mst-sayfa--randevu .mst-rnd__field textarea:focus { background: #111; border-color: var(--mst-altin); box-shadow: 0 0 0 4px rgba(220, 152, 20, .18); }
-  .mst-sayfa--randevu .mst-rnd__field input::placeholder, .mst-sayfa--randevu .mst-rnd__field textarea::placeholder { color: #6f6a61; }
-  .mst-sayfa--randevu .mst-rnd__check input { accent-color: var(--mst-altin); }
-  .mst-sayfa--randevu .mst-rnd__error { background: #2a1715; }
-  .mst-sayfa--randevu .mst-rnd__done-icon { background: var(--mst-altin); color: #1a1a1a; box-shadow: 0 0 0 10px rgba(220, 152, 20, .15); }
-  .mst-sayfa--randevu .mst-rnd a.mst-rnd__akademi { border-color: rgba(220, 152, 20, .5); box-shadow: none; }
-  .mst-sayfa--randevu .mst-sayfa__intro { color: var(--mst-yazi); }
+html.mst-koyu body.mst-sayfa--randevu {
+  color-scheme: dark;
+  --mst-ana: #f1ece2;          /* koyu zeminde metin ve çizgi rengi */
+  --mst-ana-2: #ffffff;
+  --mst-ana-acik: #2c2822;
+  --mst-bej: #2a261f;
+  --mst-zemin-sayfa: #121212;
+  --mst-yazi: #ddd8cd;
+  --mst-koyu: #f4f0e8;
+  --mst-soluk: #a39e93;
+  --mst-cizgi: #36322b;
+  --mst-beyaz: #1c1b19;
+  --mst-hata: #ff8a80;
 }
-@media (prefers-color-scheme: dark) and (max-width: 759px) {
-  .mst-sayfa--randevu .mst-rnd__next { background: #1c1b19; box-shadow: 0 -10px 30px rgba(0, 0, 0, .5); }
-  .mst-sayfa--randevu .mst-rnd__meta li { color: var(--mst-koyu); }
+.mst-koyu .mst-sayfa--randevu .mst-rnd { box-shadow: 0 18px 50px rgba(0, 0, 0, .45); }
+.mst-koyu .mst-sayfa--randevu .mst-rnd__aside { background: linear-gradient(180deg, #201f1c 0%, #1c1b19 100%); }
+.mst-koyu .mst-sayfa--randevu .mst-rnd__avatar { background: #2a2620; box-shadow: 0 0 0 3px #1c1b19, 0 0 0 4px var(--mst-cizgi); }
+.mst-koyu .mst-sayfa--randevu .mst-rnd__meta-ic { color: var(--mst-altin); }
+/* Seçili gün/saat ve koyu düğmeler: açık metin yerine altın zemin */
+.mst-koyu .mst-sayfa--randevu .mst-rnd__day[aria-pressed="true"],
+.mst-koyu .mst-sayfa--randevu .mst-rnd__time[aria-pressed="true"],
+.mst-koyu .mst-sayfa--randevu .mst-rnd__time.is-az[aria-pressed="true"] { background: var(--mst-altin); border-color: var(--mst-altin); color: #1a1a1a; box-shadow: 0 6px 16px rgba(220, 152, 20, .25); }
+.mst-koyu .mst-sayfa--randevu .mst-rnd__time.is-az[aria-pressed="true"] small { color: #1a1a1a; }
+.mst-koyu .mst-sayfa--randevu .mst-rnd__time.is-az[aria-pressed="true"] small::before { background: #1a1a1a; }
+.mst-koyu .mst-sayfa--randevu .mst-rnd__day.is-dolu[aria-pressed="true"] .mst-rnd__day-count { color: #7a1208; }
+.mst-koyu .mst-sayfa--randevu .mst-rnd__time { border-color: #3d3931; }
+.mst-koyu .mst-sayfa--randevu .mst-rnd__time.is-az { border-color: #6b4a14; background: #2b2113; }
+.mst-koyu .mst-sayfa--randevu .mst-rnd__time.is-az small { color: #ffb347; }
+.mst-koyu .mst-sayfa--randevu .mst-rnd__time.is-az:not([aria-pressed="true"]):hover { background: #35281a; }
+.mst-koyu .mst-sayfa--randevu .mst-rnd__time.is-dolu,
+.mst-koyu .mst-sayfa--randevu .mst-rnd__time.is-dolu:hover { color: #ff7a70; border-color: #5c2420; background: #2a1715; }
+.mst-koyu .mst-sayfa--randevu .mst-rnd__time.is-dolu small { color: #ff7a70; }
+.mst-koyu .mst-sayfa--randevu .mst-rnd__day.is-dolu .mst-rnd__day-count { color: #ff7a70; }
+.mst-koyu .mst-sayfa--randevu .mst-rnd__steps li.is-done span { color: #1a1a1a; }
+.mst-koyu .mst-sayfa--randevu .mst-rnd__steps li.is-active span { color: #1a1a1a; }
+.mst-koyu .mst-sayfa--randevu .mst-rnd__btn { color: #1a1a1a; }
+.mst-koyu .mst-sayfa--randevu .mst-rnd__btn--koyu,
+.mst-koyu .mst-sayfa--randevu .mst-rnd__btn--koyu:hover { background: #f1ece2; color: #1a1a1a; }
+.mst-koyu .mst-sayfa--randevu .mst-rnd__btn--ghost { color: var(--mst-ana); }
+.mst-koyu .mst-sayfa--randevu .mst-rnd__field input, .mst-koyu .mst-sayfa--randevu .mst-rnd__field textarea { background: #151413; }
+.mst-koyu .mst-sayfa--randevu .mst-rnd__field input:focus, .mst-koyu .mst-sayfa--randevu .mst-rnd__field textarea:focus { background: #111; border-color: var(--mst-altin); box-shadow: 0 0 0 4px rgba(220, 152, 20, .18); }
+.mst-koyu .mst-sayfa--randevu .mst-rnd__field input::placeholder, .mst-koyu .mst-sayfa--randevu .mst-rnd__field textarea::placeholder { color: #6f6a61; }
+.mst-koyu .mst-sayfa--randevu .mst-rnd__check input { accent-color: var(--mst-altin); }
+.mst-koyu .mst-sayfa--randevu .mst-rnd__error { background: #2a1715; }
+.mst-koyu .mst-sayfa--randevu .mst-rnd__done-icon { background: var(--mst-altin); color: #1a1a1a; box-shadow: 0 0 0 10px rgba(220, 152, 20, .15); }
+.mst-koyu .mst-sayfa--randevu .mst-rnd a.mst-rnd__akademi { border-color: rgba(220, 152, 20, .5); box-shadow: none; }
+.mst-koyu .mst-sayfa--randevu .mst-sayfa__intro { color: var(--mst-yazi); }
+@media (max-width: 759px) {
+  .mst-koyu .mst-sayfa--randevu .mst-rnd__next { background: #1c1b19; box-shadow: 0 -10px 30px rgba(0, 0, 0, .5); }
+  .mst-koyu .mst-sayfa--randevu .mst-rnd__meta li { color: var(--mst-koyu); }
 }
+
+/* Tema düğmesi: üst çubuğun solunda güneş/ay */
+.mst-top__tema {
+  position: absolute; left: 20px; top: 50%; transform: translateY(-50%);
+  width: 44px; height: 44px; padding: 0; margin: 0; cursor: pointer; display: grid; place-items: center;
+  color: #fff; background: rgba(255, 255, 255, .06); border: 1.5px solid rgba(255, 255, 255, .35); border-radius: 50%;
+  -webkit-tap-highlight-color: transparent; transition: background .15s, border-color .15s;
+}
+.mst-top__tema:hover { background: rgba(255, 255, 255, .14); border-color: #fff; }
+.mst-top__tema:focus-visible { outline: 2px solid var(--mst-altin); outline-offset: 2px; }
+.mst-top__tema .mst-ic { width: 20px; height: 20px; }
+.mst-top__tema .mst-tema-gunes { display: none; }
+html.mst-koyu .mst-top__tema .mst-tema-gunes { display: block; color: var(--mst-altin); }
+html.mst-koyu .mst-top__tema .mst-tema-ay { display: none; }
+@media (max-width: 759px) { .mst-top__tema { left: 12px; } }
