@@ -33,10 +33,12 @@ html { scroll-behavior: smooth; }
    -------------------------------------------------------------------------- */
 .uyg-hero {
   position: relative; overflow: hidden; color: #fff;
+  /* Masa fotoğrafı (kitaplar, defter, altın ışık) sağda; solda metin okunaklı kalsın diye koyulaşan örtü */
   background:
-    radial-gradient(700px 380px at 85% 10%, rgba(220, 152, 20, .22), transparent 60%),
-    radial-gradient(600px 400px at 0% 100%, rgba(220, 152, 20, .08), transparent 60%),
-    linear-gradient(160deg, #161616 0%, #222222 55%, #2d2820 100%);
+    linear-gradient(90deg, #161616 0%, rgba(22, 22, 22, .94) 30%, rgba(22, 22, 22, .55) 58%, rgba(22, 22, 22, .2) 100%),
+    linear-gradient(0deg, rgba(22, 22, 22, .9) 0%, rgba(22, 22, 22, 0) 32%),
+    url("hero-masa.webp") right center / cover no-repeat,
+    #161616;
   padding: 72px 0 96px;
 }
 .uyg-hero__in { display: grid; grid-template-columns: 1.05fr .95fr; align-items: center; gap: 48px; }
@@ -296,7 +298,13 @@ html { scroll-behavior: smooth; }
   .uyg-rota li:nth-child(4)::after { display: none; }
 }
 @media (max-width: 860px) {
-  .uyg-hero { padding: 48px 0 88px; }
+  .uyg-hero {
+    padding: 48px 0 88px;
+    background:
+      linear-gradient(180deg, rgba(22, 22, 22, .96) 0%, rgba(22, 22, 22, .9) 42%, rgba(22, 22, 22, .5) 70%, rgba(22, 22, 22, .85) 100%),
+      url("hero-masa-mobil.webp") 70% 100% / cover no-repeat,
+      #161616;
+  }
   .uyg-hero__in, .uyg-iki, .uyg-kapanis__in { grid-template-columns: 1fr; }
   .uyg-hero__metin { text-align: center; }
   .uyg-hero__alt { margin-left: auto; margin-right: auto; }
