@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 }
 
 define('MST_RANDEVU_VER', '1.5.0');
-define('MST_RANDEVU_DB', 2);
+define('MST_RANDEVU_DB', 3);
 define('MST_RANDEVU_URL', plugin_dir_url(__FILE__));
 
 /*
@@ -44,6 +44,7 @@ class MST_Randevu
     const SABLON_UYG = 'mst-uygulama-tam-sayfa'; // MST Yazar Paneli tanıtım sayfası
     const OTO    = 'mst_randevu_otomatik';
     const CRON   = 'mst_randevu_gunluk';
+    const KISI   = 2; // bir saate en fazla kaç kişi randevu alabilir
 
     /* ------------------------------------------------------------------ */
     /*  Kurulum                                                            */
@@ -106,7 +107,7 @@ class MST_Randevu
             id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
             baslangic datetime NOT NULL,
             sure smallint(5) unsigned NOT NULL DEFAULT 30,
-            kapasite tinyint(3) unsigned NOT NULL DEFAULT 3,
+            kapasite tinyint(3) unsigned NOT NULL DEFAULT 2,
             dolu tinyint(3) unsigned NOT NULL DEFAULT 0,
             durum varchar(20) NOT NULL DEFAULT 'acik',
             PRIMARY KEY  (id),
@@ -135,10 +136,27 @@ class MST_Randevu
         update_option('mst_randevu_db', MST_RANDEVU_DB);
     }
 
+    /**
+     * Saat başına kişi sınırı 2'ye indi: ileri tarihli saatler ve otomatik açma ayarı buna çekilir.
+     * Zaten 2'den fazla randevusu olan saatte kimse düşmez (sınır dolu sayısının altına inmez).
+     */
+    public static function kisi_siniri_uygula()
+    {
+        global $wpdb;
+        $wpdb->query($wpdb->prepare('UPDATE ' . self::t_slot() . ' SET kapasite = GREATEST(%d, dolu) WHERE kapasite > %d AND baslangic > %s', self::KISI, self::KISI, self::now()->format('Y-m-d H:i:s')));
+        $a = get_option(self::OTO);
+        if (is_array($a) && (int) ($a['kapasite'] ?? 0) > self::KISI) {
+            $a['kapasite'] = self::KISI;
+            update_option(self::OTO, $a, false);
+        }
+    }
+
     public static function maybe_upgrade()
     {
-        if ((int) get_option('mst_randevu_db') !== MST_RANDEVU_DB) {
+        $db = (int) get_option('mst_randevu_db');
+        if ($db !== MST_RANDEVU_DB) {
             self::activate();
+            if ($db && $db < 3) self::kisi_siniri_uygula();
         }
         // Yeni sürüm kurulduysa (elle ya da otomatik güncellemeyle) site önbelleğini
         // temizle: ziyaretçiler eski sayfayı/stili görmesin. Önbellek eklentisi yoksa
@@ -267,6 +285,7 @@ class MST_Randevu
             'ajax'   => admin_url('admin-ajax.php'),
             'basari' => $o['basari_mesaji'],
             'site'   => home_url('/'),
+            'akademi' => class_exists('MST_Akademi') ? MST_Akademi::url() : '',
         ]);
     }
 
@@ -747,7 +766,7 @@ class MST_Randevu
         $ilk      = sanitize_text_field(wp_unslash($_POST['ilk_saat'] ?? ''));
         $son      = sanitize_text_field(wp_unslash($_POST['son_saat'] ?? ''));
         $sure     = max(10, min(240, absint($_POST['sure'] ?? 30)));
-        $kapasite = max(1, min(50, absint($_POST['kapasite'] ?? 3)));
+        $kapasite = max(1, min(self::KISI, absint($_POST['kapasite'] ?? self::KISI)));
         $gunler   = array_map('absint', (array) ($_POST['gunler'] ?? []));
 
         $d1 = DateTime::createFromFormat('!Y-m-d', $bas_g, $tz);
@@ -814,7 +833,7 @@ class MST_Randevu
             'ilk'       => '10:00',
             'son'       => '17:30',
             'sure'      => 30,
-            'kapasite'  => 3,
+            'kapasite'  => self::KISI,
             'gunler'    => [1, 2, 3, 4, 5, 6],
             'son_tarih' => ($enSon && $enSon > $bugun) ? $enSon : '',
         ];
@@ -838,7 +857,7 @@ class MST_Randevu
         $bas   = ($son && $son >= $bugun) ? (clone $son)->modify('+1 day') : $bugun;
         if ($bas > $hedef) return 0;
 
-        $n = self::saat_ekle($bas, $hedef, $a['ilk'], $a['son'], (int) $a['sure'], (int) $a['kapasite'], array_map('intval', (array) $a['gunler']));
+        $n = self::saat_ekle($bas, $hedef, $a['ilk'], $a['son'], (int) $a['sure'], min(self::KISI, (int) $a['kapasite']), array_map('intval', (array) $a['gunler']));
         $a['son_tarih'] = $hedef->format('Y-m-d');
         update_option(self::OTO, $a, false);
         return $n;
@@ -860,7 +879,7 @@ class MST_Randevu
         $a['ilk']      = $ilk;
         $a['son']      = $son;
         $a['sure']     = max(10, min(240, absint($in['sure'] ?? 30)));
-        $a['kapasite'] = max(1, min(50, absint($in['kapasite'] ?? 3)));
+        $a['kapasite'] = max(1, min(self::KISI, absint($in['kapasite'] ?? self::KISI)));
         $a['gunler']   = array_values(array_filter(array_map('absint', (array) ($in['gunler'] ?? [])), function ($g) { return $g >= 1 && $g <= 7; }));
         update_option(self::OTO, $a, false);
         $n = self::otomatik_saatler();
@@ -891,7 +910,7 @@ class MST_Randevu
                 $n = $wpdb->query("DELETE FROM $t WHERE id IN ($in) AND dolu = 0");
                 self::back("$n boş saat silindi. (Randevusu olan saatler silinmez; önce randevuları iptal edin.)", 'saatler');
             case 'kapasite':
-                $k = max(1, min(50, absint($_POST['yeni_kapasite'] ?? 3)));
+                $k = max(1, min(self::KISI, absint($_POST['yeni_kapasite'] ?? self::KISI)));
                 $n = $wpdb->query($wpdb->prepare("UPDATE $t SET kapasite = GREATEST(%d, dolu) WHERE id IN ($in)", $k));
                 self::back("$n saatin kişi sınırı $k yapıldı.", 'saatler');
         }
@@ -1055,7 +1074,7 @@ class MST_Randevu
                     &nbsp;&nbsp;
                     <label>Aralık: <input type="number" name="sure" value="<?php echo (int) $oto['sure']; ?>" min="10" max="240" style="width:64px"> dk</label>
                     &nbsp;&nbsp;
-                    <label>Kişi sınırı: <input type="number" name="kapasite" value="<?php echo (int) $oto['kapasite']; ?>" min="1" max="50" style="width:56px"> kişi / saat</label>
+                    <label>Kişi sınırı: <input type="number" name="kapasite" value="<?php echo (int) min(self::KISI, $oto['kapasite']); ?>" min="1" max="<?php echo self::KISI; ?>" style="width:56px"> kişi / saat</label>
                 </p>
                 <p>Günler:
                     <?php foreach ($gunAd as $n => $g) : ?>
@@ -1084,7 +1103,7 @@ class MST_Randevu
                     &nbsp;&nbsp;
                     <label>Aralık: <input type="number" name="sure" value="30" min="10" max="240" style="width:64px"> dk</label>
                     &nbsp;&nbsp;
-                    <label>Kişi sınırı: <input type="number" name="kapasite" value="3" min="1" max="50" style="width:56px"> kişi / saat</label>
+                    <label>Kişi sınırı: <input type="number" name="kapasite" value="<?php echo self::KISI; ?>" min="1" max="<?php echo self::KISI; ?>" style="width:56px"> kişi / saat</label>
                 </p>
                 <p>Günler:
                     <?php foreach ([1 => 'Pzt', 2 => 'Sal', 3 => 'Çar', 4 => 'Per', 5 => 'Cum', 6 => 'Cmt', 7 => 'Paz'] as $n => $g) : ?>
@@ -1092,7 +1111,7 @@ class MST_Randevu
                     <?php endforeach; ?>
                 </p>
                 <?php submit_button('Saatleri oluştur', 'primary', 'submit', false); ?>
-                <p class="description">Örn. 10:00 → 17:30, 30 dk → 10:00, 10:30 … 17:00, 17:30 açılır; her saate en fazla 3 kişi randevu alabilir. Var olan saatler tekrar eklenmez.</p>
+                <p class="description">Örn. 10:00 → 17:30, 30 dk → 10:00, 10:30 … 17:00, 17:30 açılır; her saate en fazla <?php echo self::KISI; ?> kişi randevu alabilir. Var olan saatler tekrar eklenmez.</p>
             </form>
 
             <h2 style="margin-top:28px">Saatler</h2>
@@ -1107,7 +1126,7 @@ class MST_Randevu
                         <option value="kapasite">Kişi sınırını değiştir</option>
                         <option value="sil">Sil (yalnızca randevusuz)</option>
                     </select>
-                    <input id="mst-yk" type="number" name="yeni_kapasite" value="3" min="1" max="50" style="width:64px;display:none">
+                    <input id="mst-yk" type="number" name="yeni_kapasite" value="<?php echo self::KISI; ?>" min="1" max="<?php echo self::KISI; ?>" style="width:64px;display:none">
                     <button class="button">Uygula</button>
                 </div>
                 <table class="widefat striped">

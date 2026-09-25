@@ -123,6 +123,10 @@ body.admin-bar .mst-top { top: 32px; }
   }
   .mst-top.is-open .mst-top__cta { visibility: visible; opacity: 1; transform: none; transition: opacity .18s, transform .18s; }
   .mst-top__btn { height: 50px; font-size: 15px; }
+  /* Mobil menüde WhatsApp da çubuğun antrasit/gri tonunda; yalnızca simgesi yeşil */
+  .mst-top__btn--wa { background: rgba(255, 255, 255, .08); border-color: rgba(255, 255, 255, .55); color: #fff; }
+  .mst-top__btn--wa:hover { background: rgba(255, 255, 255, .14); border-color: #fff; color: #fff; }
+  .mst-top__btn--wa .mst-ic { color: #25d366; }
 }
 
 /* --------------------------------------------------------------------------
@@ -342,6 +346,20 @@ body.admin-bar .mst-top { top: 32px; }
   background: var(--mst-bej); color: var(--mst-koyu); font-weight: 800;
 }
 .mst-rnd__done-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+/* Randevu alındıktan sonra: Yazar Kariyer Akademisi kartı */
+.mst-rnd a.mst-rnd__akademi {
+  display: grid; grid-template-columns: 1fr auto; align-items: center; column-gap: 16px;
+  max-width: 460px; margin: 26px auto 0; padding: 16px 20px; border-radius: 16px; text-align: left;
+  background: var(--mst-cubuk); border: 1px solid rgba(220, 152, 20, .35); color: #fff;
+  box-shadow: 0 12px 30px rgba(22, 22, 22, .18); transition: transform .15s, box-shadow .15s;
+}
+.mst-rnd a.mst-rnd__akademi:hover { transform: translateY(-2px); box-shadow: 0 16px 36px rgba(22, 22, 22, .26); color: #fff; }
+.mst-rnd__akademi small { font-size: 11.5px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--mst-altin); }
+.mst-rnd__akademi strong { font-size: 16px; font-weight: 800; line-height: 1.35; }
+.mst-rnd__akademi-ok {
+  grid-column: 2; grid-row: 1 / span 2; width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--mst-altin); color: #1a1a1a; font-size: 20px; font-weight: 800;
+}
 
 /* --------------------------------------------------------------------------
    Geniş kutu: iki sütun (Calendly düzeni)
@@ -419,4 +437,63 @@ body.admin-bar .mst-top { top: 32px; }
 }
 @media (max-width: 360px) {
   .mst-rnd__times { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* --------------------------------------------------------------------------
+   Karanlık mod (yalnızca tam sayfa randevu şablonunda)
+   Telefon/tarayıcı karanlık moddaysa sayfa kendi koyu temasına geçer; böylece
+   "zorla karartma" renkleri ters çevirip garip göstermez. Palet aynı: antrasit + altın.
+   -------------------------------------------------------------------------- */
+@media (prefers-color-scheme: dark) {
+  body.mst-sayfa--randevu {
+    color-scheme: dark;
+    --mst-ana: #f1ece2;          /* koyu zeminde metin ve çizgi rengi */
+    --mst-ana-2: #ffffff;
+    --mst-ana-acik: #2c2822;
+    --mst-bej: #2a261f;
+    --mst-zemin-sayfa: #121212;
+    --mst-yazi: #ddd8cd;
+    --mst-koyu: #f4f0e8;
+    --mst-soluk: #a39e93;
+    --mst-cizgi: #36322b;
+    --mst-beyaz: #1c1b19;
+    --mst-hata: #ff8a80;
+  }
+  .mst-sayfa--randevu .mst-rnd { box-shadow: 0 18px 50px rgba(0, 0, 0, .45); }
+  .mst-sayfa--randevu .mst-rnd__aside { background: linear-gradient(180deg, #201f1c 0%, #1c1b19 100%); }
+  .mst-sayfa--randevu .mst-rnd__avatar { background: #2a2620; box-shadow: 0 0 0 3px #1c1b19, 0 0 0 4px var(--mst-cizgi); }
+  .mst-sayfa--randevu .mst-rnd__meta-ic { color: var(--mst-altin); }
+  /* Seçili gün/saat ve koyu düğmeler: açık metin yerine altın zemin */
+  .mst-sayfa--randevu .mst-rnd__day[aria-pressed="true"],
+  .mst-sayfa--randevu .mst-rnd__time[aria-pressed="true"],
+  .mst-sayfa--randevu .mst-rnd__time.is-az[aria-pressed="true"] { background: var(--mst-altin); border-color: var(--mst-altin); color: #1a1a1a; box-shadow: 0 6px 16px rgba(220, 152, 20, .25); }
+  .mst-sayfa--randevu .mst-rnd__time.is-az[aria-pressed="true"] small { color: #1a1a1a; }
+  .mst-sayfa--randevu .mst-rnd__time.is-az[aria-pressed="true"] small::before { background: #1a1a1a; }
+  .mst-sayfa--randevu .mst-rnd__day.is-dolu[aria-pressed="true"] .mst-rnd__day-count { color: #7a1208; }
+  .mst-sayfa--randevu .mst-rnd__time { border-color: #3d3931; }
+  .mst-sayfa--randevu .mst-rnd__time.is-az { border-color: #6b4a14; background: #2b2113; }
+  .mst-sayfa--randevu .mst-rnd__time.is-az small { color: #ffb347; }
+  .mst-sayfa--randevu .mst-rnd__time.is-az:not([aria-pressed="true"]):hover { background: #35281a; }
+  .mst-sayfa--randevu .mst-rnd__time.is-dolu,
+  .mst-sayfa--randevu .mst-rnd__time.is-dolu:hover { color: #ff7a70; border-color: #5c2420; background: #2a1715; }
+  .mst-sayfa--randevu .mst-rnd__time.is-dolu small { color: #ff7a70; }
+  .mst-sayfa--randevu .mst-rnd__day.is-dolu .mst-rnd__day-count { color: #ff7a70; }
+  .mst-sayfa--randevu .mst-rnd__steps li.is-done span { color: #1a1a1a; }
+  .mst-sayfa--randevu .mst-rnd__steps li.is-active span { color: #1a1a1a; }
+  .mst-sayfa--randevu .mst-rnd__btn { color: #1a1a1a; }
+  .mst-sayfa--randevu .mst-rnd__btn--koyu,
+  .mst-sayfa--randevu .mst-rnd__btn--koyu:hover { background: #f1ece2; color: #1a1a1a; }
+  .mst-sayfa--randevu .mst-rnd__btn--ghost { color: var(--mst-ana); }
+  .mst-sayfa--randevu .mst-rnd__field input, .mst-sayfa--randevu .mst-rnd__field textarea { background: #151413; }
+  .mst-sayfa--randevu .mst-rnd__field input:focus, .mst-sayfa--randevu .mst-rnd__field textarea:focus { background: #111; border-color: var(--mst-altin); box-shadow: 0 0 0 4px rgba(220, 152, 20, .18); }
+  .mst-sayfa--randevu .mst-rnd__field input::placeholder, .mst-sayfa--randevu .mst-rnd__field textarea::placeholder { color: #6f6a61; }
+  .mst-sayfa--randevu .mst-rnd__check input { accent-color: var(--mst-altin); }
+  .mst-sayfa--randevu .mst-rnd__error { background: #2a1715; }
+  .mst-sayfa--randevu .mst-rnd__done-icon { background: var(--mst-altin); color: #1a1a1a; box-shadow: 0 0 0 10px rgba(220, 152, 20, .15); }
+  .mst-sayfa--randevu .mst-rnd a.mst-rnd__akademi { border-color: rgba(220, 152, 20, .5); box-shadow: none; }
+  .mst-sayfa--randevu .mst-sayfa__intro { color: var(--mst-yazi); }
+}
+@media (prefers-color-scheme: dark) and (max-width: 759px) {
+  .mst-sayfa--randevu .mst-rnd__next { background: #1c1b19; box-shadow: 0 -10px 30px rgba(0, 0, 0, .5); }
+  .mst-sayfa--randevu .mst-rnd__meta li { color: var(--mst-koyu); }
 }

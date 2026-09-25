@@ -12,6 +12,8 @@ if (!defined('ABSPATH')) {
     <meta charset="<?php bloginfo('charset'); ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="#1a1a1a">
+    <!-- Sayfanın kendi karanlık teması var: tarayıcı zorla karartmasın, telefonda karanlık mod açıksa o kullanılsın -->
+    <meta name="color-scheme" content="light dark">
     <?php echo MST_Randevu::paylasim_meta('randevu'); ?>
     <?php wp_head(); ?>
     <?php
@@ -21,7 +23,7 @@ if (!defined('ABSPATH')) {
     }
     ?>
 </head>
-<body <?php body_class('mst-sayfa'); ?>>
+<body <?php body_class('mst-sayfa mst-sayfa--randevu'); ?>>
 <?php wp_body_open(); ?>
 <?php echo MST_Randevu::header_html(); ?>
 

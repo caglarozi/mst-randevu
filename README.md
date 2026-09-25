@@ -3,10 +3,12 @@
 Yazar adaylarının müsait saatlerden görüşme randevusu aldığı WordPress eklentisi.
 
 - Aday gün ve saat seçer, ad soyad + telefon (+ isteğe bağlı kitap notu) bırakır.
-- Her saate en fazla **3 kişi** randevu alabilir (panelden değiştirilebilir); son yer kaldığında saat turuncu **"Dolmak üzere"**, dolduğunda kırmızı **"Dolu"** olarak görünür (dolu saat seçilemez).
+- Her saate en fazla **2 kişi** randevu alabilir (panelden 1'e düşürülebilir; üst sınır `MST_Randevu::KISI`). Eski sürümden gelen ileri tarihli saatler güncellemede kendiliğinden 2'ye çekilir (2'den fazla randevusu olan saatte kimse düşmez). Son yer kaldığında saat turuncu **"Dolmak üzere"**, dolduğunda kırmızı **"Dolu"** olarak görünür (dolu saat seçilemez).
 - Aynı numara ileri tarihli ikinci randevu alamaz; bot tuzağı ve IP başına deneme sınırı vardır.
 - Her randevuda e-posta ve (tanımlıysa) webhook bildirimi gider; webhook ile MST CRM'e aday kaydı düşer (aşağıya bakın).
-- Telefonda tam uyumlu: saat seçilince ekranın altında sabit "Devam Et" çubuğu çıkar.
+- Telefonda tam uyumlu: saat seçilince ekranın altında sabit "Devam Et" çubuğu çıkar. Mobil menüdeki WhatsApp düğmesi çubuğun gri tonundadır (yalnızca simgesi yeşil).
+- Randevu alınınca onay ekranında **Yazar Kariyer Akademisi** kartı çıkar (Akademi sayfası yayımlanmışsa).
+- **Karanlık mod:** telefon/tarayıcı karanlık moddaysa randevu sayfası kendi koyu temasına (antrasit + altın) geçer; tarayıcının "zorla karartma"sı sayfayı bozmaz. Yazar Paneli ve Akademi sayfaları zorla karartılmaz (`color-scheme: only light`).
 
 ## Kurulum
 

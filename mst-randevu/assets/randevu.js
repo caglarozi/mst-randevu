@@ -254,6 +254,15 @@
       site.href = CFG.site || '/';
       acts.appendChild(site);
       done.appendChild(acts);
+      // Görüşmeyi beklerken Yazar Kariyer Akademisi'ni tanıtan kart
+      if (CFG.akademi) {
+        var ak = el('a', 'mst-rnd__akademi');
+        ak.href = CFG.akademi;
+        ak.appendChild(el('small', '', 'Görüşmeyi beklerken'));
+        ak.appendChild(el('strong', '', 'Yazar Kariyer Akademisi\'ni inceleyin'));
+        ak.appendChild(el('span', 'mst-rnd__akademi-ok', '→'));
+        done.appendChild(ak);
+      }
       done.hidden = false;
       scrollToTop();
     }

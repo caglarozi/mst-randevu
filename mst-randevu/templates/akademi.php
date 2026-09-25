@@ -182,6 +182,8 @@ $enCok = max(array_column($programlar, 'kontenjan'));
     <meta charset="<?php bloginfo('charset'); ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="#111111">
+    <!-- Renkler tasarımın parçası: telefonun "zorla karanlık mod"u sayfayı ters çevirmesin -->
+    <meta name="color-scheme" content="only light">
     <?php echo MST_Randevu::paylasim_meta('akademi'); ?>
     <script>document.documentElement.classList.add('akd-js');</script>
     <?php wp_head(); ?>
