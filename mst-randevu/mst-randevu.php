@@ -432,10 +432,10 @@ class MST_Randevu
     /*  Arama motoru (SEO): Yazar Paneli tanıtım sayfası                   */
     /* ------------------------------------------------------------------ */
 
-    /** Aramada görünen başlık ve açıklama (paylaşım başlığı ayrıdır: paylasim_meta). */
+    /** Aramada görünen başlık ve açıklama; hedef arama "kitap satış takibi" (paylaşım başlığı ayrıdır: paylasim_meta). */
     const SEO_UYG = [
-        'MST Yazar Paneli | Yayın Süreci, Satış ve Telif Takibi',
-        'MST Yayıncılık yazarlarına özel panel: kitabınızın yayın sürecini, satışlarını, telif ödemelerini ve tanıtım çalışmalarını tek ekrandan, anlık takip edin.',
+        'Kitap Satış Takibi: Kitabınız Kaç Adet Sattı? | MST Yazar Paneli',
+        'Kitabınız hangi platformda kaç adet sattı, stokta kaç tane kaldı, telifiniz ne kadar? MST Yazar Paneli ile kitap satışlarınızı anlık ve şeffaf takip edin.',
     ];
 
     /** Rank Math, Yoast ya da All in One SEO kurulu mu? */
