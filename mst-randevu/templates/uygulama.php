@@ -442,11 +442,29 @@ $sss = [
     </div>
     <button type="button" class="uyg-peri__govde" aria-label="Kitap perisi: mesajı göster">
         <span class="uyg-peri__ic">
-        <?php foreach (['selam', 'goster', 'dusun', 'sevinc', 'goz-kirp'] as $i => $p) :
-            $yol = MST_RANDEVU_URL . 'assets/peri/' . $p; ?>
-            <span class="uyg-peri__poz<?php echo $i === 0 ? ' is-aktif' : ''; ?>" data-poz="<?php echo esc_attr($p); ?>">
-                <img class="uyg-peri__kanat" src="<?php echo esc_url($yol . '-kanat.webp?ver=' . MST_RANDEVU_VER); ?>" alt="" width="180" height="130" decoding="async">
-                <img class="uyg-peri__beden" src="<?php echo esc_url($yol . '-govde.webp?ver=' . MST_RANDEVU_VER); ?>" alt="" width="180" height="130" decoding="async">
+        <?php
+        // Her poz: kanat katmanı + gövde (ana kare, göz kırpma, el/asa sallamanın ikinci karesi).
+        // yildiz: asanın yıldızının görüntüdeki yeri (%), iki kare için — ışıltı buradan saçılır
+        $pozlar = [
+            'selam'    => ['kirp' => true,  'yildiz' => '23.4,47.2;23.4,47.2'],
+            'goster'   => ['kirp' => true,  'yildiz' => '6.3,43.4;9.0,32.6'],
+            'dusun'    => ['kirp' => true,  'yildiz' => '86.1,55.1;78.6,50.9'],
+            'sevinc'   => ['kirp' => false, 'yildiz' => '80.8,13.3;73.2,18.3'],
+            'goz-kirp' => ['kirp' => true,  'yildiz' => '88.6,33.6;76.2,16.2'],
+        ];
+        $i = 0;
+        foreach ($pozlar as $p => $bilgi) :
+            $yol = MST_RANDEVU_URL . 'assets/peri/' . $p;
+            $kare = function ($ek, $sinif) use ($yol) {
+                return '<img class="' . $sinif . '" src="' . esc_url($yol . $ek . '.webp?ver=' . MST_RANDEVU_VER) . '" alt="" width="180" height="130" decoding="async">';
+            }; ?>
+            <span class="uyg-peri__poz<?php echo $i++ === 0 ? ' is-aktif' : ''; ?>" data-poz="<?php echo esc_attr($p); ?>" data-yildiz="<?php echo esc_attr($bilgi['yildiz']); ?>">
+                <?php
+                echo $kare('-kanat', 'uyg-peri__kanat');
+                echo $kare('-govde', 'uyg-peri__beden uyg-peri__beden--ana');
+                if ($bilgi['kirp']) echo $kare('-kirp', 'uyg-peri__beden uyg-peri__beden--kirp');
+                echo $kare('-govde2', 'uyg-peri__beden uyg-peri__beden--2');
+                ?>
             </span>
         <?php endforeach; ?>
         </span>
