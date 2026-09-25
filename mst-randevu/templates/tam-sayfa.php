@@ -11,7 +11,7 @@ if (!defined('ABSPATH')) {
 <head>
     <meta charset="<?php bloginfo('charset'); ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <meta name="theme-color" content="#ffffff">
+    <meta name="theme-color" content="#1a1a1a">
     <?php wp_head(); ?>
     <?php
     // Güvence: bir eklenti stil dosyasını kuyruktan düşürdüyse doğrudan ekle
