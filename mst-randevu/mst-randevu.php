@@ -2,7 +2,7 @@
 /**
  * Plugin Name: MST Yazar Adayı Randevu
  * Description: Yazar adaylarının müsait saatlerden görüşme randevusu alması. Kısa kod: [mst_randevu] — ya da sayfa şablonu olarak "MST Randevu (Tam Sayfa)".
- * Version:     1.4.2
+ * Version:     1.4.3
  * Author:      MST Yayıncılık
  * Text Domain: mst-randevu
  * Requires PHP: 7.4
@@ -12,7 +12,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('MST_RANDEVU_VER', '1.4.2');
+define('MST_RANDEVU_VER', '1.4.3');
 define('MST_RANDEVU_DB', 2);
 define('MST_RANDEVU_URL', plugin_dir_url(__FILE__));
 
@@ -367,8 +367,8 @@ class MST_Randevu
             ? ['MST Yazar Paneli — Kitabınızın tüm yolculuğu tek uygulamada',
                'Yayın süreci, satışlar, telif, kariyer planı ve 7/24 yapay zekâ Yazar Asistanı tek uygulamada. MST Yayıncılık yazarlarına özel.',
                'paylasim-uygulama.jpg']
-            : ['Ücretsiz yazar adayı görüşmesi — MST Yayıncılık',
-               'Kitabınızı konuşalım: size uygun saati seçin, editörümüz sizi arasın. Ücretsiz ön değerlendirme.',
+            : ['Kitabınızı birlikte yayımlayalım — Ücretsiz ön görüşme | MST Yayıncılık',
+               'Size uygun saati seçin, editörümüz sizi arasın. Ücretsiz ön görüşmede yol haritanızı birlikte çıkaralım.',
                'paylasim-randevu.jpg'];
         $gorsel = MST_RANDEVU_URL . 'assets/' . $m[2] . '?ver=' . MST_RANDEVU_VER;
         $url    = get_permalink() ?: home_url('/');
