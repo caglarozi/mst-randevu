@@ -3,8 +3,9 @@
  * - Sayaç: telefondaki satış sayısı 0'dan yukarı sayar
  * - Canlı bildirim: girişteki bildirim balonu birkaç saniyede bir değişir
  * - 3B eğim: fare girişteki telefonun üstünde gezinince telefon hafifçe eğilir
- * - Kitap perisi: sağ altta süzülür, bölüm değiştikçe uçup poz değiştirir ve bölümü anlatır;
- *   arkasında ışıltı parçacıkları bırakır (kapatılırsa o oturumda bir daha çıkmaz)
+ * - Kitap perisi: bölüm değiştikçe ekranın bir yanından öbürüne kavis çizerek uçar, poz değiştirir ve
+ *   her bölümü bir kez anlatır; beklerken ara sıra tur atar, arkasında ışıltı izi bırakır
+ *   (kapatılırsa o oturumda bir daha çıkmaz)
  * Hareketi azalt (prefers-reduced-motion) açıksa hepsi atlanır ve her şey hemen görünür. */
 (function () {
   'use strict';
@@ -217,62 +218,132 @@
     try { if (sessionStorage.getItem('mst_peri_gizli') === '1') return; } catch (e) { /* depolama kapalı */ }
     var govde = kutu.querySelector('.uyg-peri__govde'), soz = kutu.querySelector('[data-uyg-peri-soz]');
     var resimler = kutu.querySelectorAll('.uyg-peri__ic img'), tuval = document.querySelector('.uyg-peri-iz');
-    var aktif = null, yazi = 0, gizle = 0;
     var yazilan = document.createElement('span'), kalan = document.createElement('span');
     kalan.className = 'uyg-peri__kalan';
     soz.appendChild(yazilan); soz.appendChild(kalan);
+    var aktif = null, yazi = 0, gizle = 0, gosterildi = new Set(), bitti = false;
+    var W = window.innerWidth, H = window.innerHeight;
+    // Konum (perinin sol üst köşesi, ekran pikseli), uçuş ve yön
+    var konum = { x: W + 60, y: H * 0.55 }, ucus = null, taraf = 'sag', bakis = 1, egimAci = 0, sonTur = performance.now(), basladi = false;
     kutu.hidden = false;
     var iz = azHareket || !tuval ? null : parcaciklar(tuval, govde);
 
-    function konus(metin) {
+    function boy() { return { w: govde.offsetWidth, h: govde.offsetHeight }; }
+    // Konma noktaları: ekranın sağ ya da sol alt köşesi
+    function durak(t) {
+      var b = boy(), k = W < 640 ? 14 : 22;
+      return { x: t === 'sol' ? k : W - b.w - k, y: H - b.h - (W < 640 ? 10 : 18) };
+    }
+    function ciz(x, y, aci, yon) {
+      kutu.style.transform = 'translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,0)';
+      govde.style.transform = 'rotate(' + aci.toFixed(2) + 'deg) scaleX(' + yon + ')';
+    }
+    function balonKapat() {
       clearInterval(yazi); clearTimeout(gizle);
+      kutu.classList.remove('is-balon');
+    }
+    function konus(metin) {
+      balonKapat();
+      kutu.classList.toggle('is-sol', taraf === 'sol');
       kutu.classList.add('is-balon');
-      if (azHareket) { yazilan.textContent = metin; kalan.textContent = ''; }
-      else {
-        // Daktilo: balon baştan tam boyutta açılır, yazı içinde belirir
-        var i = 0;
-        yazilan.textContent = ''; kalan.textContent = metin;
-        yazi = setInterval(function () {
-          i += 1; yazilan.textContent = metin.slice(0, i); kalan.textContent = metin.slice(i);
-          if (i >= metin.length) clearInterval(yazi);
-        }, 24);
+      var okuma = 2200 + metin.length * 35;
+      if (azHareket) {
+        yazilan.textContent = metin; kalan.textContent = '';
+        gizle = setTimeout(balonKapat, okuma);
+        return;
       }
-      gizle = setTimeout(function () { kutu.classList.remove('is-balon'); }, 8000);
+      // Daktilo: balon baştan tam boyutta açılır, yazı içinde belirir; bitince okuma süresi kadar kalır
+      var i = 0;
+      yazilan.textContent = ''; kalan.textContent = metin;
+      yazi = setInterval(function () {
+        i += 1; yazilan.textContent = metin.slice(0, i); kalan.textContent = metin.slice(i);
+        if (i >= metin.length) { clearInterval(yazi); gizle = setTimeout(balonKapat, okuma); }
+      }, 26);
     }
-    function uc() {
-      if (azHareket || !govde.animate) return;
-      govde.animate([
-        { transform: 'none' },
-        { transform: 'translate(-90px,-70px) rotate(-12deg)', offset: 0.4 },
-        { transform: 'translate(-30px,-110px) rotate(8deg)', offset: 0.7 },
-        { transform: 'none' }
-      ], { duration: 1150, easing: 'cubic-bezier(.45,0,.25,1)' });
-    }
-    function sec(b, ilk) {
-      if (b === aktif) return;
-      aktif = b;
-      var poz = b.getAttribute('data-peri-poz');
-      resimler.forEach(function (r) { r.classList.toggle('is-aktif', r.getAttribute('data-poz') === poz); });
+    // Bölümün mesajı yalnızca bir kez söylenir
+    function ilkKezSoyle(b) {
+      if (!b || gosterildi.has(b)) return;
+      gosterildi.add(b);
       konus(b.getAttribute('data-peri-soz'));
-      if (ilk) { if (iz) iz.patla(24); return; }
-      uc();
-      if (iz) setTimeout(function () { iz.patla(18); }, 1050);
+    }
+    function pozVer(poz) {
+      resimler.forEach(function (r) { r.classList.toggle('is-aktif', r.getAttribute('data-poz') === poz); });
     }
 
-    // Giriş: sağ alttan süzülerek gelsin
-    if (!azHareket && govde.animate) {
-      govde.animate([
-        { transform: 'translate(260px,160px) rotate(25deg) scale(.6)', opacity: 0 },
-        { transform: 'translate(-40px,-60px) rotate(-8deg) scale(1.05)', opacity: 1, offset: 0.7 },
-        { transform: 'none', opacity: 1 }
-      ], { duration: 1400, easing: 'cubic-bezier(.3,.7,.3,1)', delay: 700, fill: 'backwards' });
+    // Kübik eğri boyunca uçuş
+    function uc(hedef, k1, k2, sure, bitince) {
+      ucus = { a: { x: konum.x, y: konum.y }, b: hedef, k1: k1, k2: k2, t0: performance.now(), sure: sure, bitince: bitince };
     }
-    setTimeout(function () {
-      // Sayfa ortadan açıldıysa (yenileme) o anki bölümle başla
-      var orta = window.innerHeight / 2, ilk = bolumler[0];
-      bolumler.forEach(function (b) { var r = b.getBoundingClientRect(); if (r.top <= orta && r.bottom >= orta) ilk = b; });
-      sec(ilk, true);
-    }, azHareket ? 0 : 2100);
+    function egri(u, a, k1, k2, b) {
+      var v = 1 - u;
+      return v * v * v * a + 3 * v * v * u * k1 + 3 * v * u * u * k2 + u * u * u * b;
+    }
+    function tarafaUc(yeniTaraf, bitince) {
+      taraf = yeniTaraf; basladi = true;
+      var h = durak(taraf), yuk = Math.min(H * 0.38, 320);
+      // Ekranın ortasından yukarı doğru kavis çizerek karşı tarafa geçer
+      uc(h, { x: konum.x + (h.x - konum.x) * 0.25, y: Math.min(konum.y, h.y) - yuk },
+        { x: konum.x + (h.x - konum.x) * 0.75, y: Math.min(konum.y, h.y) - yuk }, Math.abs(h.x - konum.x) > 200 ? 1700 : 1100, bitince);
+    }
+    function tur() {
+      // Beklerken olduğu yerde küçük bir tur atar
+      var h = durak(taraf), ic = taraf === 'sag' ? -1 : 1, b = boy();
+      uc(h, { x: h.x + ic * b.w * 1.9, y: h.y - b.h * 2.2 }, { x: h.x - ic * b.w * 0.5, y: h.y - b.h * 2.6 }, 1900);
+    }
+
+    function kare(t) {
+      if (bitti) return;
+      var x, y, hedefAci = 0;
+      if (ucus) {
+        var u = Math.min(1, (t - ucus.t0) / ucus.sure), e = u < 0.5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2;
+        x = egri(e, ucus.a.x, ucus.k1.x, ucus.k2.x, ucus.b.x);
+        y = egri(e, ucus.a.y, ucus.k1.y, ucus.k2.y, ucus.b.y);
+        var dx = x - konum.x;
+        if (Math.abs(dx) > 0.6) bakis = dx < 0 ? 1 : -1; // "göster" pozu sola bakar; sağa uçarken aynala
+        hedefAci = Math.max(-18, Math.min(18, dx * 1.2));
+        konum = { x: x, y: y };
+        if (u >= 1) { var f = ucus.bitince; ucus = null; sonTur = t; if (f) f(); }
+      } else if (basladi) {
+        var h = durak(taraf);
+        konum = { x: h.x, y: h.y };
+        bakis = taraf === 'sol' ? -1 : 1; // köşede içeriğe doğru baksın
+        if (!kutu.classList.contains('is-balon') && t - sonTur > 15000) tur();
+      }
+      // Havada süzülme: hafif yalpalama
+      var s = t / 1000, sx = Math.sin(s * 1.3) * 10, sy = Math.sin(s * 2.1) * 7;
+      egimAci += (hedefAci + Math.sin(s * 1.7) * 3 - egimAci) * 0.12;
+      ciz(konum.x + sx, konum.y + sy, egimAci, bakis);
+      requestAnimationFrame(kare);
+    }
+
+    function sec(b) {
+      if (b === aktif) return;
+      var ilk = !aktif;
+      aktif = b;
+      balonKapat();
+      pozVer(b.getAttribute('data-peri-poz'));
+      if (azHareket) { ilkKezSoyle(b); return; }
+      var sira = Array.prototype.indexOf.call(bolumler, b);
+      tarafaUc(ilk || sira % 2 === 0 ? 'sag' : 'sol', function () {
+        if (iz) iz.patla(20);
+        if (aktif === b) ilkKezSoyle(b);
+      });
+    }
+    function simdikiBolum() {
+      var orta = H / 2, bu = bolumler[0];
+      bolumler.forEach(function (b) { var r = b.getBoundingClientRect(); if (r.top <= orta && r.bottom >= orta) bu = b; });
+      return bu;
+    }
+
+    if (azHareket) {
+      var d = durak('sag'); ciz(d.x, d.y, 0, 1);
+      sec(simdikiBolum());
+    } else {
+      ciz(konum.x, konum.y, 0, 1);
+      requestAnimationFrame(kare);
+      // Giriş: ekranın dışından uçarak gelsin
+      setTimeout(function () { sec(simdikiBolum()); }, 900);
+    }
 
     // Ekranın ortasından geçen bölüm "aktif" sayılır
     if ('IntersectionObserver' in window) {
@@ -281,17 +352,19 @@
       }, { rootMargin: '-48% 0px -48% 0px' });
       bolumler.forEach(function (b) { io.observe(b); });
     }
+    window.addEventListener('resize', function () {
+      W = window.innerWidth; H = window.innerHeight;
+      if (azHareket) { var d = durak('sag'); ciz(d.x, d.y, 0, 1); }
+    });
 
+    // Tıklanınca bu bölümün mesajını yeniden söyler (yalnızca istenince)
     govde.addEventListener('click', function () {
       if (aktif) konus(aktif.getAttribute('data-peri-soz'));
       if (iz) iz.patla(30);
-      if (!azHareket && govde.animate) {
-        govde.animate([{ transform: 'none' }, { transform: 'translateY(-18px) rotate(-10deg) scale(1.08)' }, { transform: 'none' }],
-          { duration: 500, easing: 'ease-out' });
-      }
     });
     kutu.querySelector('.uyg-peri__kapat').addEventListener('click', function () {
-      clearInterval(yazi); clearTimeout(gizle);
+      balonKapat();
+      bitti = true;
       kutu.hidden = true;
       if (iz) iz.dur();
       try { sessionStorage.setItem('mst_peri_gizli', '1'); } catch (e) { /* depolama kapalı */ }
