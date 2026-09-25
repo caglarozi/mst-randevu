@@ -2,7 +2,7 @@
 /**
  * Plugin Name: MST Yazar Adayı Randevu
  * Description: Yazar adaylarının müsait saatlerden görüşme randevusu alması. Kısa kod: [mst_randevu] — ya da sayfa şablonu olarak "MST Randevu (Tam Sayfa)".
- * Version:     1.5.0
+ * Version:     1.5.1
  * Author:      MST Yayıncılık
  * Text Domain: mst-randevu
  * Requires PHP: 7.4
@@ -12,7 +12,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('MST_RANDEVU_VER', '1.5.0');
+define('MST_RANDEVU_VER', '1.5.1');
 define('MST_RANDEVU_DB', 4);
 define('MST_RANDEVU_URL', plugin_dir_url(__FILE__));
 
@@ -209,6 +209,7 @@ class MST_Randevu
             'kvkk_metni'      => 'Kişisel verilerimin randevu ve iletişim amacıyla MST Yayıncılık tarafından işlenmesini kabul ediyorum.',
             'kvkk_url'        => '', // boşsa sitedeki KVKK / Aydınlatma sayfası kendiliğinden bulunur
             'uygulama_url'    => '', // boşsa https://app.mstyayincilik.com/
+            'akademi_url'     => '', // boşsa "MST Yazar Kariyer Akademisi" şablonlu sayfa kendiliğinden bulunur
             'basari_mesaji'   => 'Randevunuz alındı! Belirtilen saatte sizi arayacağız.',
         ];
     }
@@ -302,7 +303,7 @@ class MST_Randevu
             'ajax'   => admin_url('admin-ajax.php'),
             'basari' => $o['basari_mesaji'],
             'site'   => home_url('/'),
-            'akademi' => class_exists('MST_Akademi') ? MST_Akademi::url() : '',
+            'akademi' => self::akademi_url(),
         ]);
     }
 
@@ -388,6 +389,8 @@ class MST_Randevu
             'tel'  => '<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/>',
             'onay' => '<path d="M20 6 9 17l-5-5"/>',
             'dis'  => '<path d="M14 4h6v6M20 4l-9 9M19 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h5"/>',
+            'ay'   => '<path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/>',
+            'gunes' => '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
         ];
         return '<svg class="mst-ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' . ($d[$name] ?? '') . '</svg>';
     }
@@ -428,6 +431,14 @@ class MST_Randevu
     }
 
     /** Yazar Paneli (web uygulaması) adresi. */
+    /** Randevu onay ekranındaki Akademi kartının adresi: ayardaki adres, yoksa Akademi şablonlu sayfa. */
+    public static function akademi_url()
+    {
+        $u = self::opts()['akademi_url'];
+        if (!$u && class_exists('MST_Akademi')) $u = MST_Akademi::url();
+        return $u;
+    }
+
     public static function uygulama_url()
     {
         return self::opts()['uygulama_url'] ?: 'https://app.mstyayincilik.com/';
@@ -444,7 +455,7 @@ class MST_Randevu
      * Üst çubuk. $giris: Yazar Paneli tanıtım sayfasında altın "Ön Görüşme Al" (randevu) butonu da eklenir.
      * $buton: [metin, adres] verilirse altın buton onunla çizilir; $wa_metin: WhatsApp'ta hazır mesaj.
      */
-    public static function header_html($giris = false, $buton = null, $wa_metin = null)
+    public static function header_html($giris = false, $buton = null, $wa_metin = null, $tema = false)
     {
         $home = home_url('/');
         if ($giris && !$buton) $buton = ['Ön Görüşme Al', self::randevu_url()];
@@ -452,6 +463,7 @@ class MST_Randevu
         ob_start(); ?>
         <header class="mst-top">
             <div class="mst-top__in">
+                <?php if ($tema) : ?><button type="button" class="mst-top__tema" data-mst-tema aria-label="Açık / koyu görünüm" title="Açık / koyu görünüm"><span class="mst-tema-ay"><?php echo self::icon('ay'); ?></span><span class="mst-tema-gunes"><?php echo self::icon('gunes'); ?></span></button><?php endif; ?>
                 <a class="mst-top__logo" href="<?php echo esc_url($home); ?>" aria-label="Ana sayfa">
                     <img src="<?php echo esc_url(self::logo_url()); ?>" alt="MST" width="50" height="50">
                 </a>
@@ -980,6 +992,7 @@ class MST_Randevu
             'kvkk_metni'      => sanitize_textarea_field($in['kvkk_metni'] ?? ''),
             'kvkk_url'        => esc_url_raw(trim($in['kvkk_url'] ?? '')),
             'uygulama_url'    => esc_url_raw(trim($in['uygulama_url'] ?? '')),
+            'akademi_url'     => esc_url_raw(trim($in['akademi_url'] ?? '')),
             'basari_mesaji'   => sanitize_textarea_field($in['basari_mesaji'] ?? ''),
         ]);
         self::back('Ayarlar kaydedildi.', 'ayarlar');
@@ -1048,6 +1061,7 @@ class MST_Randevu
                 <p class="description">Sayfa düzenleyicide <strong>Sayfa Özellikleri → Şablon → "MST Randevu (Tam Sayfa)"</strong> seçilirse temanın üst kısmı yerine MST logosu, WhatsApp ve "Siteye Git" çubuğu kullanılır.</p>
                 <table class="form-table">
                     <tr><th>WhatsApp numarası</th><td><input type="text" name="whatsapp" class="regular-text" value="<?php echo esc_attr($o['whatsapp']); ?>" placeholder="905XXXXXXXXX"><p class="description">Ülke koduyla, boşluksuz. Boş bırakılırsa WhatsApp butonları gizlenir.</p></td></tr>
+                    <tr><th>Akademi adresi</th><td><input type="url" name="akademi_url" class="large-text" value="<?php echo esc_attr($o['akademi_url']); ?>" placeholder="Boş = Akademi şablonlu sayfa"><p class="description">Randevu alındıktan sonra onay ekranındaki "Yazar Kariyer Akademisi'ni inceleyin" kartı buraya gider. Boşsa "MST Yazar Kariyer Akademisi (Tam Sayfa)" şablonlu yayımlanmış sayfa kullanılır; ikisi de yoksa kart görünmez.<?php echo self::akademi_url() ? '' : ' <strong style="color:#b32d2e">Şu an adres yok, kart görünmüyor.</strong>'; ?></p></td></tr>
                     <tr><th>Yazar Paneli adresi</th><td><input type="url" name="uygulama_url" class="large-text" value="<?php echo esc_attr($o['uygulama_url']); ?>" placeholder="Boş = https://app.mstyayincilik.com/"><p class="description">"MST Yazar Paneli Tanıtım (Tam Sayfa)" şablonundaki "Zaten MST yazarı mısınız? Panele giriş" bağlantıları buraya gider.</p></td></tr>
                     <tr><th>Logo adresi</th><td><input type="url" name="logo_url" class="large-text" value="<?php echo esc_attr($o['logo_url']); ?>" placeholder="Boş = eklentideki MST logosu"></td></tr>
                 </table>

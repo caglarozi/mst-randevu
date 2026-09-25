@@ -28,6 +28,14 @@ class MST_Akademi
         add_action('wp_enqueue_scripts', [__CLASS__, 'isolate_styles'], 9999);
         add_action('admin_menu', [__CLASS__, 'admin_menu'], 20);
         add_action('admin_post_mst_akademi_ayar', [__CLASS__, 'handle_ayar']);
+        add_action('save_post_page', [__CLASS__, 'sayfa_kaydedildi']);
+    }
+
+    /** Akademi sayfası yayımlanınca/değişince önbellek temizlenir: randevu onay ekranındaki Akademi kartı hemen çıksın. */
+    public static function sayfa_kaydedildi($id)
+    {
+        if (wp_is_post_revision($id) || wp_is_post_autosave($id)) return;
+        if (get_page_template_slug($id) === self::SABLON) MST_Randevu::onbellek_temizle();
     }
 
     /* ------------------------------------------------------------------ */
