@@ -57,6 +57,8 @@ Yeni sayfa → başlık (ör. “Yazar Kariyer Akademisi”) → *Şablon →* *
 node demo-sunucu.js
 ```
 
+Windows'ta kısaca: `onizleme.bat`'a çift tıklayın (masaüstüne kısayolu konabilir). En güncel `main-dayiyo`'yu indirir, önizleme kapalıysa açar ve Akademi sayfasını gösterir.
+
 Ardından http://localhost:8788 — eklentinin kendi CSS/JS'i sahte verilerle çalışır; kayıtlar yalnızca sayfada tutulur.
 
 Yazar Kariyer Akademisi: http://localhost:8788/akademi (`demo/akademi.html`).
