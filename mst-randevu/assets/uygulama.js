@@ -235,7 +235,7 @@
     // mod: soru (cevap bekliyor) · rehber (bölüm bölüm yanında) · gidiyor (uçup çıkıyor) · yok
     var mod = 'yok', aktif = null, bekleyen = null, yazi = 0, gizle = 0, gosterildi = new Set(), dongu = false;
     var W = window.innerWidth, H = window.innerHeight;
-    var konum = { x: W + 60, y: H * 0.5 }, gecis = null, turum = null, bakis = 1, egimAci = 0, sonTur = performance.now();
+    var konum = { x: W + 60, y: H * 0.5 }, gecis = null, turum = null, bakis = 1, yonAn = 1, egimAci = 0, sonTur = performance.now();
     var iz = null;
 
     function hatirla(d) { try { sessionStorage.setItem('mst_peri', d); } catch (e) { /* depolama kapalı */ } }
@@ -283,7 +283,7 @@
 
     function ciz(x, y, aci, yon) {
       kutu.style.transform = 'translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,0)';
-      govde.style.transform = 'rotate(' + aci.toFixed(2) + 'deg) scaleX(' + yon + ')';
+      govde.style.transform = 'rotate(' + aci.toFixed(2) + 'deg) scaleX(' + (+yon).toFixed(3) + ')';
     }
     // Balon perinin üstünde (yer yoksa altında) açılır ve ekranın dışına taşmaz; kuyruğu periyi gösterir
     function balonYerlestir() {
@@ -369,12 +369,23 @@
         ucuyor = true;
         if (v >= 1) { turum = null; sonTur = t; }
       }
-      if (ucuyor && Math.abs(dx) > 0.5) bakis = dx < 0 ? 1 : -1; // "göster" pozu sola bakar; sağa giderken aynala
-      else if (!ucuyor && h.ex) bakis = h.ex < x + boy().w / 2 ? 1 : -1; // durunca kutuya baksın
+      // Yön: tüm pozlar sola dönük çizildi; sağa bakması gerekince aynalanır.
+      // Gerçek uçuşta (bölüm değişimi, tur) gittiği yöne; dururken ve kutuyu takip ederken kutusuna,
+      // kutusu tam altındaysa sayfanın ortasına bakar (kaydırmadaki küçük kıpırtılarla dönmez)
+      var ucusta = gecis || turum, merkez = x + boy().w / 2;
+      if (ucusta) {
+        if (Math.abs(dx) > 1.5) bakis = dx < 0 ? 1 : -1;
+      } else {
+        var hedefX = h.ex || W / 2;
+        if (Math.abs(hedefX - merkez) < 30) hedefX = W / 2;
+        if (Math.abs(hedefX - merkez) > 12) bakis = hedefX < merkez ? 1 : -1;
+      }
+      yonAn += (bakis - yonAn) * 0.18; // dönüşü yumuşat (anlık aynalama yerine döner gibi)
+      if (Math.abs(yonAn) < 0.08) yonAn = yonAn < 0 ? -0.08 : 0.08;
       kutu.classList.toggle('is-ucuyor', ucuyor);
-      var s = t / 1000;
-      egimAci += (Math.max(-18, Math.min(18, dx * 1.2)) + Math.sin(s * 1.7) * 3 - egimAci) * 0.12;
-      ciz(x + tx + Math.sin(s * 1.3) * 5, y + ty + Math.sin(s * 2.1) * 4, egimAci, bakis);
+      var s = t / 1000, egimHedef = ucusta ? Math.max(-18, Math.min(18, dx * 1.2)) : 0;
+      egimAci += (egimHedef + Math.sin(s * 1.7) * 3 - egimAci) * 0.12;
+      ciz(x + tx + Math.sin(s * 1.3) * 4, y + ty + Math.sin(s * 2.1) * 3, egimAci, yonAn);
       if (mod === 'rehber' && bekleyen && !gecis) {
         if (bekleyen !== aktif) bekleyen = null;
         else if (h.gorunur) { ilkKezSoyle(bekleyen); bekleyen = null; }
@@ -388,7 +399,9 @@
     }
     function sabitCiz() {
       if (!azHareket || mod === 'yok') return;
-      var h = hedefNokta(); konum = h; ciz(h.x, h.y, 0, 1);
+      var h = hedefNokta(), hx = h.ex || W / 2, m = h.x + boy().w / 2;
+      if (Math.abs(hx - m) < 30) hx = W / 2;
+      konum = h; ciz(h.x, h.y, 0, hx < m ? 1 : -1);
       if (kutu.classList.contains('is-balon')) balonYerlestir();
     }
 
@@ -424,7 +437,7 @@
           if (iz) iz.patla(24);
           konus(SORU, 0, function () { secim.hidden = false; balonYerlestir(); });
         };
-        if (azHareket) { sabitCiz(); sor(); } else { ciz(konum.x, konum.y, 0, 1); donguBaslat(); uc(sor); }
+        if (azHareket) { sabitCiz(); sor(); } else { ciz(konum.x, konum.y, 0, yonAn); donguBaslat(); uc(sor); }
       } else {
         var b = aktif; aktif = null; sec(b);
         if (!azHareket) donguBaslat();

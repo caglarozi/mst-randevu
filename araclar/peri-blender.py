@@ -279,7 +279,7 @@ isik('kontur2', (-2.4, 2.6, 0.8), 500, 2.0, '#fff1d6')
 POZLAR = {
     'selam': dict(L=(35, 10, -15), R=(150, 5, -35), asa=('L', (-25,)), yuz='acik', bak=(0, 0), govde=(0, 0, -30), kanat=1.0),
     'goster': dict(L=(88, 18, -8), R=(22, 5, -20), asa=('L', (-80,)), yuz='gulus', bak=(-0.035, 0.005), govde=(0, 7, -26), kanat=0.8),
-    'dusun': dict(L=(30, 60, -125), R=(30, 5, -10), asa=('R', (35,)), yuz='gulus', bak=(0.03, 0.04), govde=(0, -6, -32), kanat=0.6),
+    'dusun': dict(L=(30, 60, -125), R=(30, 5, -10), asa=('R', (35,)), yuz='gulus', bak=(-0.03, 0.04), govde=(0, -6, -32), kanat=0.6),
     'sevinc': dict(L=(150, 5, 10), R=(150, 5, 10), asa=('R', (15,)), yuz='mutlu_acik', bak=(0, 0), govde=(0, 0, -28), kanat=1.3),
     'goz_kirp': dict(L=(40, 10, -20), R=(125, 25, -60), asa=('R', (30,)), yuz='kirp', bak=(0, 0), govde=(0, -5, -32), kanat=1.0),
 }
