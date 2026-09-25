@@ -228,6 +228,8 @@
     var balon = kutu.querySelector('.uyg-peri__balon'), secim = kutu.querySelector('.uyg-peri__secim');
     var resimler = kutu.querySelectorAll('.uyg-peri__poz'), tuval = document.querySelector('.uyg-peri-iz');
     var ust = document.querySelector('.mst-top');
+    // Telefonda bölüm açıklamaları kendiliğinden açılmaz (içeriği kapatmasın): perinin üstünde 💬 belirir, dokununca açılır
+    var dar = window.matchMedia('(max-width: 640px)');
     var yazilan = document.createElement('span'), kalan = document.createElement('span');
     kalan.className = 'uyg-peri__kalan';
     soz.appendChild(yazilan); soz.appendChild(kalan);
@@ -324,10 +326,12 @@
         if (i >= metin.length) { clearInterval(yazi); bitti(); }
       }, 24);
     }
-    // Bölümün mesajı yalnızca bir kez söylenir
+    function isaret(acik) { kutu.classList.toggle('is-mesaj', !!acik); }
+    // Bölümün mesajı yalnızca bir kez söylenir (telefonda yalnızca 💬 işareti belirir)
     function ilkKezSoyle(b) {
       if (!b || gosterildi.has(b)) return;
       gosterildi.add(b);
+      if (dar.matches) { isaret(true); return; }
       konus(b.getAttribute('data-peri-soz'));
     }
     function pozVer(poz) {
@@ -415,6 +419,7 @@
       aktif = b;
       if (mod !== 'rehber') return;
       balonKapat();
+      isaret(false);
       pozVer(b.getAttribute('data-peri-poz'));
       if (azHareket) { sabitCiz(); ilkKezSoyle(b); return; }
       bekleyen = null;
@@ -448,6 +453,7 @@
       if (mod === 'yok' || mod === 'gidiyor') return;
       hatirla('hayir');
       secim.hidden = true;
+      isaret(false);
       pozVer('selam');
       var bitir = function () {
         mod = 'yok';
@@ -494,12 +500,21 @@
       });
     });
     // Tıklanınca bu bölümün mesajını (soru bekliyorsa soruyu) yeniden söyler
-    govde.addEventListener('click', function () {
+    function ac() {
+      isaret(false);
       if (mod === 'soru') konus(SORU, 0, function () { secim.hidden = false; balonYerlestir(); });
       else if (mod === 'rehber' && aktif) konus(aktif.getAttribute('data-peri-soz'));
       if (iz) iz.patla(30);
+    }
+    govde.addEventListener('click', ac);
+    kutu.querySelector('[data-uyg-peri-ac]').addEventListener('click', ac);
+    // Balondaki × yalnızca balonu kapatır (soru bekliyorsa 💬 işareti kalır)
+    kutu.querySelector('[data-uyg-peri-balon-kapat]').addEventListener('click', function (ev) {
+      ev.stopPropagation();
+      balonKapat();
+      if (mod === 'soru') isaret(true);
     });
-    // Ziyaretçi periyi istediği an kapatabilir: vedalaşıp uçar
+    // Ziyaretçi periyi istediği an kapatabilir (perinin üstündeki ×): vedalaşıp uçar
     kutu.querySelectorAll('[data-uyg-peri-kapat]').forEach(function (d) {
       d.addEventListener('click', function (ev) { ev.stopPropagation(); git(); });
     });

@@ -438,7 +438,7 @@ $sss = [
             <button type="button" class="uyg-peri__cevap uyg-peri__cevap--evet" data-peri-cevap="evet">Evet, lütfen</button>
             <button type="button" class="uyg-peri__cevap" data-peri-cevap="hayir">Hayır, teşekkürler</button>
         </div>
-        <button type="button" class="uyg-peri__kapat" aria-label="Kitap perisini kapat" data-uyg-peri-kapat>&times;</button>
+        <button type="button" class="uyg-peri__kapat" aria-label="Mesajı kapat" data-uyg-peri-balon-kapat>&times;</button>
     </div>
     <button type="button" class="uyg-peri__govde" aria-label="Kitap perisi: mesajı göster">
         <span class="uyg-peri__ic">
@@ -451,6 +451,7 @@ $sss = [
         <?php endforeach; ?>
         </span>
     </button>
+    <button type="button" class="uyg-peri__mesaj" aria-label="Kitap perisinin mesajını oku" data-uyg-peri-ac><span></span><span></span><span></span></button>
     <button type="button" class="uyg-peri__x" aria-label="Kitap perisini kapat" title="Periyi kapat" data-uyg-peri-kapat>&times;</button>
 </div>
 <button type="button" class="uyg-peri-cagir" data-uyg-peri-cagir hidden aria-label="Kitap perisini çağır" title="Kitap perisini çağır">
