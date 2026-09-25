@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 }
 
 define('MST_RANDEVU_VER', '1.5.0');
-define('MST_RANDEVU_DB', 3);
+define('MST_RANDEVU_DB', 4);
 define('MST_RANDEVU_URL', plugin_dir_url(__FILE__));
 
 /*
@@ -151,12 +151,29 @@ class MST_Randevu
         }
     }
 
+    /** Kayıtlı ayarlarda eski varsayılan "Editörümüz sizi arar" metinleri kaldıysa yenisiyle değiştirilir (elle yazılmışsa dokunulmaz). */
+    public static function metin_guncelle()
+    {
+        $o = get_option(self::OPT);
+        if (!is_array($o)) return;
+        $eski = [
+            'rozetler' => 'Editörümüz sizi telefonla arar, Ücretsiz ön değerlendirme',
+            'aciklama' => 'Size uygun saati seçin, adınızı ve telefon numaranızı bırakın; editörümüz sizi belirtilen saatte arasın.',
+        ];
+        $yeni = self::defaults();
+        foreach ($eski as $k => $v) {
+            if (isset($o[$k]) && trim($o[$k]) === $v) $o[$k] = $yeni[$k];
+        }
+        update_option(self::OPT, $o);
+    }
+
     public static function maybe_upgrade()
     {
         $db = (int) get_option('mst_randevu_db');
         if ($db !== MST_RANDEVU_DB) {
             self::activate();
             if ($db && $db < 3) self::kisi_siniri_uygula();
+            if ($db && $db < 4) self::metin_guncelle();
         }
         // Yeni sürüm kurulduysa (elle ya da otomatik güncellemeyle) site önbelleğini
         // temizle: ziyaretçiler eski sayfayı/stili görmesin. Önbellek eklentisi yoksa
@@ -185,8 +202,8 @@ class MST_Randevu
             'min_saat'        => 2,   // randevu en geç kaç saat öncesine kadar alınabilir
             'gun_ileri'       => 30,  // kaç gün ilerisi gösterilsin
             'baslik'          => 'Yazar Adayı Görüşme Randevusu',
-            'aciklama'        => 'Size uygun saati seçin, adınızı ve telefon numaranızı bırakın; editörümüz sizi belirtilen saatte arasın.',
-            'rozetler'        => 'Editörümüz sizi telefonla arar, Ücretsiz ön değerlendirme',
+            'aciklama'        => 'Size uygun saati seçin, adınızı ve telefon numaranızı bırakın; yayın danışmanımız sizi belirtilen saatte arasın.',
+            'rozetler'        => 'Yayın danışmanımız sizi telefonla arar, Ücretsiz ön değerlendirme',
             'whatsapp'        => '905514112004',
             'logo_url'        => '',
             'kvkk_metni'      => 'Kişisel verilerimin randevu ve iletişim amacıyla MST Yayıncılık tarafından işlenmesini kabul ediyorum.',
@@ -391,7 +408,7 @@ class MST_Randevu
                'Yayınevinde kitabınıza ne oluyorsa, anında telefonunuzda: yayın süreci, satışlar, telif, tanıtım, kariyer planı ve 7/24 Yazar Asistanı. MST yazarlarına özel.',
                'paylasim-uygulama.jpg']
             : ['Bu rafta bir kitap eksik: sizinki | MST Yayıncılık',
-               'Size uyan saati seçin, editörümüz sizi arasın. İlk görüşme bizden: ücretsiz ön görüşme.',
+               'Size uyan saati seçin, yayın danışmanımız sizi arasın. İlk görüşme bizden: ücretsiz ön görüşme.',
                'paylasim-randevu.jpg'];
         $gorsel = MST_RANDEVU_URL . 'assets/' . $m[2] . '?ver=' . MST_RANDEVU_VER;
         $url    = get_permalink() ?: home_url('/');
@@ -464,7 +481,7 @@ class MST_Randevu
             <aside class="mst-rnd__aside">
                 <div class="mst-rnd__brand">
                     <span class="mst-rnd__avatar"><img src="<?php echo esc_url(self::figur_url()); ?>" alt="" width="40" height="40"></span>
-                    <span class="mst-rnd__brand-txt"><strong>MST Yayıncılık</strong><small>Editör Ekibi</small></span>
+                    <span class="mst-rnd__brand-txt"><strong>MST Yayıncılık</strong><small>Yayın Danışmanlığı</small></span>
                 </div>
                 <h2 class="mst-rnd__title"><?php echo esc_html($o['baslik']); ?></h2>
                 <?php if ($meta) : ?>
@@ -654,7 +671,7 @@ class MST_Randevu
                 'action'  => 'TEMPLATE',
                 'text'    => rawurlencode('MST Yayıncılık — Yazar görüşmesi'),
                 'dates'   => $bas->format('Ymd\THis\Z') . '/' . $bit->format('Ymd\THis\Z'),
-                'details' => rawurlencode('Editörümüz sizi ' . self::pretty_phone($tel) . ' numarasından arayacak.'),
+                'details' => rawurlencode('Yayın danışmanımız sizi ' . self::pretty_phone($tel) . ' numarasından arayacak.'),
             ], 'https://calendar.google.com/calendar/render'),
         ]);
     }
