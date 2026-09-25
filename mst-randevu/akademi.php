@@ -114,21 +114,20 @@ class MST_Akademi
     public static function assets()
     {
         if (!self::is_page()) return;
-        wp_register_style('mst-akademi', MST_RANDEVU_URL . 'assets/akademi.css', ['mst-uygulama'], MST_RANDEVU_VER);
+        wp_register_style('mst-akademi', MST_RANDEVU_URL . 'assets/akademi.css', ['mst-randevu'], MST_RANDEVU_VER);
         wp_register_script('mst-akademi', MST_RANDEVU_URL . 'assets/akademi.js', [], MST_RANDEVU_VER, true);
-        // Açılıştaki daktilo satırı için ek yazı tipi (yalnızca bu sayfada)
-        wp_enqueue_style('mst-akademi-font', 'https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&display=swap', [], null);
+        // Yalnızca bu sayfada: künye/numaralar için IBM Plex Mono, italik vurgular için Cormorant Garamond
+        wp_enqueue_style('mst-akademi-font', 'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500;1,600&family=IBM+Plex+Mono:wght@500&display=swap', [], null);
         wp_enqueue_style('mst-randevu-font');
         wp_enqueue_style('mst-akademi');
-        wp_enqueue_script('mst-randevu');
-        wp_enqueue_script('mst-uygulama');
+        wp_enqueue_script('mst-randevu'); // üst çubuğun mobil menüsü
         wp_enqueue_script('mst-akademi');
     }
 
     public static function isolate_styles()
     {
         if (!self::is_page()) return;
-        $keep = ['mst-randevu', 'mst-randevu-font', 'mst-akademi-font', 'mst-uygulama', 'mst-akademi', 'admin-bar', 'dashicons'];
+        $keep = ['mst-randevu', 'mst-randevu-font', 'mst-akademi-font', 'mst-akademi', 'admin-bar', 'dashicons'];
         foreach (wp_styles()->queue as $handle) {
             if (!in_array($handle, $keep, true)) wp_dequeue_style($handle);
         }
