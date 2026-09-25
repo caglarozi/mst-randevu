@@ -2,7 +2,7 @@
 /**
  * Plugin Name: MST Yazar Adayı Randevu
  * Description: Yazar adaylarının müsait saatlerden görüşme randevusu alması. Kısa kod: [mst_randevu] — ya da sayfa şablonu olarak "MST Randevu (Tam Sayfa)".
- * Version:     1.5.6
+ * Version:     1.5.7
  * Author:      MST Yayıncılık
  * Text Domain: mst-randevu
  * Requires PHP: 7.4
@@ -12,7 +12,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('MST_RANDEVU_VER', '1.5.6');
+define('MST_RANDEVU_VER', '1.5.7');
 define('MST_RANDEVU_DB', 4);
 define('MST_RANDEVU_URL', plugin_dir_url(__FILE__));
 
@@ -76,6 +76,7 @@ class MST_Randevu
 
         // Yönetim paneli
         add_action('admin_menu', [__CLASS__, 'admin_menu']);
+        add_action('admin_enqueue_scripts', [__CLASS__, 'rank_math_icerik']);
         add_action('admin_post_mst_randevu_slot_ekle', [__CLASS__, 'handle_add_slots']);
         add_action('admin_post_mst_randevu_slot_islem', [__CLASS__, 'handle_slot_action']);
         add_action('admin_post_mst_randevu_randevu_islem', [__CLASS__, 'handle_booking_action']);
@@ -506,6 +507,29 @@ class MST_Randevu
         if ($bos('rank_math_description')) add_filter('rank_math/frontend/description', function () use ($aciklama) { return $aciklama; });
         if ($bos('_yoast_wpseo_title')) add_filter('wpseo_title', function () use ($baslik) { return $baslik; });
         if ($bos('_yoast_wpseo_metadesc')) add_filter('wpseo_metadesc', function () use ($aciklama) { return $aciklama; });
+    }
+
+    /**
+     * Rank Math içerik analizi: tam sayfa şablonlarımızın metni (başlıklar, bölümler, SSS) sayfa
+     * düzenleyicisinde değil şablonda olduğu için Rank Math "içerik yok" sanıyordu. Düzenleme ekranında
+     * sayfanın sitedeki hâli okunup analize eklenir (Rank Math'in rank_math_content filtresi; sayfa
+     * kurucuları da bunu kullanır). Sayfanın kendisinde ve düzenleyicide hiçbir şey değişmez.
+     */
+    public static function rank_math_icerik($hook)
+    {
+        if (!in_array($hook, ['post.php', 'post-new.php'], true) || !defined('RANK_MATH_VERSION')) return;
+        $post = get_post();
+        if (!$post || $post->post_type !== 'page') return;
+        $secici = [
+            self::SABLON     => 'main.mst-sayfa__main',
+            self::SABLON_UYG => 'main.uyg',
+            'mst-akademi-tam-sayfa' => 'main.akd',
+        ][get_page_template_slug($post)] ?? '';
+        if (!$secici) return;
+        $url = $post->post_status === 'publish' ? get_permalink($post) : get_preview_post_link($post);
+        if (!$url) return;
+        wp_enqueue_script('mst-rank-math', MST_RANDEVU_URL . 'assets/rank-math.js', ['wp-hooks', 'rank-math-analyzer'], MST_RANDEVU_VER, true);
+        wp_localize_script('mst-rank-math', 'MST_RM', ['url' => $url, 'secici' => $secici]);
     }
 
     /** Açıklama etiketi; SEO eklentisi varsa onu o basar (seo_hazirla'daki filtrelerle), biz basmayız. */
