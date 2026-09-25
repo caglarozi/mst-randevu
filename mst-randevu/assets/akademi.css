@@ -22,10 +22,14 @@ html { scroll-behavior: smooth; }
    Açılış: sahne. "Yazmak başlangıçtır." daktiloyla yazılır (sessiz, görünmeyen iş);
    ardından sahne ışığı yanar ve "Görünür olmak kariyerdir." ışığın altında parlar.
    -------------------------------------------------------------------------- */
-.akd-marka {
-  display: inline-block; margin-bottom: 26px; padding: 7px 14px; border-radius: 999px; font-size: 12.5px; font-weight: 800;
-  letter-spacing: .1em; text-transform: uppercase; color: var(--mst-altin); border: 1px solid rgba(220, 152, 20, .45); background: rgba(220, 152, 20, .06);
+/* Başlığın altında imza: iki yanında kısa altın çizgi */
+.akd .akd-imza {
+  display: flex; align-items: center; justify-content: center; gap: 16px; margin: 30px auto 0;
+  font-size: 13px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: rgba(247, 213, 140, .85);
+  opacity: 0; animation: akd-yukari .8s ease 1.8s forwards;
 }
+.akd-imza::before, .akd-imza::after { content: ""; flex: 0 0 44px; height: 1px; background: linear-gradient(90deg, rgba(220, 152, 20, 0), var(--mst-altin)); }
+.akd-imza::after { transform: scaleX(-1); }
 .akd-sahne {
   position: relative; overflow: hidden; isolation: isolate; text-align: center; color: #fff; padding: 84px 0 72px;
   background: radial-gradient(120% 70% at 50% 108%, #2d2820 0%, #1a1917 45%, #111 100%);
@@ -70,10 +74,10 @@ html { scroll-behavior: smooth; }
 }
 @keyframes akd-yan-altin { 0%, 11% { color: #3b3935; } 30%, 100% { color: var(--mst-altin); text-shadow: 0 0 36px rgba(220, 152, 20, .45); } }
 .akd-gizli-metin { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-.akd .akd-sahne__alt { margin: 36px auto 0; max-width: 700px; font-size: 18px; line-height: 1.6; color: rgba(255, 255, 255, .7); opacity: 0; animation: akd-yukari .8s ease 2s forwards; }
+.akd .akd-sahne__alt { margin: 22px auto 0; max-width: 700px; font-size: 18px; line-height: 1.6; color: rgba(255, 255, 255, .7); opacity: 0; animation: akd-yukari .8s ease 2s forwards; }
 @keyframes akd-yukari { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
 
-.akd-sahne__cta { margin-top: 40px; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 12px 26px; opacity: 0; animation: akd-yukari .8s ease 2.3s forwards; }
+.akd-sahne__cta { margin-top: 40px; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 14px 16px; opacity: 0; animation: akd-yukari .8s ease 2.3s forwards; }
 .akd-sahne__link { font-weight: 800; font-size: 15px; color: rgba(255, 255, 255, .85) !important; text-decoration: underline; text-decoration-color: rgba(220, 152, 20, .6); text-underline-offset: 4px; }
 .akd-sahne__link:hover { color: var(--mst-altin) !important; }
 
@@ -264,12 +268,20 @@ body.admin-bar .akd-gezinti { top: 108px; }
 .akd-ucretsiz__vurgu li .uyg-ic { color: var(--mst-altin); }
 .akd .akd-ucretsiz__vurgu p { font-size: 14.5px; color: rgba(255, 255, 255, .72); }
 .akd-ucretsiz .uyg-btn--altin .mst-ic { width: 20px; height: 20px; }
-/* Girişteki ikinci düğme: "Ücretsiz" rozetli */
-.akd-ucretsiz-btn { gap: 10px; }
-.akd-rozet-ucretsiz {
-  padding: 3px 9px; border-radius: 100px; background: var(--mst-altin); color: #1a1a1a;
-  font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
+/* Girişteki ikinci düğme: bilet. Solda kesik çizgiyle ayrılmış "Ücretsiz" koçanı */
+.akd-bilet-btn {
+  display: inline-flex; align-items: stretch; min-height: 54px; border-radius: 100px; overflow: hidden;
+  border: 1.5px solid var(--mst-altin); background: rgba(22, 22, 22, .6); color: #fff !important; text-decoration: none;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .35); transition: background .2s, box-shadow .2s, transform .1s;
 }
+.akd-bilet-btn:hover { background: rgba(220, 152, 20, .12); box-shadow: 0 10px 30px rgba(220, 152, 20, .2); }
+.akd-bilet-btn:active { transform: translateY(1px); }
+.akd-bilet-btn__kocan {
+  position: relative; display: flex; align-items: center; padding: 0 16px 0 22px;
+  background: rgba(220, 152, 20, .14); color: var(--mst-altin); font-size: 12px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase;
+  border-right: 1.5px dashed rgba(220, 152, 20, .7);
+}
+.akd-bilet-btn__metin { display: flex; align-items: center; padding: 0 26px 0 18px; font-size: 16px; font-weight: 800; white-space: nowrap; }
 .akd .akd-ucretsiz__icerik h3 { font-size: 18px; color: #fff; margin: 0 0 14px; }
 .akd-ucretsiz__icerik .uyg-liste { margin-bottom: 28px; }
 .akd-ucretsiz__icerik { padding: 30px; border-radius: 26px; background: rgba(255, 255, 255, .04); border: 1px solid rgba(255, 255, 255, .1); }
@@ -341,6 +353,10 @@ body.admin-bar .akd-gezinti { top: 108px; }
   .akd-kapsam { grid-template-columns: 1fr; }
 }
 @media (max-width: 640px) {
+  .akd-sahne__cta .uyg-btn, .akd-bilet-btn { width: 100%; }
+  .akd-bilet-btn__metin { flex: 1; justify-content: center; }
+  .akd .akd-imza { gap: 10px; font-size: 11px; letter-spacing: .1em; }
+  .akd-imza::before, .akd-imza::after { flex-basis: 24px; }
   .akd-kurallar, .akd-guven { grid-template-columns: 1fr; }
   .akd-alanlar { grid-template-columns: repeat(2, 1fr); }
   .akd-alanlar li { padding: 16px 14px; }
@@ -356,7 +372,7 @@ body.admin-bar .akd-gezinti { top: 108px; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .akd-cark span, .akd-imlec { animation: none !important; }
-  .akd-sahne__lamba, .akd-sahne__huzme, .akd-sahne__toz, .akd-sahne__zemin, .akd-sahne__alt, .akd-sahne__cta { animation: none !important; opacity: 1 !important; }
+  .akd-sahne__lamba, .akd-sahne__huzme, .akd-sahne__toz, .akd-sahne__zemin, .akd-sahne__alt, .akd-sahne__cta, .akd .akd-imza { animation: none !important; opacity: 1 !important; }
   .akd .akd-sahne__baslik { animation: none !important; color: #fff; }
   .akd-sahne__baslik em { animation: none !important; color: var(--mst-altin); }
 }

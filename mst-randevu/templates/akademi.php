@@ -178,15 +178,14 @@ $sss = [
     <section class="akd-sahne" id="akademi">
         <div class="akd-sahne__isik" aria-hidden="true"><span class="akd-sahne__lamba"></span><span class="akd-sahne__huzme"></span><canvas class="akd-sahne__toz"></canvas><span class="akd-sahne__zemin"></span></div>
         <div class="uyg-kap akd-sahne__in">
-            <span class="akd-marka">MST Yayıncılık · Yazar Kariyer Akademisi</span>
             <p class="akd-sahne__yaz" aria-hidden="true"><span data-akd-daktilo="Yazmak başlangıçtır.">Yazmak başlangıçtır.</span><i class="akd-imlec"></i></p>
             <h1 class="akd-sahne__baslik"><span class="akd-gizli-metin">Yazmak başlangıçtır. </span>Görünür olmak <em>kariyerdir.</em></h1>
+            <p class="akd-imza">MST Yayıncılık Yazar Kariyer Akademisi</p>
             <p class="akd-sahne__alt">Yazma aşamasından profesyonel yazar markasına kadar uzanan, uygulama ve takip temelli eğitim programları. Yazar kimliğinizi netleştirin, doğru okura ulaşın, içerik sisteminizi kurun ve kariyerinizi planlı biçimde yönetin.</p>
 
             <div class="akd-sahne__cta">
                 <a class="uyg-btn uyg-btn--altin" href="#programlar">Programları İnceleyin <?php echo $ik('ok', 18); ?></a>
-                <a class="uyg-btn uyg-btn--cizgi akd-ucretsiz-btn" href="#ucretsiz"><span class="akd-rozet-ucretsiz">Ücretsiz</span> Başlangıç eğitimi</a>
-                <?php if ($wa) : ?><a class="akd-sahne__link" href="<?php echo esc_url($wa); ?>" target="_blank" rel="noopener">WhatsApp'tan bilgi alın</a><?php endif; ?>
+                <a class="akd-bilet-btn" href="#ucretsiz"><span class="akd-bilet-btn__kocan">Ücretsiz</span><span class="akd-bilet-btn__metin">Başlangıç eğitimi</span></a>
             </div>
         </div>
     </section>
