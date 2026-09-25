@@ -2,7 +2,7 @@
 /**
  * Plugin Name: MST Yazar Adayı Randevu
  * Description: Yazar adaylarının müsait saatlerden görüşme randevusu alması. Kısa kod: [mst_randevu] — ya da sayfa şablonu olarak "MST Randevu (Tam Sayfa)".
- * Version:     1.5.12
+ * Version:     1.5.13
  * Author:      MST Yayıncılık
  * Text Domain: mst-randevu
  * Requires PHP: 7.4
@@ -12,8 +12,8 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('MST_RANDEVU_VER', '1.5.12');
-define('MST_RANDEVU_DB', 4);
+define('MST_RANDEVU_VER', '1.5.13');
+define('MST_RANDEVU_DB', 5);
 define('MST_RANDEVU_URL', plugin_dir_url(__FILE__));
 
 /*
@@ -42,6 +42,9 @@ class MST_Randevu
     const NONCE  = 'mst_randevu';
     const SABLON = 'mst-randevu-tam-sayfa';
     const SABLON_UYG = 'mst-uygulama-tam-sayfa'; // MST Yazar Paneli tanıtım sayfası
+    const SABLON_AKD = 'mst-akademi-randevu-tam-sayfa'; // Yazar Kariyer Akademisi ön görüşme randevusu
+    /** Randevu türleri: her saat her tür için ayrı açılır, kişi sınırı türe göre ayrı sayılır. */
+    const TURLER = ['yazar' => 'Yazar adayı', 'akademi' => 'Akademi'];
     const OTO    = 'mst_randevu_otomatik';
     const CRON   = 'mst_randevu_gunluk';
     const KISI   = 2; // bir saate en fazla kaç kişi randevu alabilir
@@ -106,13 +109,14 @@ class MST_Randevu
         // Saat: her saatin kişi sınırı (kapasite) ve dolu sayısı vardır
         dbDelta('CREATE TABLE ' . self::t_slot() . " (
             id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+            tur varchar(20) NOT NULL DEFAULT 'yazar',
             baslangic datetime NOT NULL,
             sure smallint(5) unsigned NOT NULL DEFAULT 30,
             kapasite tinyint(3) unsigned NOT NULL DEFAULT 2,
             dolu tinyint(3) unsigned NOT NULL DEFAULT 0,
             durum varchar(20) NOT NULL DEFAULT 'acik',
             PRIMARY KEY  (id),
-            UNIQUE KEY baslangic (baslangic),
+            UNIQUE KEY tur_baslangic (tur,baslangic),
             KEY durum (durum)
         ) $c;");
 
@@ -152,6 +156,34 @@ class MST_Randevu
         }
     }
 
+    /**
+     * Akademi randevuları (DB 5): saat tablosuna "tur" eklendi. Eski tek sütunlu benzersiz anahtar
+     * kaldırılır (aynı saat her tür için ayrı satırdır) ve ileri tarihli yazar adayı saatlerinin
+     * aynısı Akademi için de açılır (her birine ayrı kişi sınırı).
+     */
+    public static function akademi_saatleri_ac()
+    {
+        global $wpdb;
+        $t = self::t_slot();
+        $eski = $wpdb->get_var("SHOW INDEX FROM $t WHERE Key_name = 'baslangic'");
+        if ($eski) $wpdb->query("ALTER TABLE $t DROP INDEX baslangic");
+        if (!$wpdb->get_var("SHOW INDEX FROM $t WHERE Key_name = 'tur_baslangic'")) {
+            $wpdb->query("ALTER TABLE $t ADD UNIQUE KEY tur_baslangic (tur,baslangic)");
+        }
+        $wpdb->query($wpdb->prepare(
+            "INSERT IGNORE INTO $t (tur, baslangic, sure, kapasite, dolu, durum)
+             SELECT 'akademi', baslangic, sure, %d, 0, durum FROM $t WHERE tur = 'yazar' AND baslangic > %s",
+            self::KISI,
+            self::now()->format('Y-m-d H:i:s')
+        ));
+    }
+
+    /** Randevu türü: bilinmeyen değer "yazar" sayılır. */
+    public static function tur($t)
+    {
+        return isset(self::TURLER[$t]) ? $t : 'yazar';
+    }
+
     /** Kayıtlı ayarlarda eski varsayılan "Editörümüz sizi arar" metinleri kaldıysa yenisiyle değiştirilir (elle yazılmışsa dokunulmaz). */
     public static function metin_guncelle()
     {
@@ -175,6 +207,7 @@ class MST_Randevu
             self::activate();
             if ($db && $db < 3) self::kisi_siniri_uygula();
             if ($db && $db < 4) self::metin_guncelle();
+            if ($db && $db < 5) self::akademi_saatleri_ac();
         }
         // Yeni sürüm kurulduysa (elle ya da otomatik güncellemeyle) site önbelleğini
         // temizle: ziyaretçiler eski sayfayı/stili görmesin. Önbellek eklentisi yoksa
@@ -326,12 +359,12 @@ class MST_Randevu
 
         // Stil dosyası <head> içinde yüklensin diye, randevu olan sayfaları önceden tanı
         $post = get_post();
-        if (is_singular() && $post && (self::is_full_page() || has_shortcode((string) $post->post_content, 'mst_randevu'))) {
-            self::enqueue();
+        if (is_singular() && $post && (self::is_full_page() || self::is_akd_rnd_page() || has_shortcode((string) $post->post_content, 'mst_randevu'))) {
+            self::enqueue(self::is_akd_rnd_page() ? 'akademi' : 'yazar');
         }
     }
 
-    public static function enqueue()
+    public static function enqueue($tur = 'yazar')
     {
         $o = self::opts();
         wp_enqueue_style('mst-randevu-font');
@@ -341,7 +374,8 @@ class MST_Randevu
             'ajax'   => admin_url('admin-ajax.php'),
             'basari' => $o['basari_mesaji'],
             'site'   => home_url('/'),
-            'akademi' => self::akademi_url(),
+            // Onay ekranındaki Akademi kartı: akademi randevusunda gösterilmez (ziyaretçi zaten oradan geldi)
+            'akademi' => $tur === 'akademi' ? '' : self::akademi_url(),
         ]);
     }
 
@@ -350,6 +384,11 @@ class MST_Randevu
     public static function is_full_page()
     {
         return is_page() && get_page_template_slug() === self::SABLON;
+    }
+
+    public static function is_akd_rnd_page()
+    {
+        return is_page() && get_page_template_slug() === self::SABLON_AKD;
     }
 
     public static function is_app_page()
@@ -361,13 +400,14 @@ class MST_Randevu
     {
         $templates[self::SABLON]     = 'MST Randevu (Tam Sayfa)';
         $templates[self::SABLON_UYG] = 'MST Yazar Paneli Tanıtım (Tam Sayfa)';
+        $templates[self::SABLON_AKD] = 'MST Akademi Ön Görüşme Randevusu (Tam Sayfa)';
         return $templates;
     }
 
     public static function template_include($template)
     {
         $uyg = self::is_app_page();
-        if (!$uyg && !self::is_full_page()) return $template;
+        if (!$uyg && !self::is_full_page() && !self::is_akd_rnd_page()) return $template;
         // Önbellek/hızlandırma eklentileri (LiteSpeed, WP Rocket, W3TC, Autoptimize…) bu sayfanın
         // CSS/JS'ini birleştirip küçültmesin; ziyaretçide stil dosyası kaybolabiliyordu.
         foreach (['LITESPEED_NO_OPTM', 'DONOTROCKETOPTIMIZE', 'DONOTMINIFYCSS', 'DONOTMINIFYJS'] as $sabit) {
@@ -379,7 +419,7 @@ class MST_Randevu
     /** Tam sayfada tema stillerini devre dışı bırakır; sayfa her temada aynı görünür. */
     public static function isolate_styles()
     {
-        if (!self::is_full_page() && !self::is_app_page()) return;
+        if (!self::is_full_page() && !self::is_app_page() && !self::is_akd_rnd_page()) return;
         $keep = ['mst-randevu', 'mst-randevu-font', 'mst-uygulama', 'admin-bar', 'dashicons'];
         foreach (wp_styles()->queue as $handle) {
             if (!in_array($handle, $keep, true)) wp_dequeue_style($handle);
@@ -484,6 +524,10 @@ class MST_Randevu
         'akademi'  => [
             'Yazar Kariyer Akademisi: Yazarlık Eğitimi | MST Yayıncılık',
             'Yazarlar için online yazarlık ve kariyer eğitimi: yazar kimliği, hedef okur, sosyal medya, kitap lansmanı ve PR. Üç seviyeli program, ücretsiz başlangıç eğitimi.',
+        ],
+        'akademi-randevu' => [
+            'Yazar Kariyer Akademisi Ön Görüşme | MST Yayıncılık',
+            'Yazar Kariyer Akademisi programları için ücretsiz ön görüşme randevusu alın. Size uygun saati seçin, akademi danışmanımız sizi arasın.',
         ],
         'uygulama' => [
             'Yazar Paneli: Kitap Satış ve Telif Takibi | MST Yayıncılık',
@@ -653,6 +697,13 @@ class MST_Randevu
         return self::opts()['uygulama_url'] ?: 'https://app.mstyayincilik.com/';
     }
 
+    /** Akademi ön görüşme randevu sayfası; yoksa boş (Akademi sayfası yalnızca WhatsApp'ı gösterir). */
+    public static function akademi_randevu_url()
+    {
+        $p = get_posts(['post_type' => 'page', 'post_status' => 'publish', 'numberposts' => 1, 'meta_key' => '_wp_page_template', 'meta_value' => self::SABLON_AKD, 'fields' => 'ids']);
+        return $p ? get_permalink($p[0]) : '';
+    }
+
     /** "MST Randevu (Tam Sayfa)" şablonlu ilk yayındaki sayfa; yoksa site ana sayfası. */
     public static function randevu_url()
     {
@@ -687,21 +738,34 @@ class MST_Randevu
         return ob_get_clean();
     }
 
-    public static function shortcode()
+    /**
+     * Randevu kutusu. [mst_randevu] yazar adayı görüşmesi; [mst_randevu tur="akademi"] Yazar Kariyer
+     * Akademisi ön görüşmesi (ayrı saatler, ayrı kişi sınırı, ilgilenilen program seçimi).
+     */
+    public static function shortcode($atts = [])
     {
+        $atts = shortcode_atts(['tur' => ''], (array) $atts, 'mst_randevu');
+        $tur  = $atts['tur'] !== '' ? self::tur(sanitize_key($atts['tur'])) : (self::is_akd_rnd_page() ? 'akademi' : 'yazar');
+        $akd  = $tur === 'akademi';
         $o = self::opts();
-        self::enqueue();
+        self::enqueue($tur);
         $meta = array_values(array_filter(array_map('trim', explode(',', (string) $o['rozetler']))));
         $ikon = ['tel', 'onay', 'saat'];
-        $wa   = self::wa_link('Merhaba, yazar görüşmesi hakkında bilgi almak istiyorum.');
+        $wa   = self::wa_link($akd ? 'Merhaba, Yazar Kariyer Akademisi hakkında bilgi almak istiyorum.' : 'Merhaba, yazar görüşmesi hakkında bilgi almak istiyorum.');
+        if ($akd) {
+            $o['baslik']   = 'Yazar Kariyer Akademisi Ön Görüşmesi';
+            $o['aciklama'] = 'Size uygun saati seçin; akademi danışmanımız sizi arayarak aşamanıza uygun programı birlikte belirlesin.';
+            $meta          = ['Akademi danışmanımız sizi telefonla arar', 'Ücretsiz ön görüşme'];
+            $secili        = sanitize_key(wp_unslash($_GET['program'] ?? ''));
+        }
 
         ob_start(); ?>
         <div class="mst-rnd-wrap">
-        <div class="mst-rnd" data-mst-randevu>
+        <div class="mst-rnd<?php echo $akd ? ' mst-rnd--akademi' : ''; ?>" data-mst-randevu data-tur="<?php echo esc_attr($tur); ?>">
             <aside class="mst-rnd__aside">
                 <div class="mst-rnd__brand">
                     <span class="mst-rnd__avatar"><img src="<?php echo esc_url(self::figur_url()); ?>" alt="" width="40" height="40"></span>
-                    <span class="mst-rnd__brand-txt"><strong>MST Yayıncılık</strong><small>Yayın Danışmanımız</small></span>
+                    <span class="mst-rnd__brand-txt"><strong>MST Yayıncılık</strong><small><?php echo $akd ? 'Yazar Kariyer Akademisi' : 'Yayın Danışmanımız'; ?></small></span>
                 </div>
                 <h2 class="mst-rnd__title"><?php echo esc_html($o['baslik']); ?></h2>
                 <?php if ($meta) : ?>
@@ -744,9 +808,19 @@ class MST_Randevu
                         <span>Telefon</span>
                         <input type="tel" name="telefon" autocomplete="tel" inputmode="tel" placeholder="05XX XXX XX XX" required>
                     </label>
+                    <?php if ($akd && class_exists('MST_Akademi')) : ?>
                     <label class="mst-rnd__field">
-                        <span>Kitabınız hakkında kısa not <em>(isteğe bağlı)</em></span>
-                        <textarea name="not_metni" rows="3" maxlength="1000" placeholder="Tür, sayfa sayısı, tamamlandı mı…"></textarea>
+                        <span>İlgilendiğiniz program <em>(isteğe bağlı)</em></span>
+                        <select name="ilgi">
+                            <option value="">Seçiniz</option>
+                            <?php foreach (MST_Akademi::PROGRAMLAR as $pk => $pa) : ?><option value="<?php echo esc_attr($pk); ?>" <?php selected($secili, $pk); ?>><?php echo esc_html($pa[0]); ?></option><?php endforeach; ?>
+                            <option value="bilmiyorum" <?php selected($secili, 'bilmiyorum'); ?>>Henüz karar vermedim</option>
+                        </select>
+                    </label>
+                    <?php endif; ?>
+                    <label class="mst-rnd__field">
+                        <span><?php echo $akd ? 'Kısa not' : 'Kitabınız hakkında kısa not'; ?> <em>(isteğe bağlı)</em></span>
+                        <textarea name="not_metni" rows="3" maxlength="1000" placeholder="<?php echo esc_attr($akd ? 'Yazarlık aşamanız, kitabınız yayımlandı mı…' : 'Tür, sayfa sayısı, tamamlandı mı…'); ?>"></textarea>
                     </label>
                     <!-- bot tuzağı: insanlar görmez -->
                     <label class="mst-rnd__hp" aria-hidden="true">Web sitesi <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
@@ -778,10 +852,12 @@ class MST_Randevu
         $min = self::now()->modify('+' . (int) $o['min_saat'] . ' hours')->format('Y-m-d H:i:s');
         $max = self::now()->modify('+' . (int) $o['gun_ileri'] . ' days')->format('Y-m-d 23:59:59');
 
+        $tur  = self::tur(sanitize_key(wp_unslash($_POST['tur'] ?? '')));
         $rows = $wpdb->get_results($wpdb->prepare(
             'SELECT id, baslangic, sure, kapasite, dolu FROM ' . self::t_slot() . "
-             WHERE durum = 'acik' AND baslangic > %s AND baslangic <= %s
+             WHERE tur = %s AND durum = 'acik' AND baslangic > %s AND baslangic <= %s
              ORDER BY baslangic ASC LIMIT 600",
+            $tur,
             $min,
             $max
         ));
@@ -825,6 +901,13 @@ class MST_Randevu
         $ad  = isset($_POST['ad_soyad']) ? trim(sanitize_text_field(wp_unslash($_POST['ad_soyad']))) : '';
         $tel = self::normalize_phone(isset($_POST['telefon']) ? wp_unslash($_POST['telefon']) : '');
         $not = isset($_POST['not_metni']) ? mb_substr(sanitize_textarea_field(wp_unslash($_POST['not_metni'])), 0, 1000) : '';
+        // Akademi randevusunda ilgilenilen program nota yazılır
+        $ilgi = sanitize_key(wp_unslash($_POST['ilgi'] ?? ''));
+        if ($ilgi && class_exists('MST_Akademi') && isset(MST_Akademi::PROGRAMLAR[$ilgi])) {
+            $not = trim('İlgilenilen program: ' . MST_Akademi::PROGRAMLAR[$ilgi][0] . ($not !== '' ? "\n" . $not : ''));
+        } elseif ($ilgi === 'bilmiyorum') {
+            $not = trim('İlgilenilen program: Henüz karar vermedi' . ($not !== '' ? "\n" . $not : ''));
+        }
 
         if (!$id) {
             wp_send_json_error(['mesaj' => 'Lütfen bir saat seçin.']);
@@ -845,11 +928,13 @@ class MST_Randevu
         $o   = self::opts();
         $min = self::now()->modify('+' . (int) $o['min_saat'] . ' hours')->format('Y-m-d H:i:s');
 
-        // Aynı numarayla ileri tarihli ikinci randevu alınmasın
+        // Aynı numarayla aynı türde ileri tarihli ikinci randevu alınmasın (yazar adayı ve akademi ayrı)
+        $tur = $wpdb->get_var($wpdb->prepare("SELECT tur FROM $ts WHERE id = %d", $id)) ?: 'yazar';
         $var = $wpdb->get_var($wpdb->prepare(
             "SELECT s.baslangic FROM $tr r JOIN $ts s ON s.id = r.slot_id
-             WHERE r.telefon = %s AND r.durum = 'aktif' AND s.baslangic > %s LIMIT 1",
+             WHERE r.telefon = %s AND r.durum = 'aktif' AND s.tur = %s AND s.baslangic > %s LIMIT 1",
             $tel,
+            $tur,
             $now
         ));
         if ($var) {
@@ -889,7 +974,7 @@ class MST_Randevu
             'tarih'  => self::fmt($rnd->baslangic),
             'takvim' => add_query_arg([
                 'action'  => 'TEMPLATE',
-                'text'    => rawurlencode('MST Yayıncılık — Yazar görüşmesi'),
+                'text'    => rawurlencode($tur === 'akademi' ? 'MST Yayıncılık — Yazar Kariyer Akademisi ön görüşmesi' : 'MST Yayıncılık — Yazar görüşmesi'),
                 'dates'   => $bas->format('Ymd\THis\Z') . '/' . $bit->format('Ymd\THis\Z'),
                 'details' => rawurlencode('Yayın danışmanımız sizi ' . self::pretty_phone($tel) . ' numarasından arayacak.'),
             ], 'https://calendar.google.com/calendar/render'),
@@ -901,7 +986,7 @@ class MST_Randevu
     {
         global $wpdb;
         return $wpdb->get_row($wpdb->prepare(
-            'SELECT r.*, s.baslangic, s.sure FROM ' . self::t_rnd() . ' r JOIN ' . self::t_slot() . ' s ON s.id = r.slot_id WHERE r.id = %d',
+            'SELECT r.*, s.baslangic, s.sure, s.tur FROM ' . self::t_rnd() . ' r JOIN ' . self::t_slot() . ' s ON s.id = r.slot_id WHERE r.id = %d',
             $id
         ));
     }
@@ -913,9 +998,12 @@ class MST_Randevu
     public static function payload($r, $olay = 'randevu.olusturuldu')
     {
         $bas = new DateTime($r->baslangic, wp_timezone());
+        $tur = self::tur($r->tur ?? 'yazar');
         return [
             'olay'           => $olay,
             'kaynak'         => 'mst-randevu',
+            'tur'            => $tur, // yazar | akademi
+            'tur_metin'      => $tur === 'akademi' ? 'Yazar Kariyer Akademisi ön görüşmesi' : 'Yazar adayı görüşmesi',
             'site'           => home_url(),
             'randevu_id'     => (int) $r->id,
             'ad_soyad'       => $r->ad_soyad,
@@ -928,7 +1016,8 @@ class MST_Randevu
             'not'            => (string) $r->not_metni,
             'olusturma'      => $r->olusturma ? (new DateTime($r->olusturma, wp_timezone()))->format('c') : null,
             'mesaj'          => sprintf(
-                "📅 Yeni yazar adayı randevusu\n%s\n%s\n%s%s",
+                "📅 %s\n%s\n%s\n%s%s",
+                $tur === 'akademi' ? 'Yeni Yazar Kariyer Akademisi randevusu' : 'Yeni yazar adayı randevusu',
                 $r->ad_soyad,
                 self::pretty_phone($r->telefon),
                 self::fmt($r->baslangic),
@@ -964,7 +1053,7 @@ class MST_Randevu
         if (!empty($o['bildirim_eposta']) && $olay === 'randevu.olusturuldu') {
             $ok = wp_mail(
                 $o['bildirim_eposta'],
-                'Yeni randevu: ' . $r->ad_soyad . ' — ' . self::fmt($r->baslangic, 'j F H:i'),
+                (self::tur($r->tur ?? 'yazar') === 'akademi' ? 'Yeni akademi randevusu: ' : 'Yeni randevu: ') . $r->ad_soyad . ' — ' . self::fmt($r->baslangic, 'j F H:i'),
                 $p['mesaj'] . "\n\nPanel: " . admin_url('admin.php?page=mst-randevu')
             );
             $sonuc[] = 'e-posta: ' . ($ok ? 'ok' : 'HATA');
@@ -985,6 +1074,14 @@ class MST_Randevu
     public static function admin_menu()
     {
         add_menu_page('Yazar Randevuları', 'Yazar Randevu', 'manage_options', 'mst-randevu', [__CLASS__, 'admin_page'], 'dashicons-calendar-alt', 26);
+    }
+
+    /** Panelde tür etiketi (Akademi altın, yazar adayı gri). */
+    private static function tur_rozet($tur)
+    {
+        $tur = self::tur($tur);
+        $renk = $tur === 'akademi' ? 'background:#fcf0d9;color:#8a5a00' : 'background:#f0f0f1;color:#50575e';
+        return '<span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:12px;font-weight:600;' . $renk . '">' . esc_html(self::TURLER[$tur]) . '</span>';
     }
 
     private static function back($msg, $tab = 'randevular')
@@ -1032,12 +1129,17 @@ class MST_Randevu
             $last = new DateTime($d->format('Y-m-d') . ' ' . $son, $tz);
             while ($t <= $last) { // son saat dahil: 17:30 seçilirse 17:30 randevusu da açılır
                 if ($t > $now) {
-                    $eklenen += (int) $wpdb->query($wpdb->prepare(
-                        'INSERT IGNORE INTO ' . self::t_slot() . " (baslangic, sure, kapasite, dolu, durum) VALUES (%s, %d, %d, 0, 'acik')",
-                        $t->format('Y-m-d H:i:s'),
-                        $sure,
-                        $kapasite
-                    ));
+                    // Aynı saat her randevu türü için ayrı açılır (yazar adayı ve akademi ayrı kişi sınırı)
+                    foreach (array_keys(self::TURLER) as $tur) {
+                        $n = (int) $wpdb->query($wpdb->prepare(
+                            'INSERT IGNORE INTO ' . self::t_slot() . " (tur, baslangic, sure, kapasite, dolu, durum) VALUES (%s, %s, %d, %d, 0, 'acik')",
+                            $tur,
+                            $t->format('Y-m-d H:i:s'),
+                            $sure,
+                            $kapasite
+                        ));
+                        if ($tur === 'yazar') $eklenen += $n;
+                    }
                 }
                 $t->modify("+$sure minutes");
             }
@@ -1295,7 +1397,7 @@ class MST_Randevu
             </form>
 
         <?php elseif ($tab === 'saatler') :
-            $rows  = $wpdb->get_results($wpdb->prepare('SELECT * FROM ' . self::t_slot() . ' WHERE baslangic >= %s ORDER BY baslangic ASC LIMIT 1500', $from));
+            $rows  = $wpdb->get_results($wpdb->prepare('SELECT * FROM ' . self::t_slot() . ' WHERE baslangic >= %s ORDER BY baslangic ASC, tur DESC LIMIT 3000', $from));
             $bugun = self::now()->format('Y-m-d');
             $oto   = self::oto();
             $gunAd = [1 => 'Pzt', 2 => 'Sal', 3 => 'Çar', 4 => 'Per', 5 => 'Cum', 6 => 'Cmt', 7 => 'Paz'];
@@ -1371,11 +1473,11 @@ class MST_Randevu
                 <table class="widefat striped">
                     <thead><tr>
                         <td class="check-column"><input type="checkbox" onclick="this.closest('table').querySelectorAll('.mst-cb').forEach(c=>c.checked=this.checked)"></td>
-                        <th>Tarih</th><th>Saat</th><th>Doluluk</th><th>Durum</th>
+                        <th>Tarih</th><th>Saat</th><th>Tür</th><th>Doluluk</th><th>Durum</th>
                     </tr></thead>
                     <tbody>
                     <?php if (!$rows) : ?>
-                        <tr><td colspan="5">Henüz saat eklenmedi.</td></tr>
+                        <tr><td colspan="6">Henüz saat eklenmedi.</td></tr>
                     <?php endif; foreach ($rows as $r) :
                         $gecmis = $r->baslangic <= $now_s;
                         $tam    = (int) $r->dolu >= (int) $r->kapasite; ?>
@@ -1383,6 +1485,7 @@ class MST_Randevu
                             <th class="check-column"><input class="mst-cb" type="checkbox" name="ids[]" value="<?php echo (int) $r->id; ?>"></th>
                             <td><?php echo esc_html(self::fmt($r->baslangic, 'j M Y D')); ?></td>
                             <td><strong><?php echo esc_html(self::fmt($r->baslangic, 'H:i')); ?></strong> <small>(<?php echo (int) $r->sure; ?> dk)</small></td>
+                            <td><?php echo self::tur_rozet($r->tur); ?></td>
                             <td><span style="font-weight:600;color:<?php echo $tam ? '#b32d2e' : ((int) $r->dolu ? '#996800' : '#008a20'); ?>"><?php echo (int) $r->dolu; ?> / <?php echo (int) $r->kapasite; ?></span><?php echo $tam ? ' — dolu' : ''; ?></td>
                             <td><?php echo $r->durum === 'kapali' ? '<span style="color:#646970">Kapalı</span>' : 'Açık'; ?></td>
                         </tr>
@@ -1392,16 +1495,24 @@ class MST_Randevu
             </form>
 
         <?php else :
+            $sec_tur = isset(self::TURLER[$_GET['tur'] ?? '']) ? sanitize_key($_GET['tur']) : '';
             $rows = $wpdb->get_results($wpdb->prepare(
-                'SELECT r.*, s.baslangic, s.sure FROM ' . self::t_rnd() . ' r JOIN ' . self::t_slot() . " s ON s.id = r.slot_id
-                 WHERE s.baslangic >= %s ORDER BY s.baslangic ASC, r.id ASC LIMIT 1500",
-                $from
+                'SELECT r.*, s.baslangic, s.sure, s.tur FROM ' . self::t_rnd() . ' r JOIN ' . self::t_slot() . " s ON s.id = r.slot_id
+                 WHERE s.baslangic >= %s AND (%s = '' OR s.tur = %s) ORDER BY s.baslangic ASC, r.id ASC LIMIT 1500",
+                $from,
+                $sec_tur,
+                $sec_tur
             ));
             $ileri = 0;
             foreach ($rows as $r) if ($r->durum === 'aktif' && $r->baslangic > $now_s) $ileri++;
             ?>
             <h2>Randevular <span style="font-weight:400;color:#646970">— ileride <?php echo (int) $ileri; ?> aktif randevu</span></h2>
-            <p>Sayfaya eklemek için kısa kod <code>[mst_randevu]</code> ya da sayfa şablonu <strong>MST Randevu (Tam Sayfa)</strong>.</p>
+            <p>Göster:
+                <?php foreach (['' => 'Tümü'] + self::TURLER as $tk => $ta) : ?>
+                    <a href="<?php echo esc_url(add_query_arg(['page' => 'mst-randevu', 'tur' => $tk], admin_url('admin.php'))); ?>" style="margin-right:10px;<?php echo $sec_tur === $tk ? 'font-weight:700;text-decoration:none;color:#1d2327' : ''; ?>"><?php echo esc_html($ta); ?></a>
+                <?php endforeach; ?>
+            </p>
+            <p>Sayfa şablonları: yazar adayları için <strong>MST Randevu (Tam Sayfa)</strong>, akademi için <strong>MST Akademi Ön Görüşme Randevusu (Tam Sayfa)</strong>. Kısa kod: <code>[mst_randevu]</code> ya da <code>[mst_randevu tur="akademi"]</code>. Akademi saatleri yazar adayı saatleriyle aynı anda açılır, kişi sınırı ayrı sayılır.</p>
             <form method="post" action="<?php echo $post; ?>">
                 <?php wp_nonce_field('mst_randevu_randevu_islem'); ?>
                 <input type="hidden" name="action" value="mst_randevu_randevu_islem">
@@ -1416,16 +1527,17 @@ class MST_Randevu
                 <table class="widefat striped">
                     <thead><tr>
                         <td class="check-column"><input type="checkbox" onclick="this.closest('table').querySelectorAll('.mst-cb').forEach(c=>c.checked=this.checked)"></td>
-                        <th>Tarih / Saat</th><th>Aday</th><th>Telefon</th><th>Not</th><th>Durum</th><th>Bildirim</th>
+                        <th>Tarih / Saat</th><th>Tür</th><th>Aday</th><th>Telefon</th><th>Not</th><th>Durum</th><th>Bildirim</th>
                     </tr></thead>
                     <tbody>
                     <?php if (!$rows) : ?>
-                        <tr><td colspan="7">Henüz randevu yok.</td></tr>
+                        <tr><td colspan="8">Henüz randevu yok.</td></tr>
                     <?php endif; foreach ($rows as $r) :
                         $soluk = $r->baslangic <= $now_s || $r->durum !== 'aktif'; ?>
                         <tr style="<?php echo $soluk ? 'opacity:.5' : ''; ?>">
                             <th class="check-column"><input class="mst-cb" type="checkbox" name="ids[]" value="<?php echo (int) $r->id; ?>"></th>
                             <td><strong><?php echo esc_html(self::fmt($r->baslangic, 'j M Y D')); ?></strong> <?php echo esc_html(self::fmt($r->baslangic, 'H:i')); ?></td>
+                            <td><?php echo self::tur_rozet($r->tur); ?></td>
                             <td><?php echo esc_html($r->ad_soyad); ?></td>
                             <td><a href="tel:+<?php echo esc_attr($r->telefon); ?>"><?php echo esc_html(self::pretty_phone($r->telefon)); ?></a></td>
                             <td style="max-width:260px"><?php echo esc_html(wp_trim_words((string) $r->not_metni, 20)); ?></td>

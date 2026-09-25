@@ -52,6 +52,15 @@ Yeni sayfa → başlık (ör. “Yazar Kariyer Akademisi”) → *Şablon →* *
 - **SEO:** arama başlığı "Yazar Kariyer Akademisi: Yazarlık Eğitimi | MST Yayıncılık" ve açıklaması `MST_Randevu::SEO['akademi']`'dadır (Rank Math'te sayfaya başlık/açıklama yazılmışsa onlar kullanılır). Yapılandırılmış veri: kurum, sayfa yolu, üç program (Course: fiyat, süre, çevrim içi) ve SSS.
 - **Yazar Randevu → Akademi Ayarları**: ücretsiz eğitim tarihi (geçince kendiliğinden “yeni tarih yakında” yazar), yeri, süresi ve sonraki dönem başlangıcı.
 
+### Akademi ön görüşme randevusu
+
+Yeni sayfa → başlık (ör. “Akademi Ön Görüşme”) → *Şablon →* **MST Akademi Ön Görüşme Randevusu (Tam Sayfa)** → Yayımla. Tema içinde kullanmak için kısa kod: `[mst_randevu tur="akademi"]`.
+
+- Yazar adayı randevusuyla aynı saatleri kullanır ama **kontenjanı ayrıdır**: her saatte yazar adayları için 2, akademi için ayrıca 2 yer vardır. **Saatler** ekranında eklenen her saat iki tür için de açılır; tek tek kapatılabilir (Tür sütunu).
+- Formda isteğe bağlı “İlgilendiğiniz program” seçimi var; akademi sayfasından `?program=temel|marka|mentorluk` ile gelinirse hazır seçili olur. Seçim randevu notunun başına yazılır.
+- Sayfa yayımlanınca akademi sayfasındaki “bilgi alın” düğmeleri küçük bir seçim kutusu açar: **WhatsApp’tan yazın** ya da **Ön görüşme randevusu alın** (telefonda alttan açılır). Sayfa yoksa düğmeler eskisi gibi doğrudan WhatsApp’a gider; üstteki “Ön Görüşme Al” da yazar randevu sayfasına döner.
+- **Randevular** listesinde Tür sütunu ve Tümü / Yazar adayı / Akademi süzgeci vardır. Bildirim e-postası ve CRM’e giden veride tür (`tur`: `yazar` | `akademi`) yer alır.
+
 ## Yerel önizleme (WordPress olmadan)
 
 ```bash
@@ -71,7 +80,7 @@ MST Yazar Paneli tanıtım sayfası: http://localhost:8788/uygulama (`demo/uygul
 | Yol | İçerik |
 |---|---|
 | `mst-randevu/mst-randevu.php` | Eklenti: veritabanı, AJAX, bildirim, yönetim paneli |
-| `mst-randevu/templates/tam-sayfa.php` | "MST Randevu (Tam Sayfa)" sayfa şablonu |
+| `mst-randevu/templates/tam-sayfa.php` | "MST Randevu (Tam Sayfa)" ve "MST Akademi Ön Görüşme Randevusu (Tam Sayfa)" sayfa şablonları |
 | `mst-randevu/akademi.php` + `templates/akademi.php` + `assets/akademi.css/js` | Yazar Kariyer Akademisi bilgi sayfası ve ayarları |
 | `mst-randevu/templates/uygulama.php` + `assets/uygulama.css` | "MST Yazar Paneli Tanıtım (Tam Sayfa)" şablonu — yazar uygulamasının tanıtım sayfası |
 | `mst-randevu/assets/` | CSS, JS, logo |
