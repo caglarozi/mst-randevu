@@ -1,4 +1,6 @@
-// Randevu formunu WordPress olmadan yerelde gösterir: http://localhost:8788
+// Randevu formunu ve Yazar Paneli tanıtım sayfasını WordPress olmadan yerelde gösterir:
+//   http://localhost:8788           randevu
+//   http://localhost:8788/uygulama  MST Yazar Paneli tanıtım
 //
 // İsteğe bağlı — alınan randevuları gerçek MST CRM'e iletmek için:
 //   node demo-sunucu.js --crm ANAHTAR
@@ -39,11 +41,13 @@ http.createServer((req, res) => {
   let p = decodeURIComponent(req.url.split('?')[0]);
   if (p === '/crm-ilet' && req.method === 'POST') return crmIlet(req, res);
   if (p === '/') p = '/demo/index.html';
+  if (p === '/uygulama') p = '/demo/uygulama.html'; // MST Yazar Paneli tanıtım sayfası
   const file = path.normalize(path.join(root, p));
   if (!file.startsWith(root) || !fs.existsSync(file) || fs.statSync(file).isDirectory()) { res.writeHead(404); return res.end('Bulunamadı'); }
   res.writeHead(200, { 'Content-Type': types[path.extname(file)] || 'application/octet-stream', 'Cache-Control': 'no-store' });
   fs.createReadStream(file).pipe(res);
 }).listen(8788, () => {
-  console.log('hazir http://localhost:8788');
+  console.log('hazir http://localhost:8788  (randevu)');
+  console.log('      http://localhost:8788/uygulama  (MST Yazar Paneli tanıtım)');
   console.log(CRM_ANAHTAR ? `Randevular CRM'e iletilecek: ${CRM_URL}` : 'CRM\'e iletim kapalı (açmak için: node demo-sunucu.js --crm ANAHTAR)');
 });

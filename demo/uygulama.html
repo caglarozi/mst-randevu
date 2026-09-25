@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1a1a1a">
+<title>MST Yazar Paneli — MST Yayıncılık</title>
+<!-- WordPress'siz önizleme: templates/uygulama.php'nin çıktısından üretildi. Şablon değişirse yeniden üretilmeli. -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="/mst-randevu/assets/randevu.css">
+<link rel="stylesheet" href="/mst-randevu/assets/uygulama.css">
+</head>
+<body class="mst-sayfa mst-uyg">
+<header class="mst-top">
+            <div class="mst-top__in">
+                <a class="mst-top__logo" href="https://mstyayincilik.com/" aria-label="Ana sayfa">
+                    <img src="/mst-randevu/assets/mst-figur.png" alt="MST" width="50" height="50">
+                </a>
+                <button type="button" class="mst-top__menu" aria-label="Menüyü aç" aria-expanded="false" aria-controls="mst-top-menu"><span></span><span></span><span></span></button>
+                <div class="mst-top__cta" id="mst-top-menu">
+                    <a class="mst-top__btn mst-top__btn--wa" href="https://wa.me/905514112004?text=Merhaba%2C%20MST%20Yazar%20Paneli%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum." target="_blank" rel="noopener" aria-label="WhatsApp'tan yazın"><svg class="mst-ic" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg><span>WhatsApp</span></a>                    <a class="mst-top__btn mst-top__btn--mobil" href="https://mstyayincilik.com/"><span>Siteye Git</span><svg class="mst-ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M19 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h5"/></svg></a>
+                    <a class="mst-top__btn mst-top__btn--altin" href="https://app.mstyayincilik.com/"><span>Panele Giriş</span></a>                </div>
+            </div>
+        </header>
+<main class="uyg">
+    <!-- ============ Giriş ============ -->
+    <section class="uyg-hero">
+        <div class="uyg-kap uyg-hero__in">
+            <div class="uyg-hero__metin">
+                <span class="uyg-rozet"><svg class="uyg-ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M5.6 18.4l2.8-2.8M15.6 8.4l2.8-2.8"/></svg> MST Yazar Paneli</span>
+                <h1>Kitabınızın tüm yolculuğu <em>tek uygulamada.</em></h1>
+                <p class="uyg-hero__alt">Yayın sürecinden satışlara, telif kazancından kariyer planınıza kadar her şeyi anlık takip edin. 7/24 yapay zekâ destekli Yazar Asistanı her an yanınızda.</p>
+                <div class="uyg-hero__cta">
+                    <a class="uyg-btn uyg-btn--altin" href="https://app.mstyayincilik.com/">Panele Giriş Yap <svg class="uyg-ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+                    <a class="uyg-btn uyg-btn--cizgi" href="/">MST yazarı olun</a>
+                </div>
+                <ul class="uyg-hero__cipler">
+                    <li><svg class="uyg-ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/></svg> Web'den ve telefondan</li>
+                    <li><svg class="uyg-ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10 21a2 2 0 0 0 4 0"/></svg> Anlık bildirimler</li>
+                    <li><svg class="uyg-ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M5.6 18.4l2.8-2.8M15.6 8.4l2.8-2.8"/></svg> 7/24 AI asistan</li>
+                </ul>
+            </div>
+            <div class="uyg-hero__gorsel" aria-hidden="true">
+                <div class="uyg-tel">
+                    <div class="uyg-tel__ekran">
+                        <div class="uyg-tel__ust"><span>Merhaba, Yazarımız 👋</span><svg class="uyg-ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10 21a2 2 0 0 0 4 0"/></svg></div>
+                        <div class="uyg-kart uyg-kart--koyu">
+                            <small>Kitabınız</small>
+                            <strong>Kitabınızın Adı</strong>
+                            <div class="uyg-ilerleme"><span style="width:43%"></span></div>
+                            <div class="uyg-kart__satir"><span>Aşama: <b>Kapak</b></span><span>3 / 7</span></div>
+                        </div>
+                        <div class="uyg-mini-ikili">
+                            <div class="uyg-kart"><small>Toplam satış</small><strong>1.248</strong><em>+%12 bu ay</em></div>
+                            <div class="uyg-kart"><small>Hak edilen telif</small><strong>₺ ••••</strong><em>Detayı gör</em></div>
+                        </div>
+                        <div class="uyg-kart">
+                            <small>Bugün ne yapmalıyım?</small>
+                            <div class="uyg-gorev uyg-gorev--bitti"><svg class="uyg-ic" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Kapak önerisine yorum yap</div>
+                            <div class="uyg-gorev"><i></i> Instagram'da ilk tanıtım gönderisi</div>
+                        </div>
+                        <div class="uyg-tel__etiket">Örnek görünüm</div>
+                    </div>
+                </div>
+                <div class="uyg-yuzen uyg-yuzen--1"><svg class="uyg-ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10 21a2 2 0 0 0 4 0"/></svg> <span><b>Yeni aşama:</b> Kapak tasarımı başladı</span></div>
+                <div class="uyg-yuzen uyg-yuzen--2"><svg class="uyg-ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg> <span><b>Rozet kazandınız:</b> İlk 30 gün</span></div>
+            </div>
+        </div>
+    </section>
+    <!-- ============ Modül şeridi ============ -->
+    <nav class="uyg-seritler" aria-label="Özellikler">
+        <div class="uyg-kap">
+                            <a href="#surec"><svg class="uyg-ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="19" r="2"/><circle cx="18" cy="5" r="2"/><path d="M12 19h4.5a3.5 3.5 0 0 0 0-7h-8a3.5 3.5 0 0 1 0-7H12"/></svg><span>Yayın süreci</span></a>
+                            <a href="#satis"><svg class="uyg-ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg><span>Satış &amp; stok</span></a>
+                            <a href="#telif"><svg class="uyg-ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="14" rx="2"/><path d="M3 10h18M16 15h2"/></svg><span>Telif</span></a>
+                            <a href="#tanitim"><svg class="uyg-ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1z"/><path d="M15 9a4 4 0 0 1 0 6M18 6a8 8 0 0 1 0 12"/></svg><span>Reklam &amp; tanıtım</span></a>
+                            <a href="#kariyer"><svg class="uyg-ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg><span>Kariyer &amp; Akademi</span></a>
+                            <a href="#asistan"><svg class="uyg-ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M5.6 18.4l2.8-2.8M15.6 8.4l2.8-2.8"/></svg><span>AI Yazar Asistanı</span></a>
+                            <a href="#topluluk"><svg class="uyg-ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2 20a7 7 0 0 1 14 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M22 20a7 7 0 0 0-4-6.3"/></svg><span>Başarı &amp; topluluk</span></a>
+                    </div>
+    </nav>
+    <!-- ============ 1. Yayın süreci ============ -->
+    <section class="uyg-bolum" id="surec">
+        <div class="uyg-kap">
+            <header class="uyg-baslik">
+                <span class="uyg-ust"><svg class="uyg-ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="19" r="2"/><circle cx="18" cy="5" r="2"/><path d="M12 19h4.5a3.5 3.5 0 0 0 0-7h-8a3.5 3.5 0 0 1 0-7H12"/></svg> Yayın süreci</span>
+                <h2>Kitabınız hangi aşamada? Artık hep biliyorsunuz.</h2>
+                <p>Editörden dağıtıma kadar her adımı anlık görün; yeni bir aşamaya geçildiğinde bildirim alın.</p>
+            </header>
+            <ol class="uyg-rota">
+                                    <li class="is-bitti">
+                        <span class="uyg-rota__ic"><svg class="uyg-ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span>
+                        <strong>Editör</strong>
+                        <small>Tamamlandı</small>
+                    </li>
+                                    <li class="is-bitti">
+                        <span class="uyg-rota__ic"><svg class="uyg-ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span>
+                        <strong>Mizanpaj</strong>
+                        <small>Tamamlandı</small>
+                    </li>
+                                    <li class="is-simdi">
+                        <span class="uyg-rota__ic"><svg class="uyg-ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="m21 16-5-5-9 9"/></svg></span>
+                        <strong>Kapak</strong>
+                        <small>Devam ediyor</small>
+                    </li>
+                                    <li class="">
+                        <span class="uyg-rota__ic"><svg class="uyg-ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5v14M8 5v14M11 5v14M15 5v14M18 5v14M20 5v14"/></svg></span>
+                        <strong>ISBN</strong>
+                        <small>Sırada</small>
+                    </li>
+                                    <li class="">
+                        <span class="uyg-rota__ic"><svg class="uyg-ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8.5" r="1.5"/></svg></span>
+                        <strong>Bandrol</strong>
+                        <small>Sırada</small>
+                    </li>
+                                    <li class="">
+                        <span class="uyg-rota__ic"><svg class="uyg-ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 9V3h10v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M7 14h10v7H7z"/></svg></span>
+                        <strong>Baskı</strong>
+                        <small>Sırada</small>
+                    </li>
+                                    <li class="">
+                        <span class="uyg-rota__ic"><svg class="uyg-ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 6h12v10H2zM14 10h4l4 4v2h-8"/><circle cx="6" cy="18" r="2"/><circle cx="18" cy="18" r="2"/></svg></span>
+                        <strong>Dağıtım</strong>
+                        <small>Sırada</small>
+                    </li>
+                            </ol>
+            <ul class="uyg-liste"><li><svg class="uyg-ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Kitabınızın hangi aşamada olduğunu anlık takip edin</span></li><li><svg class="uyg-ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Editör, mizanpaj, kapak, ISBN, bandrol, baskı ve dağıtım süreçlerini görüntüleyin</span></li><li><svg class="uyg-ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Yayın sürecindeki yeni aşamalardan ve önemli gelişmelerden bildirimle haberdar olun</span></li></ul>        </div>
+    </section>
+    <!-- ============ 2. Satış & stok ============ -->
+    <section class="uyg-bolum uyg-bolum--acik" id="satis">
+        <div class="uyg-kap uyg-iki">
+            <div>
+                <header class="uyg-baslik uyg-baslik--sol">
+                    <span class="uyg-ust"><svg class="uyg-ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg> Satış, rapor & stok</span>
+                    <h2>Satışlarınız nerede, ne kadar? Tek bakışta.</h2>
+                    <p>Toplam satışınızı, hangi platformdan geldiğini ve stok durumunu kendiniz görün.</p>
+                </header>
+                <ul class="uyg-liste"><li><svg class="uyg-ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Toplam kitap satışını görüntüleyin</span></li><li><svg class="uyg-ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Satışların hangi platformlardan geldiğini takip edin</span></li><li><svg class="uyg-ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>D&amp;R, Kitapyurdu ve diğer satış kanallarındaki performansı izleyin</span></li><li><svg class="uyg-ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Günlük, aylık ve dönemsel satış raporlarına ulaşın</span></li><li><svg class="uyg-ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Kitabınızın güncel stok durumunu takip edin</span></li><li><svg class="uyg-ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Dağıtıma çıkan ve kalan kitap adetlerini görüntüleyin</span></li></ul>            </div>
+            <div class="uyg-panel" aria-hidden="true">
+                <div class="uyg-panel__ust"><strong>Satış raporu</strong><span class="uyg-sekmeler"><b>Aylık</b><i>Günlük</i><i>Dönemsel</i></span></div>
+                <div class="uyg-cubuklar">
+                                            <div><span style="height:38%"></span><small>Oca</small></div>
+                                            <div><span style="height:52%"></span><small>Şub</small></div>
+                                            <div><span style="height:47%"></span><small>Mar</small></div>
+                                            <div><span style="height:66%"></span><small>Nis</small></div>
+                                            <div><span style="height:58%"></span><small>May</small></div>
+                                            <div><span style="height:82%"></span><small>Haz</small></div>
+                                    </div>
+                <div class="uyg-kanallar">
+                                            <div><span>D&amp;R</span><div class="uyg-ilerleme"><span style="width:42%"></span></div><b>%42</b></div>
+                                            <div><span>Kitapyurdu</span><div class="uyg-ilerleme"><span style="width:35%"></span></div><b>%35</b></div>
+                                            <div><span>Diğer kanallar</span><div class="uyg-ilerleme"><span style="width:23%"></span></div><b>%23</b></div>
+                                    </div>
+                <div class="uyg-stok">
+                    <div><small>Dağıtımda</small><strong>640</strong></div>
+                    <div><small>Depoda kalan</small><strong>360</strong></div>
+                </div>
+                <div class="uyg-panel__etiket">Örnek görünüm</div>
+            </div>
+        </div>
+    </section>
+    <!-- ============ 3. Telif ============ -->
+    <section class="uyg-bolum" id="telif">
+        <div class="uyg-kap uyg-iki uyg-iki--ters">
+            <div>
+                <header class="uyg-baslik uyg-baslik--sol">
+                    <span class="uyg-ust"><svg class="uyg-ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="14" rx="2"/><path d="M3 10h18M16 15h2"/></svg> Telif kazancı</span>
+                    <h2>Emeğinizin karşılığı, şeffaf ve güncel.</h2>
+                    <p>Hak ettiğiniz telifi, geçmiş ödemelerinizi ve satış hareketlerinizi dilediğiniz an görün.</p>
+                </header>
+                <ul class="uyg-liste"><li><svg class="uyg-ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Telif kazancınızı takip edin</span></li><li><svg class="uyg-ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Hak edilen telif tutarlarını görüntüleyin</span></li><li><svg class="uyg-ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Geçmiş telif ödemelerinize ulaşın</span></li><li><svg class="uyg-ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Sipariş ve satış hareketlerini görüntüleyin</span></li></ul>            </div>
+            <div class="uyg-panel" aria-hidden="true">
+                <div class="uyg-telif">
+                    <small>Hak edilen telif</small>
+                    <strong>₺ ••••••</strong>
+                    <span>Bir sonraki ödeme dönemi</span>
+                </div>
+                <div class="uyg-hareketler">
+                    <div><span>Telif ödemesi</span><em>Ödendi</em></div>
+                    <div><span>Telif ödemesi</span><em>Ödendi</em></div>
+                    <div><span>Satış hareketi · Kitapyurdu</span><em class="gri">+24 adet</em></div>
+                    <div><span>Satış hareketi · D&amp;R</span><em class="gri">+17 adet</em></div>
+                </div>
+                <div class="uyg-panel__etiket">Örnek görünüm</div>
+            </div>
+        </div>
+    </section>
+    <!-- ============ 4. Reklam & tanıtım ============ -->
+    <section class="uyg-bolum uyg-bolum--acik" id="tanitim">
+        <div class="uyg-kap uyg-iki">
+            <div>
+                <header class="uyg-baslik uyg-baslik--sol">
+                    <span class="uyg-ust"><svg class="uyg-ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1z"/><path d="M15 9a4 4 0 0 1 0 6M18 6a8 8 0 0 1 0 12"/></svg> Reklam & tanıtım</span>
+                    <h2>Kitabınız için yapılan her çalışma önünüzde.</h2>
+                    <p>Sosyal medya ve reklam çalışmalarını, kampanya sonuçlarını takip edin.</p>
+                </header>
+                <ul class="uyg-liste"><li><svg class="uyg-ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Reklam ve tanıtım çalışmalarını takip edin</span></li><li><svg class="uyg-ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Kitabınız için hazırlanan sosyal medya ve reklam çalışmalarını görüntüleyin</span></li><li><svg class="uyg-ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Kampanya sonuçlarını ve performans verilerini izleyin</span></li></ul>            </div>
+            <div class="uyg-panel" aria-hidden="true">
+                <div class="uyg-kampanya">
+                    <div class="uyg-kampanya__gorsel"><svg class="uyg-ic" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="m21 16-5-5-9 9"/></svg></div>
+                    <div><strong>Tanıtım kampanyası</strong><small>Instagram · Reels</small><span class="uyg-durum">Yayında</span></div>
+                </div>
+                <div class="uyg-metrikler">
+                    <div><small>Erişim</small><strong>—</strong></div>
+                    <div><small>Etkileşim</small><strong>—</strong></div>
+                    <div><small>Tıklama</small><strong>—</strong></div>
+                </div>
+                <p class="uyg-panel__not">Kampanyanız yayına girdiğinde sonuçlar burada görünür.</p>
+                <div class="uyg-panel__etiket">Örnek görünüm</div>
+            </div>
+        </div>
+    </section>
+    <!-- ============ 5. Kariyer & Akademi ============ -->
+    <section class="uyg-bolum" id="kariyer">
+        <div class="uyg-kap">
+            <header class="uyg-baslik">
+                <span class="uyg-ust"><svg class="uyg-ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg> Kariyer planı & Yazar Kariyer Akademisi</span>
+                <h2>“Bugün ne yapmalıyım?” sorusunun cevabı hazır.</h2>
+                <p>Size özel görevler, 30/60/90 günlük kariyer planı ve uygulamanın içinde eğitimler.</p>
+            </header>
+            <div class="uyg-kartlar">
+                <article class="uyg-ozellik">
+                    <span class="uyg-ozellik__ic"><svg class="uyg-ic" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span>
+                    <h3>Günlük ve haftalık görevler</h3>
+                    <p>Kendinize özel görevleri görün, “Bugün ne yapmalıyım?” yönlendirmeleriyle adım adım ilerleyin.</p>
+                </article>
+                <article class="uyg-ozellik">
+                    <span class="uyg-ozellik__ic"><svg class="uyg-ic" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg></span>
+                    <h3>30 / 60 / 90 günlük plan</h3>
+                    <p>İlk 30, 60 ve 90 gününüz için hazırlanan yazar kariyer planını takip edin.</p>
+                    <div class="uyg-plan" aria-hidden="true"><span class="bitti">30</span><span class="simdi">60</span><span>90</span></div>
+                </article>
+                <article class="uyg-ozellik">
+                    <span class="uyg-ozellik__ic"><svg class="uyg-ic" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m2 9 10-5 10 5-10 5z"/><path d="M6 11v5c0 1.5 3 3 6 3s6-1.5 6-3v-5M22 9v6"/></svg></span>
+                    <h3>Yazar Kariyer Akademisi</h3>
+                    <p>Sosyal medya, içerik üretimi, kişisel marka ve kitap pazarlaması eğitimlerine uygulamadan ulaşın.</p>
+                </article>
+                <article class="uyg-ozellik">
+                    <span class="uyg-ozellik__ic"><svg class="uyg-ic" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10 21a2 2 0 0 0 4 0"/></svg></span>
+                    <h3>Eğitim takvimi</h3>
+                    <p>Yaklaşan eğitimleri ve tamamladığınız eğitimleri tek yerde görün.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+    <!-- ============ 6. AI Yazar Asistanı ============ -->
+    <section class="uyg-bolum uyg-bolum--koyu" id="asistan">
+        <div class="uyg-kap uyg-iki">
+            <div>
+                <header class="uyg-baslik uyg-baslik--sol">
+                    <span class="uyg-ust"><svg class="uyg-ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M5.6 18.4l2.8-2.8M15.6 8.4l2.8-2.8"/></svg> 7/24 Yapay Zekâ Yazar Asistanı</span>
+                    <h2>Gece yarısı bir fikir mi lazım? Asistanınız uyanık.</h2>
+                    <p>Kitap tanıtımından sosyal medya içeriğine, yazar markanızdan yayın sürecine kadar sorularınıza anında yanıt.</p>
+                </header>
+                <ul class="uyg-liste"><li><svg class="uyg-ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Kitap tanıtımı hakkında yapay zekâ desteği alın</span></li><li><svg class="uyg-ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Sosyal medya içerik fikirleri alın</span></li><li><svg class="uyg-ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Reels, gönderi ve tanıtım metni fikirleri oluşturun</span></li><li><svg class="uyg-ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Yazar markanızı geliştirmek için öneriler alın</span></li><li><svg class="uyg-ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Kitabınızı daha fazla kişiye ulaştırmak için yönlendirme alın</span></li><li><svg class="uyg-ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Yayıncılık süreciyle ilgili sorularınıza hızlı yanıt alın</span></li></ul>            </div>
+            <div class="uyg-sohbet" aria-hidden="true">
+                <div class="uyg-sohbet__ust"><span class="uyg-sohbet__avatar"><svg class="uyg-ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M5.6 18.4l2.8-2.8M15.6 8.4l2.8-2.8"/></svg></span><div><strong>Yazar Asistanı</strong><small>Çevrim içi · 7/24</small></div></div>
+                <div class="uyg-balon uyg-balon--ben">Romanım için bu hafta hangi Reels'i çekmeliyim?</div>
+                <div class="uyg-balon">Üç fikir hazırladım ✨<br>1. “İlk cümle” — kitabın ilk satırını sesli okuyun.<br>2. Kapak tasarımının öncesi/sonrası.<br>3. Yazarken dinlediğiniz şarkıyla 15 saniyelik masa başı çekimi.</div>
+                <div class="uyg-balon uyg-balon--ben">İkincisi için açıklama yazar mısın?</div>
+                <div class="uyg-balon uyg-balon--yaziyor"><i></i><i></i><i></i></div>
+                <div class="uyg-panel__etiket">Örnek görünüm</div>
+            </div>
+        </div>
+    </section>
+    <!-- ============ 7. Başarı & topluluk ============ -->
+    <section class="uyg-bolum" id="topluluk">
+        <div class="uyg-kap">
+            <header class="uyg-baslik">
+                <span class="uyg-ust"><svg class="uyg-ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2 20a7 7 0 0 1 14 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M22 20a7 7 0 0 0-4-6.3"/></svg> Başarı & topluluk</span>
+                <h2>Yalnız yazmıyorsunuz.</h2>
+                <p>Görevleri tamamladıkça rozet kazanın, MST yazar topluluğuyla bağlantıda kalın.</p>
+            </header>
+            <div class="uyg-rozetler" aria-hidden="true">
+                                    <div><span><svg class="uyg-ic" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg></span><small>İlk 30 gün</small></div>
+                                    <div><span><svg class="uyg-ic" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1z"/><path d="M15 9a4 4 0 0 1 0 6M18 6a8 8 0 0 1 0 12"/></svg></span><small>İlk tanıtım</small></div>
+                                    <div><span><svg class="uyg-ic" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m2 9 10-5 10 5-10 5z"/><path d="M6 11v5c0 1.5 3 3 6 3s6-1.5 6-3v-5M22 9v6"/></svg></span><small>Akademi mezunu</small></div>
+                                    <div><span><svg class="uyg-ic" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2 20a7 7 0 0 1 14 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M22 20a7 7 0 0 0-4-6.3"/></svg></span><small>Topluluk üyesi</small></div>
+                            </div>
+            <div class="uyg-kartlar">
+                <article class="uyg-ozellik">
+                    <span class="uyg-ozellik__ic"><svg class="uyg-ic" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg></span>
+                    <h3>Başarı ve gelişim</h3>
+                    <p>Gelişiminizi takip edin; görevleri tamamladıkça rozetler ve başarılar kazanın.</p>
+                </article>
+                <article class="uyg-ozellik">
+                    <span class="uyg-ozellik__ic"><svg class="uyg-ic" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2 20a7 7 0 0 1 14 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M22 20a7 7 0 0 0-4-6.3"/></svg></span>
+                    <h3>MST yazar topluluğu</h3>
+                    <p>Topluluğa erişin, diğer yazarlarla iletişim ve etkileşim kurun.</p>
+                </article>
+                <article class="uyg-ozellik">
+                    <span class="uyg-ozellik__ic"><svg class="uyg-ic" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1z"/><path d="M15 9a4 4 0 0 1 0 6M18 6a8 8 0 0 1 0 12"/></svg></span>
+                    <h3>Duyurular ve fırsatlar</h3>
+                    <p>MST duyurularını ve yazarlara özel fırsatları kaçırmayın.</p>
+                </article>
+                <article class="uyg-ozellik">
+                    <span class="uyg-ozellik__ic"><svg class="uyg-ic" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10 21a2 2 0 0 0 4 0"/></svg></span>
+                    <h3>Etkinlik bildirimleri</h3>
+                    <p>Eğitim, etkinlik, seminer ve toplantılardan bildirimle haberdar olun.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+    <!-- ============ Tek uygulama ============ -->
+    <section class="uyg-bolum uyg-bolum--acik">
+        <div class="uyg-kap">
+            <header class="uyg-baslik">
+                <span class="uyg-ust"><svg class="uyg-ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/></svg> Nasıl başlanır?</span>
+                <h2>Tüm kitap ve kariyer süreciniz tek uygulamada.</h2>
+            </header>
+            <ol class="uyg-adimlar">
+                <li><span>1</span><h3>Yayın sürecinizi başlatın</h3><p>MST Yayıncılık ile kitabınızın yayın yolculuğuna başlayın.</p></li>
+                <li><span>2</span><h3>Giriş bilgilerinizi alın</h3><p>Hesabınız açılır, giriş bilgileriniz size iletilir.</p></li>
+                <li><span>3</span><h3>Panelinize girin</h3><p>Telefonunuzun ana ekranına ekleyin; kitabınız artık cebinizde.</p></li>
+            </ol>
+        </div>
+    </section>
+    <!-- ============ SSS ============ -->
+    <section class="uyg-bolum" id="sss">
+        <div class="uyg-kap uyg-dar">
+            <header class="uyg-baslik"><h2>Sık sorulan sorular</h2></header>
+            <div class="uyg-sss">
+                                    <details><summary>MST Yazar Paneli&#039;ni kimler kullanabilir?</summary><p>MST Yayıncılık ile kitabını yayımlayan yazarlarımız. Yayın süreciniz başladığında panele giriş bilgileriniz size iletilir.</p></details>
+                                    <details><summary>Telefonumda nasıl kullanırım?</summary><p>Panel bir web uygulamasıdır; telefonunuzun tarayıcısından giriş yapabilirsiniz. Tarayıcı menüsündeki &quot;Ana ekrana ekle&quot; seçeneğiyle uygulama gibi tek dokunuşla açabilirsiniz.</p></details>
+                                    <details><summary>Giriş bilgilerimi bulamıyorum, ne yapmalıyım?</summary><p>WhatsApp üzerinden bize yazın; ekibimiz hesabınızla ilgili yardımcı olur.</p></details>
+                                    <details><summary>Henüz MST yazarı değilim, paneli görebilir miyim?</summary><p>Panel, yayın sürecindeki yazarlarımıza özeldir. Kitabınızı birlikte yayımlamak için ücretsiz ön görüşme randevusu alabilirsiniz.</p></details>
+                            </div>
+        </div>
+    </section>
+    <!-- ============ Kapanış ============ -->
+    <section class="uyg-kapanis">
+        <div class="uyg-kap uyg-kapanis__in">
+            <div>
+                <h2>Kitabınızın yolculuğunu birlikte yönetelim.</h2>
+                <p>MST yazarıysanız hemen panelinize girin. Henüz değilseniz, kitabınızı konuşmak için ücretsiz ön görüşme randevusu alın.</p>
+            </div>
+            <div class="uyg-kapanis__cta">
+                <a class="uyg-btn uyg-btn--altin" href="https://app.mstyayincilik.com/">Panele Giriş Yap <svg class="uyg-ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+                <a class="uyg-btn uyg-btn--cizgi" href="/">Ücretsiz görüşme randevusu al</a>
+                <a class="uyg-kapanis__wa" href="https://wa.me/905514112004?text=Merhaba%2C%20MST%20Yazar%20Paneli%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum." target="_blank" rel="noopener"><svg class="mst-ic" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg> Sorunuz mu var? WhatsApp'tan yazın</a>            </div>
+        </div>
+    </section>
+    </main>
+<script src="/mst-randevu/assets/randevu.js"></script>
+</body>
+</html>
