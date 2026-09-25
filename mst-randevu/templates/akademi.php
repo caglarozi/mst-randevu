@@ -52,7 +52,7 @@ $liste = function (array $maddeler, $sinif = '') use ($ik) {
 };
 
 $bolumler = [
-    ['#asama', 'Aşamanız'], ['#yaklasim', 'Eğitim yaklaşımı'], ['#programlar', 'Programlar'], ['#karsilastirma', 'Karşılaştırma'],
+    ['#yol', 'Yol haritanız'], ['#sorun', 'Neden akademi?'], ['#yaklasim', 'Eğitim yaklaşımı'], ['#programlar', 'Programlar'], ['#karsilastirma', 'Karşılaştırma'],
     ['#ucretsiz', 'Ücretsiz eğitim'], ['#kapsam', 'Kapsam'], ['#sss', 'SSS'], ['#basvuru', 'Başvuru'],
 ];
 
@@ -66,6 +66,31 @@ $asamalar = [
 ];
 
 $dongu = ['Analiz', 'Eğitim', 'Uygulama', 'Değerlendirme', 'Yeni plan'];
+
+/** Aşamaya göre yol haritası: ücretsiz eğitim → analiz → program → çıktılar → sonraki seviye. */
+$yollar = [
+    'yazma' => ['Fikirden düzenli bir yazar kimliğine', 'temel', [
+        ['Ücretsiz eğitim', 'Aşamanızı ve ihtiyacınızı netleştirin.'],
+        ['Yazar Kariyer Analizi', 'Durumunuz MST ekibi tarafından değerlendirilir.'],
+        ['Temel Program · 12 hafta', 'Yazar kimliği, hedef okur, yazma ve içerik sistemi.'],
+        ['Çalışma dosyalarınız', 'Konumlandırma belgesi, 30 günlük yazma sistemi, 90 günlük gelişim planı.'],
+        ['Sonraki seviye', 'Dosyanız hazır olduğunda Marka ve Görünürlük Programı.'],
+    ]],
+    'dosya' => ['Hazır dosyadan görünür bir yazara', 'marka', [
+        ['Ücretsiz eğitim', 'Yayın öncesi yapılması gerekenleri görün.'],
+        ['Yazar Kariyer Analizi', 'Eseriniz ve hedefleriniz değerlendirilir.'],
+        ['Marka ve Görünürlük · 12 hafta', 'Marka, içerik, video, lansman ve PR sistemi.'],
+        ['Çalışma dosyalarınız', 'Marka stratejisi, lansman planı, basın bülteni, 90 günlük görünürlük yol haritası.'],
+        ['Sonraki seviye', 'Uzun vadeli kariyer için Kariyer Mentorluk Programı.'],
+    ]],
+    'yayimlandi' => ['Raftaki kitaptan uzun vadeli kariyere', 'marka', [
+        ['Ücretsiz eğitim', 'Kitap yayımlandıktan sonra yapılması gerekenleri görün.'],
+        ['Yazar Kariyer Analizi', 'Görünürlüğünüz ve kariyer hedefiniz değerlendirilir.'],
+        ['Marka ve Görünürlük ya da Kariyer Mentorluk', 'Hedefinize ve takip ihtiyacınıza göre önerilir.'],
+        ['Çalışma dosyalarınız', 'Medya tanıtım dosyası, içerik takvimi, KPI tablosu, ikinci eser stratejisi.'],
+        ['Sonraki seviye', '12 aylık yazar kariyer yol haritasıyla okur topluluğu ve ikinci eser.'],
+    ]],
+];
 
 $kurallar = [
     ['kilit', 'Programlar sabit müfredata sahiptir; katılımcılar ders konularını seçmez.'],
@@ -214,62 +239,79 @@ $secim = function ($ad, $bos = 'Seçin') use ($sec) {
 
 <main class="uyg akd">
 
-    <!-- ============ Açılış ============ -->
-    <section class="uyg-hero akd-hero" id="akademi">
-        <div class="uyg-kap uyg-hero__in">
-            <div class="uyg-hero__metin">
-                <span class="akd-marka uyg-gir" style="--d:.05s">MST Yayıncılık · Yazar Kariyer Akademisi</span>
-                <h1 aria-label="Yazmak başlangıçtır. Görünür olmak kariyerdir."><span class="uyg-k" style="--i:0">Yazmak</span> <span class="uyg-k" style="--i:1">başlangıçtır.</span> <em class="uyg-k uyg-parilti" style="--i:2">Görünür olmak kariyerdir.</em></h1>
-                <p class="uyg-hero__alt uyg-gir" style="--d:.75s">Yazma aşamasından profesyonel yazar markasına kadar uzanan, uygulama ve takip temelli eğitim programları.</p>
-                <p class="akd-hero__alt2 uyg-gir" style="--d:.85s">Yazar kimliğinizi netleştirin, doğru okura ulaşın, içerik sisteminizi kurun ve kariyerinizi planlı biçimde yönetin.</p>
-                <div class="uyg-hero__cta uyg-gir" style="--d:.95s">
-                    <a class="uyg-btn uyg-btn--altin" href="#basvuru">Ücretsiz Yazar Kariyer Analizi <?php echo $ik('ok', 18); ?></a>
-                    <a class="uyg-btn uyg-btn--cizgi" href="#programlar">Programları İnceleyin</a>
+    <!-- ============ Açılış: sahne ============ -->
+    <section class="akd-sahne" id="akademi">
+        <div class="akd-sahne__isik" aria-hidden="true"><span class="akd-sahne__lamba"></span><span class="akd-sahne__huzme"></span><canvas class="akd-sahne__toz"></canvas><span class="akd-sahne__zemin"></span></div>
+        <div class="uyg-kap akd-sahne__in">
+            <span class="akd-marka">MST Yayıncılık · Yazar Kariyer Akademisi</span>
+            <p class="akd-sahne__yaz" aria-hidden="true"><span data-akd-daktilo="Yazmak başlangıçtır.">Yazmak başlangıçtır.</span><i class="akd-imlec"></i></p>
+            <h1 class="akd-sahne__baslik"><span class="akd-gizli-metin">Yazmak başlangıçtır. </span>Görünür olmak <em>kariyerdir.</em></h1>
+            <p class="akd-sahne__alt">Yazma aşamasından profesyonel yazar markasına kadar uzanan, uygulama ve takip temelli eğitim programları. Yazar kimliğinizi netleştirin, doğru okura ulaşın, içerik sisteminizi kurun ve kariyerinizi planlı biçimde yönetin.</p>
+
+            <div class="akd-sahne__secim">
+                <p class="akd-sahne__soru">Yazarlık yolculuğunuzun neresindesiniz?</p>
+                <div class="akd-sahne__kartlar">
+                    <?php foreach ($asamalar as $k => $a) : ?>
+                        <button type="button" class="akd-sahne__kart" data-akd-asama="<?php echo esc_attr($k); ?>" aria-pressed="false">
+                            <span class="akd-sahne__kart-ic"><?php echo $ik($a[0], 22); ?></span>
+                            <span class="akd-sahne__kart-metin"><strong><?php echo esc_html($a[1]); ?></strong><small><?php echo esc_html($a[2]); ?></small></span>
+                            <span class="akd-sahne__kart-ok"><?php echo $ik('ok', 18); ?></span>
+                        </button>
+                    <?php endforeach; ?>
                 </div>
-                <p class="uyg-giris-link uyg-gir" style="--d:1.05s"><a href="#ucretsiz" data-akd-ilgi="ucretsiz">Ücretsiz Eğitime Katılın</a><?php echo $egitim ? ' · ' . esc_html($egitim[1]) : ''; ?></p>
             </div>
 
-            <div class="uyg-hero__gorsel akd-dongu" aria-hidden="true">
-                <svg viewBox="0 0 400 400" class="akd-dongu__svg">
-                    <circle cx="200" cy="200" r="150" class="akd-dongu__iz"/>
-                    <circle cx="200" cy="200" r="150" class="akd-dongu__yay"/>
-                    <circle cx="200" cy="200" r="104" class="akd-dongu__ic"/>
-                </svg>
-                <div class="akd-dongu__merkez"><strong>Sabit müfredat</strong><span>Uygulama · Takip · Geri bildirim</span></div>
-                <?php foreach ($dongu as $i => $d) :
-                    $a = -90 + $i * 72; ?>
-                    <div class="akd-dongu__dugum" style="--a:<?php echo (int) $a; ?>deg;--i:<?php echo (int) $i; ?>"><span><b><?php echo $i + 1; ?></b><?php echo esc_html($d); ?></span></div>
-                <?php endforeach; ?>
+            <div class="akd-sahne__cta">
+                <a class="uyg-btn uyg-btn--altin" href="#basvuru">Ücretsiz Yazar Kariyer Analizi <?php echo $ik('ok', 18); ?></a>
+                <a class="akd-sahne__link" href="#programlar">Programları İnceleyin</a>
+                <a class="akd-sahne__link" href="#ucretsiz" data-akd-ilgi="ucretsiz">Ücretsiz Eğitime Katılın<?php echo $egitim ? ' <small>' . esc_html($egitim[1]) . '</small>' : ''; ?></a>
             </div>
         </div>
     </section>
 
-    <nav class="uyg-seritler akd-seritler" aria-label="Sayfa bölümleri">
+    <nav class="akd-gezinti" aria-label="Sayfa bölümleri">
         <div class="uyg-kap">
-            <?php foreach ($bolumler as $b) : ?><a href="<?php echo esc_attr($b[0]); ?>"><span><?php echo esc_html($b[1]); ?></span></a><?php endforeach; ?>
+            <?php foreach ($bolumler as $b) : ?><a href="<?php echo esc_attr($b[0]); ?>" data-akd-gez="<?php echo esc_attr(substr($b[0], 1)); ?>"><?php echo esc_html($b[1]); ?></a><?php endforeach; ?>
         </div>
     </nav>
 
-    <!-- ============ Aşama belirleme ============ -->
-    <section class="uyg-bolum akd-lacivert" id="asama">
+    <!-- ============ Yol haritası: seçilen aşamaya göre ============ -->
+    <section class="uyg-bolum akd-lacivert akd-yol" id="yol">
         <div class="uyg-kap">
             <header class="uyg-baslik">
-                <span class="uyg-ust"><?php echo $ik('hedef', 18); ?> Başlangıç noktanız</span>
-                <h2>Yazarlık yolculuğunuzun hangi aşamasındasınız?</h2>
-                <p>Seçiminiz, kariyer analizi formundaki program önerisini belirler.</p>
+                <span class="uyg-ust"><?php echo $ik('hedef', 18); ?> Size özel yol haritası</span>
+                <h2>Nereden başlarsanız başlayın, sıradaki adım belli.</h2>
+                <p>Aşamanızı seçin; ücretsiz eğitimden program çıktılarınıza kadar izleyeceğiniz yolu görün.</p>
             </header>
-            <div class="akd-asamalar">
-                <?php foreach ($asamalar as $k => $a) : ?>
-                    <button type="button" class="akd-asama" data-akd-asama="<?php echo esc_attr($k); ?>" aria-pressed="false">
-                        <span class="akd-asama__ic"><?php echo $ik($a[0], 26); ?></span>
-                        <strong><?php echo esc_html($a[1]); ?></strong>
-                        <span class="akd-asama__metin"><?php echo esc_html($a[2]); ?></span>
-                        <ul><?php foreach ($a[4] as $m) : ?><li><?php echo esc_html($m); ?></li><?php endforeach; ?></ul>
-                        <span class="akd-asama__oneri">Önerilen başlangıç: <b><?php echo esc_html(MST_Akademi::PROGRAMLAR[$a[3]][0]); ?></b></span>
-                        <span class="akd-asama__sec">Bu benim aşamam <?php echo $ik('ok', 16); ?></span>
-                    </button>
-                <?php endforeach; ?>
+            <div class="akd-yol__secici" role="tablist" aria-label="Yazarlık aşaması">
+                <?php $ilk = true; foreach ($asamalar as $k => $a) : ?>
+                    <button type="button" role="tab" data-akd-yol="<?php echo esc_attr($k); ?>" aria-selected="<?php echo $ilk ? 'true' : 'false'; ?>"><?php echo $ik($a[0], 18); ?><span class="akd-uzun"><?php echo esc_html($a[1]); ?></span><span class="akd-kisa" aria-hidden="true"><?php echo esc_html(['yazma' => 'Yazıyorum', 'dosya' => 'Dosyam hazır', 'yayimlandi' => 'Yayımlandı'][$k]); ?></span></button>
+                <?php $ilk = false; endforeach; ?>
             </div>
+            <?php $ilk = true; foreach ($yollar as $k => $y) :
+                $pk = $y[1]; $pr = $programlar[$pk]; ?>
+                <div class="akd-yol__panel" data-akd-yol-panel="<?php echo esc_attr($k); ?>" role="tabpanel" <?php echo $ilk ? '' : 'hidden'; ?>>
+                    <div class="akd-yol__sol">
+                        <h3><?php echo esc_html($y[0]); ?></h3>
+                        <p><?php echo esc_html($asamalar[$k][2]); ?></p>
+                        <ul class="akd-yol__kimler"><?php foreach ($asamalar[$k][4] as $m) : ?><li><?php echo esc_html($m); ?></li><?php endforeach; ?></ul>
+                        <div class="akd-yol__program">
+                            <small>Önerilen başlangıç</small>
+                            <strong><?php echo esc_html(MST_Akademi::PROGRAMLAR[$pk][0]); ?></strong>
+                            <span><?php echo esc_html($pr['olcu'][0][0] . ' · ' . $pr['olcu'][4][0] . ' katılımcı · ' . $pr['olcu'][3][0] . ' kayıt erişimi'); ?></span>
+                            <div class="akd-yol__butonlar">
+                                <a class="uyg-btn uyg-btn--altin" href="#basvuru" data-akd-basvur="<?php echo esc_attr($k); ?>">Bu yol için analiz isteyin <?php echo $ik('ok', 18); ?></a>
+                                <a class="akd-sahne__link" href="#program-<?php echo esc_attr($pk); ?>">Programı inceleyin</a>
+                            </div>
+                        </div>
+                    </div>
+                    <ol class="akd-yol__rota">
+                        <?php foreach ($y[2] as $i => $adim) : ?>
+                            <li class="<?php echo $i === 2 ? 'is-program' : ($i === 4 ? 'is-sonraki' : ''); ?>"><span><?php echo $i + 1; ?></span><div><strong><?php echo esc_html($adim[0]); ?></strong><p><?php echo esc_html($adim[1]); ?></p></div></li>
+                        <?php endforeach; ?>
+                    </ol>
+                </div>
+            <?php $ilk = false; endforeach; ?>
         </div>
     </section>
 
