@@ -190,7 +190,7 @@ $enCok = max(array_column($programlar, 'kontenjan'));
     <?php
     foreach (['mst-randevu' => 'randevu.css', 'mst-akademi' => 'akademi.css'] as $h => $dosya) {
         if (!wp_style_is($h, 'done')) {
-            echo '<link rel="stylesheet" id="' . esc_attr($h) . '-yedek-css" href="' . esc_url(MST_RANDEVU_URL . 'assets/' . $dosya . '?ver=' . MST_RANDEVU_VER) . '">' . "\n";
+            echo '<link rel="stylesheet" id="' . esc_attr($h) . '-yedek-css" href="' . esc_url(MST_Randevu::varlik($dosya)) . '">' . "\n";
         }
     }
     ?>

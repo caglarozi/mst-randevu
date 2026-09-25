@@ -27,6 +27,7 @@ Eklenti kendini bu depodaki GitHub sürümlerinden (Releases) günceller — zip
 - `mst-randevu/mst-randevu.php` içinde **hem** `Version:` başlığı **hem** `MST_RANDEVU_VER` artırılıp (ör. `1.2.0 → 1.2.1`) `main`'e birleştirilince GitHub Actions (`.github/workflows/eklenti-surumu.yml`) `v1.2.1` sürümünü açar ve `mst-randevu.zip`'i ekler.
 - WordPress bunu birkaç saat içinde görür (hemen görmek için **Eklentiler** sayfasında "Güncellemeleri kontrol et" bağlantısı). **Şimdi güncelle** ile ya da eklentinin **Otomatik güncellemeleri etkinleştir** seçeneğiyle kurulur.
 - Sürüm numarası artırılmayan değişiklikler siteye gitmez.
+- Stil ve betik dosyaları her sürümde `wp-content/uploads/mst-randevu/<sürüm>/` altına kopyalanıp oradan yüklenir; adres her sürümde değiştiği için CDN/önbellek eski dosyayı veremez (bazı önbellekler `?ver=` etiketini yok sayıyor). Eski sürüm klasörleri güncellemede silinir. Klasöre yazılamazsa eklentideki dosya kullanılır.
 - Dikkat: otomatik güncelleme açıksa `main`'e giren her sürüm doğrudan canlı siteye gider.
 
 ## MST Yazar Paneli tanıtım sayfası
