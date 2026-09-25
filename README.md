@@ -71,7 +71,7 @@ Windows'ta kısaca: `onizleme.bat`'a çift tıklayın (masaüstüne kısayolu ko
 
 Ardından http://localhost:8788 — eklentinin kendi CSS/JS'i sahte verilerle çalışır; kayıtlar yalnızca sayfada tutulur.
 
-Yazar Kariyer Akademisi: http://localhost:8788/akademi (`demo/akademi.html`).
+Yazar Kariyer Akademisi: http://localhost:8788/akademi (`demo/akademi.html`). Akademi ön görüşme randevusu: http://localhost:8788/akademi-randevu (`demo/akademi-randevu.html`); akademi sayfasındaki “bilgi alın” seçimleri buraya bağlıdır.
 
 MST Yazar Paneli tanıtım sayfası: http://localhost:8788/uygulama (`demo/uygulama.html`, `templates/uygulama.php`'nin çıktısından üretilmiştir; şablon değişince yeniden üretilmeli).
 
