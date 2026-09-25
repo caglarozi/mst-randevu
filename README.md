@@ -27,6 +27,10 @@ Eklenti kendini bu depodaki GitHub sürümlerinden (Releases) günceller — zip
 - Sürüm numarası artırılmayan değişiklikler siteye gitmez.
 - Dikkat: otomatik güncelleme açıksa `main`'e giren her sürüm doğrudan canlı siteye gider.
 
+## MST Yazar Paneli tanıtım sayfası
+
+Yeni sayfa → *Sayfa Özellikleri → Şablon →* **MST Yazar Paneli Tanıtım (Tam Sayfa)** → Yayımla. Üst çubuk randevu sayfasıyla aynıdır; "Panele Giriş" butonları **Bildirim & Ayarlar → Yazar Paneli adresi**'ne (boşsa `https://app.mstyayincilik.com/`), "MST yazarı olun / randevu" butonları randevu sayfasına gider. Telefon ve paneldeki ekranlar "Örnek görünüm" etiketli temsili çizimlerdir.
+
 ## Yerel önizleme (WordPress olmadan)
 
 ```bash
@@ -41,6 +45,7 @@ Ardından http://localhost:8788 — eklentinin kendi CSS/JS'i sahte verilerle ç
 |---|---|
 | `mst-randevu/mst-randevu.php` | Eklenti: veritabanı, AJAX, bildirim, yönetim paneli |
 | `mst-randevu/templates/tam-sayfa.php` | "MST Randevu (Tam Sayfa)" sayfa şablonu |
+| `mst-randevu/templates/uygulama.php` + `assets/uygulama.css` | "MST Yazar Paneli Tanıtım (Tam Sayfa)" şablonu — yazar uygulamasının tanıtım sayfası |
 | `mst-randevu/assets/` | CSS, JS, logo |
 | `mst-randevu/lib/plugin-update-checker/` | GitHub'dan güncelleme kütüphanesi (Plugin Update Checker 5.7, MIT) |
 | `.github/workflows/eklenti-surumu.yml` | Sürüm artınca zip'li GitHub sürümü açar |

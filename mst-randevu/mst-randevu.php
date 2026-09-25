@@ -2,7 +2,7 @@
 /**
  * Plugin Name: MST Yazar Adayı Randevu
  * Description: Yazar adaylarının müsait saatlerden görüşme randevusu alması. Kısa kod: [mst_randevu] — ya da sayfa şablonu olarak "MST Randevu (Tam Sayfa)".
- * Version:     1.3.1
+ * Version:     1.4.0
  * Author:      MST Yayıncılık
  * Text Domain: mst-randevu
  * Requires PHP: 7.4
@@ -12,7 +12,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('MST_RANDEVU_VER', '1.3.1');
+define('MST_RANDEVU_VER', '1.4.0');
 define('MST_RANDEVU_DB', 2);
 define('MST_RANDEVU_URL', plugin_dir_url(__FILE__));
 
@@ -41,6 +41,7 @@ class MST_Randevu
     const OPT    = 'mst_randevu_ayarlar';
     const NONCE  = 'mst_randevu';
     const SABLON = 'mst-randevu-tam-sayfa';
+    const SABLON_UYG = 'mst-uygulama-tam-sayfa'; // MST Yazar Paneli tanıtım sayfası
     const OTO    = 'mst_randevu_otomatik';
     const CRON   = 'mst_randevu_gunluk';
 
@@ -172,6 +173,7 @@ class MST_Randevu
             'logo_url'        => '',
             'kvkk_metni'      => 'Kişisel verilerimin randevu ve iletişim amacıyla MST Yayıncılık tarafından işlenmesini kabul ediyorum.',
             'kvkk_url'        => '', // boşsa sitedeki KVKK / Aydınlatma sayfası kendiliğinden bulunur
+            'uygulama_url'    => '', // boşsa https://app.mstyayincilik.com/
             'basari_mesaji'   => 'Randevunuz alındı! Belirtilen saatte sizi arayacağız.',
         ];
     }
@@ -236,6 +238,15 @@ class MST_Randevu
         // Yazı tipine bağımlı DEĞİL: bir hız/gizlilik eklentisi Google Fonts'u kapatırsa stil dosyası da düşmesin
         wp_register_style('mst-randevu', MST_RANDEVU_URL . 'assets/randevu.css', [], MST_RANDEVU_VER);
         wp_register_script('mst-randevu', MST_RANDEVU_URL . 'assets/randevu.js', [], MST_RANDEVU_VER, true);
+        wp_register_style('mst-uygulama', MST_RANDEVU_URL . 'assets/uygulama.css', ['mst-randevu'], MST_RANDEVU_VER);
+
+        // Yazar Paneli tanıtım sayfası: üst çubuk + mobil menü randevu dosyalarından gelir
+        if (self::is_app_page()) {
+            wp_enqueue_style('mst-randevu-font');
+            wp_enqueue_style('mst-uygulama');
+            wp_enqueue_script('mst-randevu');
+            return;
+        }
 
         // Stil dosyası <head> içinde yüklensin diye, randevu olan sayfaları önceden tanı
         $post = get_post();
@@ -264,28 +275,35 @@ class MST_Randevu
         return is_page() && get_page_template_slug() === self::SABLON;
     }
 
+    public static function is_app_page()
+    {
+        return is_page() && get_page_template_slug() === self::SABLON_UYG;
+    }
+
     public static function page_templates($templates)
     {
-        $templates[self::SABLON] = 'MST Randevu (Tam Sayfa)';
+        $templates[self::SABLON]     = 'MST Randevu (Tam Sayfa)';
+        $templates[self::SABLON_UYG] = 'MST Yazar Paneli Tanıtım (Tam Sayfa)';
         return $templates;
     }
 
     public static function template_include($template)
     {
-        if (!self::is_full_page()) return $template;
+        $uyg = self::is_app_page();
+        if (!$uyg && !self::is_full_page()) return $template;
         // Önbellek/hızlandırma eklentileri (LiteSpeed, WP Rocket, W3TC, Autoptimize…) bu sayfanın
         // CSS/JS'ini birleştirip küçültmesin; ziyaretçide stil dosyası kaybolabiliyordu.
         foreach (['LITESPEED_NO_OPTM', 'DONOTROCKETOPTIMIZE', 'DONOTMINIFYCSS', 'DONOTMINIFYJS'] as $sabit) {
             if (!defined($sabit)) define($sabit, true);
         }
-        return __DIR__ . '/templates/tam-sayfa.php';
+        return __DIR__ . ($uyg ? '/templates/uygulama.php' : '/templates/tam-sayfa.php');
     }
 
     /** Tam sayfada tema stillerini devre dışı bırakır; sayfa her temada aynı görünür. */
     public static function isolate_styles()
     {
-        if (!self::is_full_page()) return;
-        $keep = ['mst-randevu', 'mst-randevu-font', 'admin-bar', 'dashicons'];
+        if (!self::is_full_page() && !self::is_app_page()) return;
+        $keep = ['mst-randevu', 'mst-randevu-font', 'mst-uygulama', 'admin-bar', 'dashicons'];
         foreach (wp_styles()->queue as $handle) {
             if (!in_array($handle, $keep, true)) wp_dequeue_style($handle);
         }
@@ -336,10 +354,24 @@ class MST_Randevu
         return '<svg class="mst-ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' . ($d[$name] ?? '') . '</svg>';
     }
 
-    public static function header_html()
+    /** Yazar Paneli (web uygulaması) adresi. */
+    public static function uygulama_url()
+    {
+        return self::opts()['uygulama_url'] ?: 'https://app.mstyayincilik.com/';
+    }
+
+    /** "MST Randevu (Tam Sayfa)" şablonlu ilk yayındaki sayfa; yoksa site ana sayfası. */
+    public static function randevu_url()
+    {
+        $p = get_posts(['post_type' => 'page', 'post_status' => 'publish', 'numberposts' => 1, 'meta_key' => '_wp_page_template', 'meta_value' => self::SABLON, 'fields' => 'ids']);
+        return $p ? get_permalink($p[0]) : home_url('/');
+    }
+
+    /** Üst çubuk. $giris: Yazar Paneli tanıtım sayfasında altın "Panele Giriş" butonu da eklenir. */
+    public static function header_html($giris = false)
     {
         $home = home_url('/');
-        $wa   = self::wa_link('Merhaba, yazar görüşmesi hakkında bilgi almak istiyorum.');
+        $wa   = self::wa_link($giris ? 'Merhaba, MST Yazar Paneli hakkında bilgi almak istiyorum.' : 'Merhaba, yazar görüşmesi hakkında bilgi almak istiyorum.');
         ob_start(); ?>
         <header class="mst-top">
             <div class="mst-top__in">
@@ -349,7 +381,8 @@ class MST_Randevu
                 <button type="button" class="mst-top__menu" aria-label="Menüyü aç" aria-expanded="false" aria-controls="mst-top-menu"><span></span><span></span><span></span></button>
                 <div class="mst-top__cta" id="mst-top-menu">
                     <?php if ($wa) : ?><a class="mst-top__btn mst-top__btn--wa" href="<?php echo esc_url($wa); ?>" target="_blank" rel="noopener" aria-label="WhatsApp'tan yazın"><?php echo self::icon('wa'); ?><span>WhatsApp</span></a><?php endif; ?>
-                    <a class="mst-top__btn" href="<?php echo esc_url($home); ?>"><span>Siteye Git</span><?php echo self::icon('dis'); ?></a>
+                    <a class="mst-top__btn<?php echo $giris ? ' mst-top__btn--mobil' : ''; ?>" href="<?php echo esc_url($home); ?>"><span>Siteye Git</span><?php echo self::icon('dis'); ?></a>
+                    <?php if ($giris) : ?><a class="mst-top__btn mst-top__btn--altin" href="<?php echo esc_url(self::uygulama_url()); ?>"><span>Panele Giriş</span></a><?php endif; ?>
                 </div>
             </div>
         </header>
@@ -869,6 +902,7 @@ class MST_Randevu
             'logo_url'        => esc_url_raw(trim($in['logo_url'] ?? '')),
             'kvkk_metni'      => sanitize_textarea_field($in['kvkk_metni'] ?? ''),
             'kvkk_url'        => esc_url_raw(trim($in['kvkk_url'] ?? '')),
+            'uygulama_url'    => esc_url_raw(trim($in['uygulama_url'] ?? '')),
             'basari_mesaji'   => sanitize_textarea_field($in['basari_mesaji'] ?? ''),
         ]);
         self::back('Ayarlar kaydedildi.', 'ayarlar');
@@ -937,6 +971,7 @@ class MST_Randevu
                 <p class="description">Sayfa düzenleyicide <strong>Sayfa Özellikleri → Şablon → "MST Randevu (Tam Sayfa)"</strong> seçilirse temanın üst kısmı yerine MST logosu, WhatsApp ve "Siteye Git" çubuğu kullanılır.</p>
                 <table class="form-table">
                     <tr><th>WhatsApp numarası</th><td><input type="text" name="whatsapp" class="regular-text" value="<?php echo esc_attr($o['whatsapp']); ?>" placeholder="905XXXXXXXXX"><p class="description">Ülke koduyla, boşluksuz. Boş bırakılırsa WhatsApp butonları gizlenir.</p></td></tr>
+                    <tr><th>Yazar Paneli adresi</th><td><input type="url" name="uygulama_url" class="large-text" value="<?php echo esc_attr($o['uygulama_url']); ?>" placeholder="Boş = https://app.mstyayincilik.com/"><p class="description">"MST Yazar Paneli Tanıtım (Tam Sayfa)" şablonundaki "Panele Giriş" butonları buraya gider.</p></td></tr>
                     <tr><th>Logo adresi</th><td><input type="url" name="logo_url" class="large-text" value="<?php echo esc_attr($o['logo_url']); ?>" placeholder="Boş = eklentideki MST logosu"></td></tr>
                 </table>
                 <h2>Metinler</h2>

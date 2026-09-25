@@ -80,6 +80,14 @@ body.admin-bar .mst-top { top: 32px; }
 .mst-top__btn--wa { background: #25d366; border-color: #25d366; color: #fff; }
 .mst-top__btn--wa .mst-ic { width: 19px; height: 19px; }
 .mst-top__btn--wa:hover { background: #1ebe5b; border-color: #1ebe5b; color: #fff; }
+.mst-top__btn--altin { background: var(--mst-altin); border-color: var(--mst-altin); color: #1a1a1a; }
+.mst-top__btn--altin:hover { background: var(--mst-altin-koyu); border-color: var(--mst-altin-koyu); color: #1a1a1a; }
+/* Yazar Paneli sayfasında "Siteye Git" yalnızca mobil menüde (logo zaten siteye gider) */
+@media (min-width: 760px) { .mst-top__btn--mobil { display: none; } }
+@media (min-width: 760px) and (max-width: 1040px) {
+  .mst-top__cta:has(.mst-top__btn--altin) .mst-top__btn--wa { width: 44px; padding: 0; }
+  .mst-top__cta:has(.mst-top__btn--altin) .mst-top__btn--wa span { display: none; }
+}
 
 @media (max-width: 782px) { body.admin-bar .mst-top { top: 0; } }
 /* Üç çizgi (hamburger) butonu: yalnızca mobilde görünür */
