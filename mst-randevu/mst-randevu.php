@@ -2,7 +2,7 @@
 /**
  * Plugin Name: MST Yazar Adayı Randevu
  * Description: Yazar adaylarının müsait saatlerden görüşme randevusu alması. Kısa kod: [mst_randevu] — ya da sayfa şablonu olarak "MST Randevu (Tam Sayfa)".
- * Version:     1.4.4
+ * Version:     1.5.0
  * Author:      MST Yayıncılık
  * Text Domain: mst-randevu
  * Requires PHP: 7.4
@@ -12,7 +12,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('MST_RANDEVU_VER', '1.4.4');
+define('MST_RANDEVU_VER', '1.5.0');
 define('MST_RANDEVU_DB', 2);
 define('MST_RANDEVU_URL', plugin_dir_url(__FILE__));
 
@@ -363,7 +363,11 @@ class MST_Randevu
      */
     public static function paylasim_meta($tur)
     {
-        $m = $tur === 'uygulama'
+        if ($tur === 'akademi') {
+            $m = ['Yazar Kariyer Akademisi | MST Yayıncılık',
+                  'Yazar kimliği, sosyal medya, içerik üretimi, yapay zekâ, video, kitap lansmanı, PR ve kariyer planlaması eğitimleri. Yazma aşamasından profesyonel yazar markasına kadar sabit müfredatlı programlar.',
+                  'paylasim-akademi.jpg'];
+        } else $m = $tur === 'uygulama'
             ? ['MST Yazar Paneli: kitabınızın içindekiler sayfası',
                'Yayınevinde kitabınıza ne oluyorsa, anında telefonunuzda: yayın süreci, satışlar, telif, tanıtım, kariyer planı ve 7/24 Yazar Asistanı. MST yazarlarına özel.',
                'paylasim-uygulama.jpg']
@@ -382,7 +386,7 @@ class MST_Randevu
             ['name', 'twitter:card', 'summary_large_image'], ['name', 'twitter:title', $m[0]],
             ['name', 'twitter:description', $m[1]], ['name', 'twitter:image', $gorsel],
         ];
-        $h = '';
+        $h = $tur === 'akademi' ? '<meta name="description" content="' . esc_attr($m[1]) . '">' . "\n    " : '';
         foreach ($e as $x) $h .= '<meta ' . $x[0] . '="' . esc_attr($x[1]) . '" content="' . esc_attr($x[2]) . '">' . "\n    ";
         return $h;
     }
@@ -400,11 +404,15 @@ class MST_Randevu
         return $p ? get_permalink($p[0]) : home_url('/');
     }
 
-    /** Üst çubuk. $giris: Yazar Paneli tanıtım sayfasında altın "Ön Görüşme Al" (randevu) butonu da eklenir. */
-    public static function header_html($giris = false)
+    /**
+     * Üst çubuk. $giris: Yazar Paneli tanıtım sayfasında altın "Ön Görüşme Al" (randevu) butonu da eklenir.
+     * $buton: [metin, adres] verilirse altın buton onunla çizilir; $wa_metin: WhatsApp'ta hazır mesaj.
+     */
+    public static function header_html($giris = false, $buton = null, $wa_metin = null)
     {
         $home = home_url('/');
-        $wa   = self::wa_link($giris ? 'Merhaba, MST Yazar Paneli hakkında bilgi almak istiyorum.' : 'Merhaba, yazar görüşmesi hakkında bilgi almak istiyorum.');
+        if ($giris && !$buton) $buton = ['Ön Görüşme Al', self::randevu_url()];
+        $wa   = self::wa_link($wa_metin ?: ($giris ? 'Merhaba, MST Yazar Paneli hakkında bilgi almak istiyorum.' : 'Merhaba, yazar görüşmesi hakkında bilgi almak istiyorum.'));
         ob_start(); ?>
         <header class="mst-top">
             <div class="mst-top__in">
@@ -414,8 +422,8 @@ class MST_Randevu
                 <button type="button" class="mst-top__menu" aria-label="Menüyü aç" aria-expanded="false" aria-controls="mst-top-menu"><span></span><span></span><span></span></button>
                 <div class="mst-top__cta" id="mst-top-menu">
                     <?php if ($wa) : ?><a class="mst-top__btn mst-top__btn--wa" href="<?php echo esc_url($wa); ?>" target="_blank" rel="noopener" aria-label="WhatsApp'tan yazın"><?php echo self::icon('wa'); ?><span>WhatsApp</span></a><?php endif; ?>
-                    <a class="mst-top__btn<?php echo $giris ? ' mst-top__btn--mobil' : ''; ?>" href="<?php echo esc_url($home); ?>"><span>Siteye Git</span><?php echo self::icon('dis'); ?></a>
-                    <?php if ($giris) : ?><a class="mst-top__btn mst-top__btn--altin" href="<?php echo esc_url(self::randevu_url()); ?>"><span>Ön Görüşme Al</span></a><?php endif; ?>
+                    <a class="mst-top__btn<?php echo $buton ? ' mst-top__btn--mobil' : ''; ?>" href="<?php echo esc_url($home); ?>"><span>Siteye Git</span><?php echo self::icon('dis'); ?></a>
+                    <?php if ($buton) : ?><a class="mst-top__btn mst-top__btn--altin" href="<?php echo esc_url($buton[1]); ?>"><span><?php echo esc_html($buton[0]); ?></span></a><?php endif; ?>
                 </div>
             </div>
         </header>
@@ -1177,3 +1185,4 @@ class MST_Randevu
 }
 
 MST_Randevu::init();
+require_once __DIR__ . '/akademi.php'; // Yazar Kariyer Akademisi sayfası ve başvuruları

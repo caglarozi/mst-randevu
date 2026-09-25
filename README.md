@@ -33,6 +33,16 @@ Yeni sayfa → *Sayfa Özellikleri → Şablon →* **MST Yazar Paneli Tanıtım
 
 Sayfada **kitap perisi** maskotu var. Sayfa açılınca sağ alttan uçarak gelir ve rehberlik isteyip istemediğinizi sorar (**Evet / Hayır**). Evet: bölüm değiştikçe o bölümün kutusunun yanına kavis çizerek uçar (girişte telefonun, yayın sürecinde Dağıtım adımının yanı…), sayfa kayarken kutuyu takip eder ve kutusu ekrana girince başının üstünde "•••" işareti belirir; açıklama içeriği kapatmasın diye kendiliğinden açılmaz, periye dokununca açılır (her bölüm için bir kez işaret çıkar). Canlı durur: göz kırpar, el/asa sallar (konuşurken elleriyle anlatır), asasından ışıltı saçar, zıplar, konunca yaylanır, beklerken ara sıra takla atarak tur atar. Balondaki × yalnızca balonu kapatır. Hayır ya da perinin üstündeki ×: el sallayıp vedalaşır ve uçarak gider; sağ altta küçük bir **peri düğmesi** kalır, basınca geri gelir. Cevap o oturum boyunca hatırlanır. Poz ve cümleler şablondaki `$peri('poz', 'cümle', 'kutu seçicisi', 'yer sırası')` çağrılarındadır; her poz `assets/peri/` altında kanat katmanı + gövde kareleri (ana, göz kırpma, ikinci hareket karesi) olarak görsellerdir (`araclar/peri-blender.py` ile Blender'da çizildi); kanatlar çırpar, uçarken hızlanır. "Hareketi azalt" ayarında peri hareketsiz görünür.
 
+## MST Yazar Kariyer Akademisi sayfası
+
+Yeni sayfa → başlık (ör. “Yazar Kariyer Akademisi”) → *Şablon →* **MST Yazar Kariyer Akademisi (Tam Sayfa)** → Yayımla.
+
+- Bölümler: açılış (eğitim döngüsü), aşama belirleme, sorun alanı, eğitim yaklaşımı ve kurallar, 12 temel alan, üç program (her programda fiyat en sonda), karşılaştırma tablosu, ücretsiz eğitim, güven, kalite standardı ve kapsam sınırları, SSS, **Yazar Kariyer Analizi** başvuru formu.
+- Aşama kartı seçilince formdaki aşama işaretlenir ve önerilen program vurgulanır. Form 4 adımlıdır; başvurular **Yazar Randevu → Akademi Başvuruları** ekranına düşer (durum takibi, CSV indirme), bildirim e-postası gider.
+- Program önerisi: yazma → Temel; dosya hazır → Marka ve Görünürlük (hiç içerik üretimi yoksa Temel); yayımlanmış → Marka ve Görünürlük, uzun vadeli kariyer hedefi ya da mentorluk ilgisi varsa Kariyer Mentorluk. Son kararı MST ekibi verir.
+- Reklam kaynağı (utm_*, fbclid, gclid) ilk girişte saklanır ve başvuruyla kaydedilir. Sayfada Meta Pixel / Google Analytics kuruluysa başvuru “Lead / generate_lead” olarak bildirilir.
+- **Akademi Başvuruları → Ücretsiz eğitim & Ayarlar**: ücretsiz eğitim tarihi (geçince kendiliğinden “yeni tarih yakında” yazar), sonraki dönem başlangıcı, bildirim e-postası, isteğe bağlı webhook (`akademi.basvuru`).
+
 ## Yerel önizleme (WordPress olmadan)
 
 ```bash
@@ -49,6 +59,7 @@ MST Yazar Paneli tanıtım sayfası: http://localhost:8788/uygulama (`demo/uygul
 |---|---|
 | `mst-randevu/mst-randevu.php` | Eklenti: veritabanı, AJAX, bildirim, yönetim paneli |
 | `mst-randevu/templates/tam-sayfa.php` | "MST Randevu (Tam Sayfa)" sayfa şablonu |
+| `mst-randevu/akademi.php` + `templates/akademi.php` + `assets/akademi.css/js` | Yazar Kariyer Akademisi sayfası, başvuru formu ve yönetim ekranı |
 | `mst-randevu/templates/uygulama.php` + `assets/uygulama.css` | "MST Yazar Paneli Tanıtım (Tam Sayfa)" şablonu — yazar uygulamasının tanıtım sayfası |
 | `mst-randevu/assets/` | CSS, JS, logo |
 | `mst-randevu/lib/plugin-update-checker/` | GitHub'dan güncelleme kütüphanesi (Plugin Update Checker 5.7, MIT) |
