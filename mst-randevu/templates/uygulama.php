@@ -75,7 +75,7 @@ $sss = [
     ['Giriş bilgilerimi bulamıyorum, ne yapmalıyım?', 'WhatsApp üzerinden bize yazın; ekibimiz hesabınızla ilgili yardımcı olur.'],
     ['Henüz MST yazarı değilim, paneli görebilir miyim?', 'Panel, yayın sürecindeki yazarlarımıza özeldir. Kitabınızı birlikte yayımlamak için ücretsiz ön görüşme randevusu alabilirsiniz.'],
 ];
-MST_Randevu::seo_hazirla(); // arama başlığı/açıklaması (wp_head'den önce)
+MST_Randevu::seo_hazirla('uygulama'); // arama başlığı/açıklaması (wp_head'den önce)
 ?><!doctype html>
 <html <?php language_attributes(); ?>>
 <head>
