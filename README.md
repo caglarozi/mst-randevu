@@ -37,12 +37,10 @@ Sayfada **kitap perisi** maskotu var. Sayfa açılınca sağ alttan uçarak geli
 
 Yeni sayfa → başlık (ör. “Yazar Kariyer Akademisi”) → *Şablon →* **MST Yazar Kariyer Akademisi (Tam Sayfa)** → Yayımla.
 
-- Açılış bir **sahne**: “Yazmak başlangıçtır.” daktiloyla yazılır, sahne ışığı yanar ve “Görünür olmak kariyerdir.” ışığın altında parlar; ziyaretçi aşamasını (yazıyorum / dosyam hazır / yayımlandı) ilk ekranda seçer ve altta o aşamaya özel **yol haritası** açılır.
-- Bölümler: açılış, yol haritası, sorun alanı, eğitim yaklaşımı ve kurallar, 12 temel alan, üç program (her programda fiyat en sonda), karşılaştırma tablosu, ücretsiz eğitim, güven, kalite standardı ve kapsam sınırları, SSS, **Yazar Kariyer Analizi** başvuru formu.
-- Aşama kartı seçilince formdaki aşama işaretlenir ve önerilen program vurgulanır. Form 4 adımlıdır; başvurular **Yazar Randevu → Akademi Başvuruları** ekranına düşer (durum takibi, CSV indirme), bildirim e-postası gider.
-- Program önerisi: yazma → Temel; dosya hazır → Marka ve Görünürlük (hiç içerik üretimi yoksa Temel); yayımlanmış → Marka ve Görünürlük, uzun vadeli kariyer hedefi ya da mentorluk ilgisi varsa Kariyer Mentorluk. Son kararı MST ekibi verir.
-- Reklam kaynağı (utm_*, fbclid, gclid) ilk girişte saklanır ve başvuruyla kaydedilir. Sayfada Meta Pixel / Google Analytics kuruluysa başvuru “Lead / generate_lead” olarak bildirilir.
-- **Akademi Başvuruları → Ücretsiz eğitim & Ayarlar**: ücretsiz eğitim tarihi (geçince kendiliğinden “yeni tarih yakında” yazar), sonraki dönem başlangıcı, bildirim e-postası, isteğe bağlı webhook (`akademi.basvuru`).
+- Yalnızca bilgi sayfasıdır; başvuru formu yoktur. İletişim WhatsApp (her programda o programın adıyla hazır mesaj) ve ücretsiz ön görüşme randevusu üzerinden yürür.
+- Açılış bir **sahne**: “Yazmak başlangıçtır.” daktiloyla yazılır, sahne ışığı yanar ve “Görünür olmak kariyerdir.” ışığın altında parlar.
+- Bölümler: neden akademi, eğitim yaklaşımı ve kurallar, 12 temel alan, üç program (her programda fiyat en sonda), karşılaştırma, ücretsiz eğitim, güven, kalite standardı ve kapsam sınırları, SSS, iletişim. Girişten sonra üstte sabit bir bölüm menüsü vardır.
+- **Yazar Randevu → Akademi Ayarları**: ücretsiz eğitim tarihi (geçince kendiliğinden “yeni tarih yakında” yazar), yeri, süresi ve sonraki dönem başlangıcı.
 
 ## Yerel önizleme (WordPress olmadan)
 
@@ -52,7 +50,7 @@ node demo-sunucu.js
 
 Ardından http://localhost:8788 — eklentinin kendi CSS/JS'i sahte verilerle çalışır; kayıtlar yalnızca sayfada tutulur.
 
-Yazar Kariyer Akademisi: http://localhost:8788/akademi (`demo/akademi.html`; form, sunucudaki sahte uca gider ve kayıt tutulmaz).
+Yazar Kariyer Akademisi: http://localhost:8788/akademi (`demo/akademi.html`).
 
 MST Yazar Paneli tanıtım sayfası: http://localhost:8788/uygulama (`demo/uygulama.html`, `templates/uygulama.php`'nin çıktısından üretilmiştir; şablon değişince yeniden üretilmeli).
 
@@ -62,7 +60,7 @@ MST Yazar Paneli tanıtım sayfası: http://localhost:8788/uygulama (`demo/uygul
 |---|---|
 | `mst-randevu/mst-randevu.php` | Eklenti: veritabanı, AJAX, bildirim, yönetim paneli |
 | `mst-randevu/templates/tam-sayfa.php` | "MST Randevu (Tam Sayfa)" sayfa şablonu |
-| `mst-randevu/akademi.php` + `templates/akademi.php` + `assets/akademi.css/js` | Yazar Kariyer Akademisi sayfası, başvuru formu ve yönetim ekranı |
+| `mst-randevu/akademi.php` + `templates/akademi.php` + `assets/akademi.css/js` | Yazar Kariyer Akademisi bilgi sayfası ve ayarları |
 | `mst-randevu/templates/uygulama.php` + `assets/uygulama.css` | "MST Yazar Paneli Tanıtım (Tam Sayfa)" şablonu — yazar uygulamasının tanıtım sayfası |
 | `mst-randevu/assets/` | CSS, JS, logo |
 | `mst-randevu/lib/plugin-update-checker/` | GitHub'dan güncelleme kütüphanesi (Plugin Update Checker 5.7, MIT) |

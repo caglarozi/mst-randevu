@@ -1,7 +1,7 @@
 // Randevu formunu ve Yazar Paneli tanıtım sayfasını WordPress olmadan yerelde gösterir:
 //   http://localhost:8788           randevu
 //   http://localhost:8788/uygulama  MST Yazar Paneli tanıtım
-//   http://localhost:8788/akademi   MST Yazar Kariyer Akademisi (form sahte uca gider, kayıt tutulmaz)
+//   http://localhost:8788/akademi   MST Yazar Kariyer Akademisi
 //
 // İsteğe bağlı — alınan randevuları gerçek MST CRM'e iletmek için:
 //   node demo-sunucu.js --crm ANAHTAR
@@ -38,25 +38,9 @@ function crmIlet(req, res) {
   });
 }
 
-// Akademi formu için sahte uç: aşamaya göre program önerisini döndürür (WordPress'teki kuralın özeti)
-function akademiSahte(req, res) {
-  let govde = '';
-  req.on('data', c => { govde += c; if (govde.length > 200000) req.destroy(); });
-  req.on('end', () => {
-    const alan = ad => ((govde.match(new RegExp('name="' + ad + '"\\r\\n\\r\\n([^\\r]*)')) || [])[1] || '');
-    const asama = alan('asama'), hedef = alan('hedef'), ilgi = alan('ilgi');
-    const oneri = asama === 'yazma' ? 'temel' : (asama === 'yayimlandi' && (hedef === 'kariyer' || ilgi === 'mentorluk') ? 'mentorluk' : 'marka');
-    const ad = { temel: 'Yazar Akademisi Temel Programı', marka: 'Yazar Marka ve Görünürlük Programı', mentorluk: 'Yazar Kariyer Mentorluk Programı' };
-    console.log('Akademi başvurusu (önizleme, kaydedilmedi):', alan('ad_soyad'), asama, '→', oneri);
-    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-    res.end(JSON.stringify({ success: true, data: { oneri, oneri_adi: ad[oneri], mesaj: 'Önizleme: başvuru gönderilmedi. Canlı sitede ekibimize ulaşır.' } }));
-  });
-}
-
 http.createServer((req, res) => {
   let p = decodeURIComponent(req.url.split('?')[0]);
   if (p === '/crm-ilet' && req.method === 'POST') return crmIlet(req, res);
-  if (p === '/wp-admin/admin-ajax.php' && req.method === 'POST') return akademiSahte(req, res);
   if (p === '/') p = '/demo/index.html';
   if (p === '/uygulama') p = '/demo/uygulama.html'; // MST Yazar Paneli tanıtım sayfası
   if (p === '/akademi') p = '/demo/akademi.html';   // MST Yazar Kariyer Akademisi

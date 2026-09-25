@@ -9,8 +9,8 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-$wa     = MST_Randevu::wa_link('Merhaba, Yazar Kariyer Akademisi hakkında bilgi almak istiyorum.');
-$sec    = MST_Akademi::secenekler();
+$wa      = MST_Randevu::wa_link('Merhaba, Yazar Kariyer Akademisi hakkında bilgi almak istiyorum.');
+$randevu = MST_Randevu::randevu_url();
 $egitim = MST_Akademi::ucretsiz_egitim();
 $donem  = MST_Akademi::donem();
 $ao     = MST_Akademi::opts();
@@ -52,63 +52,11 @@ $liste = function (array $maddeler, $sinif = '') use ($ik) {
 };
 
 $bolumler = [
-    ['#yol', 'Yol haritanız'], ['#sorun', 'Neden akademi?'], ['#yaklasim', 'Eğitim yaklaşımı'], ['#programlar', 'Programlar'], ['#karsilastirma', 'Karşılaştırma'],
-    ['#ucretsiz', 'Ücretsiz eğitim'], ['#kapsam', 'Kapsam'], ['#sss', 'SSS'], ['#basvuru', 'Başvuru'],
-];
-
-$asamalar = [
-    'yazma'      => ['kalem', 'Yazma aşamasındayım', 'Yazar kimliği, hedef okur ve düzenli üretim sistemi oluşturmak istiyorum.', 'temel',
-                     ['Kitap fikri olanlar', 'Yazmaya başlamış ama düzen kuramayanlar', 'Eserini nasıl planlayacağını bilmeyenler', 'Sosyal medyada ne paylaşacağını bilmeyenler']],
-    'dosya'      => ['dosya', 'Dosyam hazır', 'Eserimi doğru konumlandırmak ve yayın öncesi görünürlüğümü hazırlamak istiyorum.', 'marka',
-                     ['Eserini tamamlamış olanlar', 'Yayınevine dosya göndermeye hazırlananlar', 'Hedef okurunu henüz belirlememiş olanlar', 'Lansman ve tanıtım hazırlığına ihtiyaç duyanlar']],
-    'yayimlandi' => ['kitap', 'Kitabım yayımlandı', 'Yazar markamı, içerik sistemimi, lansmanımı ve kariyer planımı geliştirmek istiyorum.', 'marka',
-                     ['Kitabının yeterince görünür olmadığını düşünenler', 'Kamera karşısında içerik üretemeyenler', 'PR, medya ve röportaja hazırlanmak isteyenler', 'İkinci kitabını ve uzun vadeli kariyerini planlayanlar']],
+    ['#sorun', 'Neden akademi?'], ['#yaklasim', 'Eğitim yaklaşımı'], ['#programlar', 'Programlar'], ['#karsilastirma', 'Karşılaştırma'],
+    ['#ucretsiz', 'Ücretsiz eğitim'], ['#kapsam', 'Kapsam'], ['#sss', 'SSS'], ['#iletisim', 'İletişim'],
 ];
 
 $dongu = ['Analiz', 'Eğitim', 'Uygulama', 'Değerlendirme', 'Yeni plan'];
-
-/** Aşamaya göre yol haritası: ücretsiz eğitim → analiz → program → çıktılar → sonraki seviye. */
-$yollar = [
-    'yazma' => ['Fikirden düzenli bir yazar kimliğine', 'temel', [
-        ['Ücretsiz eğitim', 'Aşamanızı ve ihtiyacınızı netleştirin.'],
-        ['Yazar Kariyer Analizi', 'Durumunuz MST ekibi tarafından değerlendirilir.'],
-        ['Temel Program · 12 hafta', 'Yazar kimliği, hedef okur, yazma ve içerik sistemi.'],
-        ['Çalışma dosyalarınız', 'Konumlandırma belgesi, 30 günlük yazma sistemi, 90 günlük gelişim planı.'],
-        ['Sonraki seviye', 'Dosyanız hazır olduğunda Marka ve Görünürlük Programı.'],
-    ]],
-    'dosya' => ['Hazır dosyadan görünür bir yazara', 'marka', [
-        ['Ücretsiz eğitim', 'Yayın öncesi yapılması gerekenleri görün.'],
-        ['Yazar Kariyer Analizi', 'Eseriniz ve hedefleriniz değerlendirilir.'],
-        ['Marka ve Görünürlük · 12 hafta', 'Marka, içerik, video, lansman ve PR sistemi.'],
-        ['Çalışma dosyalarınız', 'Marka stratejisi, lansman planı, basın bülteni, 90 günlük görünürlük yol haritası.'],
-        ['Sonraki seviye', 'Uzun vadeli kariyer için Kariyer Mentorluk Programı.'],
-    ]],
-    'yayimlandi' => ['Raftaki kitaptan uzun vadeli kariyere', 'marka', [
-        ['Ücretsiz eğitim', 'Kitap yayımlandıktan sonra yapılması gerekenleri görün.'],
-        ['Yazar Kariyer Analizi', 'Görünürlüğünüz ve kariyer hedefiniz değerlendirilir.'],
-        ['Marka ve Görünürlük ya da Kariyer Mentorluk', 'Hedefinize ve takip ihtiyacınıza göre önerilir.'],
-        ['Çalışma dosyalarınız', 'Medya tanıtım dosyası, içerik takvimi, KPI tablosu, ikinci eser stratejisi.'],
-        ['Sonraki seviye', '12 aylık yazar kariyer yol haritasıyla okur topluluğu ve ikinci eser.'],
-    ]],
-];
-
-$kurallar = [
-    ['kilit', 'Programlar sabit müfredata sahiptir; katılımcılar ders konularını seçmez.'],
-    ['takvim', 'Programlar dönem sistemiyle açılır; dönem ortasında katılımcı eklenmez.'],
-    ['kalem', 'Her dersin bir uygulama görevi vardır.'],
-    ['kamera', 'Dersler canlı ve çevrim içi yapılır.'],
-    ['saat', 'Kayıt erişimi program seviyesine göre sunulur.'],
-    ['kisi', 'Geri bildirim kapsamı program seviyesine göre artar.'],
-    ['kisiler', 'Üst programlarda kontenjan azalır, kişisel takip artar.'],
-    ['dosya', 'Program yalnızca video izlenen bir kurs değildir; her katılımcı somut çalışma dosyaları oluşturur.'],
-];
-
-$alanlar = [
-    ['kisi', 'Yazar kimliği ve konumlandırma'], ['hedef', 'Hedef okur ve okur psikolojisi'], ['kalem', 'Yazma disiplini ve eser planlama'],
-    ['dosya', 'Dosya sunumu, özet ve tanıtım metni'], ['profil', 'Kişisel marka ve profil mimarisi'], ['takvim', 'İçerik stratejisi ve yayın takvimi'],
-    ['kamera', 'Kısa video, kamera ve anlatım'], ['kivilcim', 'Yapay zekâ ile içerik üretimi'], ['roket', 'Kitap lansmanı ve kampanya planı'],
-    ['mikrofon', 'PR, medya ve röportaj hazırlığı'], ['kisiler', 'Topluluk, etkinlik ve okur bağı'], ['grafik', 'Satış kanalları ve performans takibi'],
-];
 
 $programlar = [
     'temel' => [
@@ -203,19 +151,6 @@ $sss = [
     ['Program ücretine kitap basımı dahil mi?', 'Hayır. Akademi programları ile yayın paketleri birbirinden ayrı hizmetlerdir.'],
 ];
 
-/** Form: seçenekli alanı hap (radio/checkbox) grubu olarak çizer. */
-$haplar = function ($ad, $tur = 'radio', $gerekli = false) use ($sec) {
-    $h = '<div class="akd-haplar" role="' . ($tur === 'radio' ? 'radiogroup' : 'group') . '">';
-    foreach ($sec[$ad] as $k => $e) {
-        $h .= '<label class="akd-hap"><input type="' . $tur . '" name="' . esc_attr($ad) . ($tur === 'checkbox' ? '[]' : '') . '" value="' . esc_attr($k) . '"' . ($gerekli ? ' required' : '') . '><span>' . esc_html($e) . '</span></label>';
-    }
-    return $h . '</div>';
-};
-$secim = function ($ad, $bos = 'Seçin') use ($sec) {
-    $h = '<select name="' . esc_attr($ad) . '" id="akd-' . esc_attr($ad) . '"><option value="">' . esc_html($bos) . '</option>';
-    foreach ($sec[$ad] as $k => $e) $h .= '<option value="' . esc_attr($k) . '">' . esc_html($e) . '</option>';
-    return $h . '</select>';
-};
 ?><!doctype html>
 <html <?php language_attributes(); ?>>
 <head>
@@ -235,7 +170,7 @@ $secim = function ($ad, $bos = 'Seçin') use ($sec) {
 </head>
 <body <?php body_class('mst-sayfa mst-uyg mst-akd'); ?>>
 <?php wp_body_open(); ?>
-<?php echo MST_Randevu::header_html(false, ['Ücretsiz Kariyer Analizi', '#basvuru'], 'Merhaba, Yazar Kariyer Akademisi hakkında bilgi almak istiyorum.'); ?>
+<?php echo MST_Randevu::header_html(false, ['Ön Görüşme Al', $randevu], 'Merhaba, Yazar Kariyer Akademisi hakkında bilgi almak istiyorum.'); ?>
 
 <main class="uyg akd">
 
@@ -248,23 +183,10 @@ $secim = function ($ad, $bos = 'Seçin') use ($sec) {
             <h1 class="akd-sahne__baslik"><span class="akd-gizli-metin">Yazmak başlangıçtır. </span>Görünür olmak <em>kariyerdir.</em></h1>
             <p class="akd-sahne__alt">Yazma aşamasından profesyonel yazar markasına kadar uzanan, uygulama ve takip temelli eğitim programları. Yazar kimliğinizi netleştirin, doğru okura ulaşın, içerik sisteminizi kurun ve kariyerinizi planlı biçimde yönetin.</p>
 
-            <div class="akd-sahne__secim">
-                <p class="akd-sahne__soru">Yazarlık yolculuğunuzun neresindesiniz?</p>
-                <div class="akd-sahne__kartlar">
-                    <?php foreach ($asamalar as $k => $a) : ?>
-                        <button type="button" class="akd-sahne__kart" data-akd-asama="<?php echo esc_attr($k); ?>" aria-pressed="false">
-                            <span class="akd-sahne__kart-ic"><?php echo $ik($a[0], 22); ?></span>
-                            <span class="akd-sahne__kart-metin"><strong><?php echo esc_html($a[1]); ?></strong><small><?php echo esc_html($a[2]); ?></small></span>
-                            <span class="akd-sahne__kart-ok"><?php echo $ik('ok', 18); ?></span>
-                        </button>
-                    <?php endforeach; ?>
-                </div>
-            </div>
-
             <div class="akd-sahne__cta">
-                <a class="uyg-btn uyg-btn--altin" href="#basvuru">Ücretsiz Yazar Kariyer Analizi <?php echo $ik('ok', 18); ?></a>
-                <a class="akd-sahne__link" href="#programlar">Programları İnceleyin</a>
-                <a class="akd-sahne__link" href="#ucretsiz" data-akd-ilgi="ucretsiz">Ücretsiz Eğitime Katılın<?php echo $egitim ? ' <small>' . esc_html($egitim[1]) . '</small>' : ''; ?></a>
+                <a class="uyg-btn uyg-btn--altin" href="#programlar">Programları İnceleyin <?php echo $ik('ok', 18); ?></a>
+                <a class="akd-sahne__link" href="#ucretsiz">Ücretsiz eğitim<?php echo $egitim ? ' <small>' . esc_html($egitim[1]) . '</small>' : ''; ?></a>
+                <?php if ($wa) : ?><a class="akd-sahne__link" href="<?php echo esc_url($wa); ?>" target="_blank" rel="noopener">WhatsApp'tan bilgi alın</a><?php endif; ?>
             </div>
         </div>
     </section>
@@ -274,46 +196,6 @@ $secim = function ($ad, $bos = 'Seçin') use ($sec) {
             <?php foreach ($bolumler as $b) : ?><a href="<?php echo esc_attr($b[0]); ?>" data-akd-gez="<?php echo esc_attr(substr($b[0], 1)); ?>"><?php echo esc_html($b[1]); ?></a><?php endforeach; ?>
         </div>
     </nav>
-
-    <!-- ============ Yol haritası: seçilen aşamaya göre ============ -->
-    <section class="uyg-bolum akd-lacivert akd-yol" id="yol">
-        <div class="uyg-kap">
-            <header class="uyg-baslik">
-                <span class="uyg-ust"><?php echo $ik('hedef', 18); ?> Size özel yol haritası</span>
-                <h2>Nereden başlarsanız başlayın, sıradaki adım belli.</h2>
-                <p>Aşamanızı seçin; ücretsiz eğitimden program çıktılarınıza kadar izleyeceğiniz yolu görün.</p>
-            </header>
-            <div class="akd-yol__secici" role="tablist" aria-label="Yazarlık aşaması">
-                <?php $ilk = true; foreach ($asamalar as $k => $a) : ?>
-                    <button type="button" role="tab" data-akd-yol="<?php echo esc_attr($k); ?>" aria-selected="<?php echo $ilk ? 'true' : 'false'; ?>"><?php echo $ik($a[0], 18); ?><span class="akd-uzun"><?php echo esc_html($a[1]); ?></span><span class="akd-kisa" aria-hidden="true"><?php echo esc_html(['yazma' => 'Yazıyorum', 'dosya' => 'Dosyam hazır', 'yayimlandi' => 'Yayımlandı'][$k]); ?></span></button>
-                <?php $ilk = false; endforeach; ?>
-            </div>
-            <?php $ilk = true; foreach ($yollar as $k => $y) :
-                $pk = $y[1]; $pr = $programlar[$pk]; ?>
-                <div class="akd-yol__panel" data-akd-yol-panel="<?php echo esc_attr($k); ?>" role="tabpanel" <?php echo $ilk ? '' : 'hidden'; ?>>
-                    <div class="akd-yol__sol">
-                        <h3><?php echo esc_html($y[0]); ?></h3>
-                        <p><?php echo esc_html($asamalar[$k][2]); ?></p>
-                        <ul class="akd-yol__kimler"><?php foreach ($asamalar[$k][4] as $m) : ?><li><?php echo esc_html($m); ?></li><?php endforeach; ?></ul>
-                        <div class="akd-yol__program">
-                            <small>Önerilen başlangıç</small>
-                            <strong><?php echo esc_html(MST_Akademi::PROGRAMLAR[$pk][0]); ?></strong>
-                            <span><?php echo esc_html($pr['olcu'][0][0] . ' · ' . $pr['olcu'][4][0] . ' katılımcı · ' . $pr['olcu'][3][0] . ' kayıt erişimi'); ?></span>
-                            <div class="akd-yol__butonlar">
-                                <a class="uyg-btn uyg-btn--altin" href="#basvuru" data-akd-basvur="<?php echo esc_attr($k); ?>">Bu yol için analiz isteyin <?php echo $ik('ok', 18); ?></a>
-                                <a class="akd-sahne__link" href="#program-<?php echo esc_attr($pk); ?>">Programı inceleyin</a>
-                            </div>
-                        </div>
-                    </div>
-                    <ol class="akd-yol__rota">
-                        <?php foreach ($y[2] as $i => $adim) : ?>
-                            <li class="<?php echo $i === 2 ? 'is-program' : ($i === 4 ? 'is-sonraki' : ''); ?>"><span><?php echo $i + 1; ?></span><div><strong><?php echo esc_html($adim[0]); ?></strong><p><?php echo esc_html($adim[1]); ?></p></div></li>
-                        <?php endforeach; ?>
-                    </ol>
-                </div>
-            <?php $ilk = false; endforeach; ?>
-        </div>
-    </section>
 
     <!-- ============ Sorun alanı ============ -->
     <section class="uyg-bolum uyg-bolum--acik" id="sorun">
@@ -434,7 +316,7 @@ $secim = function ($ad, $bos = 'Seçin') use ($sec) {
                     <footer class="akd-program__alt">
                         <div class="akd-fiyat"><small>Program bedeli</small><strong><?php echo esc_html($p['fiyat']); ?></strong><span><?php echo esc_html($p['fiyat_alt']); ?></span></div>
                         <p class="akd-program__not">Kayıtlar dönem başlangıcında alınır; dönem ortasında katılımcı eklenmez. Reklam bütçesi, prodüksiyon ve yayın hizmetleri fiyata dahil değildir. <a href="#kapsam">Kapsam</a></p>
-                        <a class="uyg-btn uyg-btn--altin" href="#basvuru" data-akd-ilgi="<?php echo esc_attr($k); ?>">Bu program için başvurun <?php echo $ik('ok', 18); ?></a>
+                        <?php if ($wa) : ?><a class="uyg-btn uyg-btn--altin" href="<?php echo esc_url(MST_Randevu::wa_link('Merhaba, ' . MST_Akademi::PROGRAMLAR[$k][0] . ' hakkında bilgi almak istiyorum.')); ?>" target="_blank" rel="noopener">Bu program hakkında bilgi alın <?php echo $ik('ok', 18); ?></a><?php endif; ?>
                     </footer>
                 </article>
             <?php endforeach; ?>
@@ -479,10 +361,10 @@ $secim = function ($ad, $bos = 'Seçin') use ($sec) {
                     <?php else : ?>
                         <span class="akd-tarih__etiket">Sıradaki eğitim</span>
                         <strong>Yeni tarih yakında açıklanacak</strong>
-                        <span>Formu doldurun; tarih belli olduğunda size haber verelim.</span>
+                        <span>WhatsApp'tan yazın; tarih belli olduğunda size haber verelim.</span>
                     <?php endif; ?>
                 </div>
-                <a class="uyg-btn uyg-btn--altin" href="#basvuru" data-akd-ilgi="ucretsiz">Ücretsiz eğitime katılmak istiyorum <?php echo $ik('ok', 18); ?></a>
+                <?php if ($wa) : ?><a class="uyg-btn uyg-btn--altin" href="<?php echo esc_url(MST_Randevu::wa_link('Merhaba, Yazar Kariyer Akademisi ücretsiz eğitimine katılmak istiyorum.')); ?>" target="_blank" rel="noopener">Ücretsiz eğitime katılmak istiyorum <?php echo $ik('ok', 18); ?></a><?php endif; ?>
             </div>
             <div class="akd-ucretsiz__icerik">
                 <h3>Eğitimde neler var?</h3>
@@ -556,96 +438,18 @@ $secim = function ($ad, $bos = 'Seçin') use ($sec) {
         </div>
     </section>
 
-    <!-- ============ Başvuru: Yazar Kariyer Analizi ============ -->
-    <section class="uyg-bolum uyg-bolum--koyu akd-basvuru" id="basvuru">
-        <div class="uyg-kap akd-basvuru__in">
-            <div class="akd-basvuru__sol">
-                <header class="uyg-baslik uyg-baslik--sol">
-                    <span class="uyg-ust"><?php echo $ik('dosya', 18); ?> Ücretsiz Yazar Kariyer Analizi</span>
-                    <h2>Size uygun programı birlikte belirleyelim.</h2>
-                    <p>Formu doldurun; ekibimiz başvurunuzu inceleyip aşamanıza uygun programı ve sonraki adımı size iletsin.</p>
-                </header>
-                <ol class="akd-akis">
-                    <?php foreach (['Aşamanızı seçin', 'Analiz formunu doldurun', 'Durumunuz sınıflandırılır', 'MST ekibi başvurunuzu inceler', 'Size uygun program önerilir; gerekirse ön görüşme yapılır', 'Dönem başlangıcında programa alınırsınız'] as $i => $a) : ?>
-                        <li><span><?php echo $i + 1; ?></span><?php echo esc_html($a); ?></li>
-                    <?php endforeach; ?>
-                </ol>
-                <?php if ($wa) : ?><a class="uyg-kapanis__wa" href="<?php echo esc_url($wa); ?>" target="_blank" rel="noopener"><?php echo MST_Randevu::icon('wa'); ?> Sorunuz mu var? WhatsApp'tan yazın</a><?php endif; ?>
+    <!-- ============ İletişim ============ -->
+    <section class="uyg-bolum uyg-bolum--koyu akd-iletisim" id="iletisim">
+        <div class="uyg-kap akd-iletisim__in">
+            <header class="uyg-baslik">
+                <span class="uyg-ust"><?php echo $ik('soru', 18); ?> Sorularınız mı var?</span>
+                <h2>Hangi programın size uygun olduğunu birlikte konuşalım.</h2>
+                <p>Programlar, dönem tarihleri ve ücretsiz eğitim hakkında bilgi almak için WhatsApp'tan yazın ya da ücretsiz ön görüşme randevusu alın.</p>
+            </header>
+            <div class="akd-iletisim__butonlar">
+                <?php if ($wa) : ?><a class="uyg-btn uyg-btn--altin" href="<?php echo esc_url($wa); ?>" target="_blank" rel="noopener"><?php echo MST_Randevu::icon('wa'); ?> WhatsApp'tan bilgi alın</a><?php endif; ?>
+                <a class="uyg-btn uyg-btn--cizgi" href="<?php echo esc_url($randevu); ?>">Ücretsiz ön görüşme randevusu</a>
             </div>
-
-            <form class="akd-form" id="akd-form" novalidate>
-                <div class="akd-form__ilerleme" aria-hidden="true"><span></span></div>
-                <ol class="akd-form__adimlar" aria-hidden="true"><li class="is-aktif">Aşama</li><li>İletişim</li><li>Yazarlık</li><li>Hedef</li></ol>
-
-                <fieldset class="akd-adim is-aktif" data-adim="1">
-                    <legend>Yazarlık aşamanız</legend>
-                    <div class="akd-asama-sec">
-                        <?php foreach ($asamalar as $k => $a) : ?>
-                            <label class="akd-asama-sec__kart"><input type="radio" name="asama" value="<?php echo esc_attr($k); ?>" required><span><?php echo $ik($a[0], 22); ?><b><?php echo esc_html($a[1]); ?></b><small><?php echo esc_html($a[2]); ?></small></span></label>
-                        <?php endforeach; ?>
-                    </div>
-                    <p class="akd-oneri" data-akd-oneri hidden></p>
-                </fieldset>
-
-                <fieldset class="akd-adim" data-adim="2" hidden>
-                    <legend>İletişim bilgileriniz</legend>
-                    <div class="akd-izgara">
-                        <label class="akd-alan akd-alan--tam"><span>Ad soyad *</span><input type="text" name="ad_soyad" autocomplete="name" required minlength="3" maxlength="100"></label>
-                        <label class="akd-alan"><span>Telefon *</span><input type="tel" name="telefon" autocomplete="tel" inputmode="tel" required placeholder="05xx xxx xx xx"></label>
-                        <label class="akd-alan"><span>E-posta *</span><input type="email" name="eposta" autocomplete="email" required></label>
-                        <label class="akd-alan"><span>Şehir</span><input type="text" name="sehir" autocomplete="address-level2" maxlength="100"></label>
-                        <label class="akd-alan"><span>Yaş aralığı</span><?php echo $secim('yas'); ?></label>
-                    </div>
-                </fieldset>
-
-                <fieldset class="akd-adim" data-adim="3" hidden>
-                    <legend>Yazarlık durumunuz</legend>
-                    <div class="akd-soru"><span>Kitap fikriniz var mı?</span><?php echo $haplar('kitap_fikri'); ?></div>
-                    <div class="akd-soru"><span>Yazmaya başladınız mı?</span><?php echo $haplar('yazmaya_basladi'); ?></div>
-                    <div class="akd-soru"><span>Dosyanız tamamlandı mı?</span><?php echo $haplar('dosya_tamam'); ?></div>
-                    <div class="akd-soru"><span>Daha önce kitap yayımladınız mı?</span><?php echo $haplar('yayimladi'); ?></div>
-                    <div class="akd-izgara">
-                        <label class="akd-alan" data-akd-kosul="yayimladi=evet"><span>Yayımlanmış kitabınızın adı</span><input type="text" name="kitap_adi" maxlength="191"></label>
-                        <label class="akd-alan"><span>Kitap türü</span><?php echo $secim('kitap_turu'); ?></label>
-                        <label class="akd-alan akd-alan--tam"><span>Sosyal medya hesabınız</span><input type="text" name="sosyal" maxlength="191" placeholder="ör. instagram.com/kullaniciadi"></label>
-                    </div>
-                    <div class="akd-soru"><span>Kamera karşısında video üretiyor musunuz?</span><?php echo $haplar('kamera'); ?></div>
-                    <div class="akd-soru"><span>Ne sıklıkla içerik üretiyorsunuz?</span><?php echo $haplar('siklik'); ?></div>
-                </fieldset>
-
-                <fieldset class="akd-adim" data-adim="4" hidden>
-                    <legend>Hedefleriniz ve uygunluğunuz</legend>
-                    <div class="akd-izgara">
-                        <label class="akd-alan"><span>En fazla zorlandığınız alan</span><?php echo $secim('zorlandigi'); ?></label>
-                        <label class="akd-alan"><span>Hedefiniz</span><?php echo $secim('hedef'); ?></label>
-                        <label class="akd-alan akd-alan--tam"><span>Eğitimden beklentiniz</span><textarea name="beklenti" rows="3" maxlength="1500"></textarea></label>
-                    </div>
-                    <div class="akd-soru"><span>Uygun günleriniz</span><?php echo $haplar('gunler', 'checkbox'); ?></div>
-                    <div class="akd-soru"><span>Uygun saat aralığınız</span><?php echo $haplar('saat'); ?></div>
-                    <div class="akd-izgara">
-                        <label class="akd-alan"><span>İlgilendiğiniz program</span><?php echo $secim('ilgi'); ?></label>
-                        <label class="akd-alan akd-alan--tam"><span>Ek not</span><textarea name="not" rows="2" maxlength="1500"></textarea></label>
-                    </div>
-                    <label class="akd-onay"><input type="checkbox" name="kvkk" value="1" required><span><a href="<?php echo esc_url(MST_Randevu::kvkk_url()); ?>" target="_blank" rel="noopener">KVKK Aydınlatma Metni</a>’ni okudum; kişisel verilerimin başvurumun değerlendirilmesi ve benimle iletişim kurulması amacıyla işlenmesini kabul ediyorum. *</span></label>
-                    <label class="akd-onay"><input type="checkbox" name="iletisim_izni" value="1"><span>Eğitim takvimi ve duyurular hakkında e-posta, SMS ve WhatsApp ile bilgilendirilmeyi kabul ediyorum (isteğe bağlı).</span></label>
-                </fieldset>
-
-                <input type="text" name="website" tabindex="-1" autocomplete="off" class="akd-gizli" aria-hidden="true">
-                <input type="hidden" name="_t" value="">
-                <p class="akd-hata" role="alert" hidden></p>
-                <div class="akd-form__alt">
-                    <button type="button" class="akd-geri" data-akd-geri hidden>Geri</button>
-                    <button type="button" class="uyg-btn uyg-btn--altin" data-akd-ileri>Devam <?php echo $ik('ok', 18); ?></button>
-                    <button type="submit" class="uyg-btn uyg-btn--altin" data-akd-gonder hidden>Analizimi gönder <?php echo $ik('ok', 18); ?></button>
-                </div>
-
-                <div class="akd-sonuc" hidden tabindex="-1">
-                    <span class="akd-sonuc__ic"><?php echo $ik('onay', 30); ?></span>
-                    <h3>Teşekkürler, başvurunuz bize ulaştı.</h3>
-                    <p data-akd-sonuc-mesaj></p>
-                    <div class="akd-sonuc__oneri"><small>Aşamanıza göre ilk önerimiz</small><strong data-akd-sonuc-oneri></strong><a data-akd-sonuc-link href="#programlar">Programı inceleyin <?php echo $ik('ok', 16); ?></a></div>
-                </div>
-            </form>
         </div>
     </section>
 
