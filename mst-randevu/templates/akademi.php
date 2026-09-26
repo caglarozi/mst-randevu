@@ -1,9 +1,8 @@
 <?php
 /**
  * "MST Yazar Kariyer Akademisi (Tam Sayfa)" şablonu: akademinin bilgi ve başvuru sayfası.
- * Renkler ve ortak bileşenler (üst çubuk, .uyg-* bölümleri) Yazar Paneli tanıtım sayfasıyla aynıdır;
- * akademiye özgü stiller assets/akademi.css'tedir. Bölümler kitap bölümü gibi numaralıdır (I–IX);
- * simge kutuları, kart ızgaraları ve parlama efektleri bilinçli olarak kullanılmaz.
+ * Renkler ve ortak bileşenler (üst çubuk, .uyg-* bölümleri, giriş ışığı) Yazar Paneli
+ * tanıtım sayfasıyla aynıdır; akademiye özgü stiller assets/akademi.css'tedir.
  * Program sayfası sıralaması: fiyat her programın en sonunda gösterilir.
  */
 if (!defined('ABSPATH')) {
@@ -33,55 +32,65 @@ $secim = function ($etiket, $wa_metin, $program = '', $wa_ikon = false) use ($ak
 };
 $donem  = MST_Akademi::donem();
 
-/** Sade madde listesi (kısa çizgili). */
-$liste = function (array $maddeler, $sinif = '') {
-    $h = '<ul class="akd-liste ' . esc_attr($sinif) . '">';
-    foreach ($maddeler as $m) $h .= '<li>' . esc_html($m) . '</li>';
-    return $h . '</ul>';
+/** Çizgi simgeler (24px ızgara). */
+$ik = function ($n, $boy = 22) {
+    $d = [
+        'kalem'    => '<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13 7 4 4"/>',
+        'dosya'    => '<path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h6M9 17h6"/>',
+        'kitap'    => '<path d="M12 6c-2-1.5-5-2-8-2v14c3 0 6 .5 8 2 2-1.5 5-2 8-2V4c-3 0-6 .5-8 2z"/><path d="M12 6v14"/>',
+        'hedef'    => '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>',
+        'kisi'     => '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+        'kisiler'  => '<circle cx="9" cy="8" r="3.5"/><path d="M2 20a7 7 0 0 1 14 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M22 20a7 7 0 0 0-4-6.3"/>',
+        'profil'   => '<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="11" r="2.5"/><path d="M5.5 17a4 4 0 0 1 7 0M15 9h3M15 13h3"/>',
+        'takvim'   => '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+        'kamera'   => '<rect x="2" y="6" width="14" height="12" rx="2"/><path d="m16 10 6-3v10l-6-3"/>',
+        'kivilcim' => '<path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M5.6 18.4l2.8-2.8M15.6 8.4l2.8-2.8"/>',
+        'roket'    => '<path d="M5 15c-1.5 1.5-2 5-2 5s3.5-.5 5-2"/><path d="M9 15 6 12c1-3 4-8 12-9-1 8-6 11-9 12z"/><circle cx="14.5" cy="9.5" r="1.5"/>',
+        'megafon'  => '<path d="M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1z"/><path d="M15 9a4 4 0 0 1 0 6M18 6a8 8 0 0 1 0 12"/>',
+        'mikrofon' => '<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>',
+        'grafik'   => '<path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/>',
+        'onay'     => '<path d="M20 6 9 17l-5-5"/>',
+        'ok'       => '<path d="M5 12h14M13 6l6 6-6 6"/>',
+        'dongu'    => '<path d="M20 12a8 8 0 0 1-14.9 4M4 12a8 8 0 0 1 14.9-4"/><path d="M19 3v5h-5M5 21v-5h5"/>',
+        'kilit'    => '<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
+        'saat'     => '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+        'yildiz'   => '<path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/>',
+        'kalkan'   => '<path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/>',
+        'carpi'    => '<path d="M6 6l12 12M18 6 6 18"/>',
+        'soru'     => '<circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.7M12 17h.01"/>',
+        'wa'       => '',
+    ];
+    return '<svg class="uyg-ic" width="' . (int) $boy . '" height="' . (int) $boy . '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' . ($d[$n] ?? '') . '</svg>';
 };
-/** Bölüm başlığı: solda bölüm numarası ve adı, sağda başlık ve açıklama (kitap bölümü gibi). */
-$bas = function ($no, $ad, $baslik, $aciklama = '') {
-    return '<header class="akd-bas"><p class="akd-bas__no"><span>' . esc_html($no) . '</span>' . esc_html($ad) . '</p><div><h2>' . esc_html($baslik) . '</h2>'
-        . ($aciklama !== '' ? '<p class="akd-bas__acik">' . $aciklama . '</p>' : '') . '</div></header>';
+$liste = function (array $maddeler, $sinif = '') use ($ik) {
+    $h = '<ul class="uyg-liste ' . esc_attr($sinif) . '">';
+    foreach ($maddeler as $m) $h .= '<li>' . $ik('onay', 16) . '<span>' . esc_html($m) . '</span></li>';
+    return $h . '</ul>';
 };
 
 $bolumler = [
     ['#sorun', 'Neden akademi?'], ['#yaklasim', 'Eğitim yaklaşımı'], ['#programlar', 'Programlar'], ['#karsilastirma', 'Karşılaştırma'],
-    ['#ucretsiz', 'Ücretsiz eğitim'], ['#guven', 'Neden MST'], ['#kapsam', 'Kapsam'], ['#sss', 'SSS'],
+    ['#ucretsiz', 'Ücretsiz eğitim'], ['#kapsam', 'Kapsam'], ['#sss', 'SSS'], ['#iletisim', 'İletişim'],
 ];
 
-$dongu = [
-    ['Analiz', 'Katılımcının aşaması, hedefi ve ihtiyacı belirlenir.'],
-    ['Eğitim', 'Sabit müfredatla canlı ve çevrim içi dersler yapılır.'],
-    ['Uygulama', 'Her dersin sonunda bir uygulama görevi verilir.'],
-    ['Değerlendirme', 'Çalışmalar program seviyesine göre değerlendirilir.'],
-    ['Yeni plan', 'Dönem sonunda bir sonraki adımın planı çıkarılır.'],
+$dongu = ['Analiz', 'Eğitim', 'Uygulama', 'Değerlendirme', 'Yeni plan'];
+
+$alanlar = [
+    ['kisi', 'Yazar kimliği ve konumlandırma'], ['hedef', 'Hedef okur ve okur psikolojisi'], ['kalem', 'Yazma disiplini ve eser planlama'],
+    ['dosya', 'Dosya sunumu, özet ve tanıtım metni'], ['profil', 'Kişisel marka ve profil mimarisi'], ['takvim', 'İçerik stratejisi ve yayın takvimi'],
+    ['kamera', 'Kısa video, kamera ve anlatım'], ['kivilcim', 'Yapay zekâ ile içerik üretimi'], ['roket', 'Kitap lansmanı ve kampanya planı'],
+    ['mikrofon', 'PR, medya ve röportaj hazırlığı'], ['kisiler', 'Topluluk, etkinlik ve okur bağı'], ['grafik', 'Satış kanalları ve performans takibi'],
 ];
 
 $kurallar = [
-    'Programlar sabit müfredatla yürür; ders konuları katılımcıya göre değişmez.',
-    'Programlar dönem sistemiyle açılır; dönem ortasında katılımcı alınmaz.',
-    'Her dersin bir uygulama görevi vardır.',
-    'Dersler canlı ve çevrim içi yapılır.',
-    'Ders kayıtlarına erişim süresi program seviyesine göre belirlenir.',
-    'Geri bildirim kapsamı program seviyesine göre genişler.',
-    'Üst programlarda kontenjan azalır, kişisel takip artar.',
-    'Her katılımcı program boyunca kendi çalışma dosyalarını oluşturur.',
-];
-
-$alanlar = [
-    'Yazar kimliği ve konumlandırma', 'Hedef okur ve okur psikolojisi', 'Yazma disiplini ve eser planlama',
-    'Dosya sunumu, özet ve tanıtım metni', 'Kişisel marka ve profil mimarisi', 'İçerik stratejisi ve yayın takvimi',
-    'Kısa video, kamera ve anlatım', 'Yapay zekâ ile içerik üretimi', 'Kitap lansmanı ve kampanya planı',
-    'PR, medya ve röportaj hazırlığı', 'Topluluk, etkinlik ve okur bağı', 'Satış kanalları ve performans takibi',
-];
-
-$farklar = [
-    ['Yayıncılığın içinden', 'Editoryal, yayın, tanıtım ve kariyer süreçleri tek bir ekip tarafından birlikte ele alınır.'],
-    ['Yazara özel içerik', 'Eğitimler genel sosyal medya anlatımı yerine yazarların ihtiyaçlarına göre hazırlanır.'],
-    ['Uygulama ve değerlendirme', 'Her konu uygulama göreviyle pekiştirilir ve program seviyesine göre değerlendirilir.'],
-    ['Somut çıktılar', 'Program sonunda kullanabileceğiniz plan ve çalışma dosyaları elinizde olur.'],
-    ['Kişisel takip', 'Üst programlarda bireysel strateji görüşmeleri ve gelişim takibi yer alır.'],
+    ['kilit', 'Programlar sabit müfredatla yürür; ders konuları katılımcıya göre değişmez.'],
+    ['takvim', 'Programlar dönem sistemiyle açılır; dönem ortasında katılımcı alınmaz.'],
+    ['kalem', 'Her dersin bir uygulama görevi vardır.'],
+    ['kamera', 'Dersler canlı ve çevrim içi yapılır.'],
+    ['saat', 'Ders kayıtlarına erişim süresi program seviyesine göre belirlenir.'],
+    ['kisi', 'Geri bildirim kapsamı program seviyesine göre genişler.'],
+    ['kisiler', 'Üst programlarda kontenjan azalır, kişisel takip artar.'],
+    ['dosya', 'Her katılımcı program boyunca kendi çalışma dosyalarını oluşturur.'],
 ];
 
 $programlar = [
@@ -109,7 +118,6 @@ $programlar = [
         ],
         'ciktilar' => ['Yazar kimliği ve konumlandırma belgesi', 'Hedef okur profili', '30 günlük yazma sistemi', 'Düzenlenmiş sosyal medya biyografisi', 'Dört ana içerik alanı', '30 günlük içerik planı', '12 paylaşım fikri', '4 kısa video senaryosu', 'Kişisel yapay zekâ prompt dosyası', 'Temel kitap tanıtım planı', '90 günlük gelişim planı'],
         'degerlendirme' => 'Ayda 1 toplu çalışma değerlendirmesi. Bu programda bireysel görüşme bulunmaz.',
-        'fiyat_sayi' => '7470', 'sure_iso' => 'P12W',
         'fiyat' => 'Aylık 2.490 TL + KDV', 'fiyat_alt' => 'Program süresi 3 ay · Toplam program bedeli 7.470 TL + KDV',
     ],
     'marka' => [
@@ -130,7 +138,6 @@ $programlar = [
         ],
         'ciktilar' => ['Yazar marka stratejisi', 'Profesyonel biyografi', 'Profil düzenleme raporu', 'Görsel ve iletişim dili', '30 günlük içerik takvimi', '20 Reels konusu', '8 ayrıntılı video senaryosu', 'Kitap lansman planı', 'Basın bülteni taslağı', 'Röportaj soru-cevap dosyası', 'Satış kanalı analizi', '90 günlük görünürlük yol haritası'],
         'degerlendirme' => '6 kişisel çalışma değerlendirmesi ve 3 bireysel strateji görüşmesi (her biri 45 dakika).',
-        'fiyat_sayi' => '24900', 'sure_iso' => 'P12W',
         'fiyat' => '24.900 TL + KDV', 'fiyat_alt' => '12 haftalık program bedeli',
     ],
     'mentorluk' => [
@@ -151,8 +158,7 @@ $programlar = [
         ],
         'ciktilar' => ['Kişisel yazar marka kitabı', 'Profesyonel biyografi', 'Hedef okur raporu', 'Eser ve konumlandırma raporu', 'Medya tanıtım dosyası', '90 günlük içerik takvimi', '24 kısa video konusu', '12 ayrıntılı video senaryosu', 'Basın bülteni', 'Röportaj hazırlık dosyası', 'Kitap lansman planı', 'Reklam mesajları', 'Reklam kreatif briefleri', 'KPI takip tablosu', 'İkinci eser stratejisi', '12 aylık yazar kariyer yol haritası'],
         'degerlendirme' => 'Haftalık kişisel görev takibi, aylık gelişim raporu, 4 kariyer kurulu değerlendirmesi ve 8 bireysel mentorluk görüşmesi (her biri 45 dakika).',
-        'fiyat_sayi' => '59900', 'sure_iso' => 'P16W',
-        'fiyat' => '59.900 TL + KDV', 'fiyat_alt' => '16 haftalık program bedeli · ön görüşme ile',
+        'fiyat' => '59.900 TL + KDV', 'fiyat_alt' => '16 haftalık program bedeli · başvuru ve ön görüşme ile',
     ],
 ];
 
@@ -175,7 +181,7 @@ $sss = [
     ['Ders kayıtlarına erişebilir miyim?', 'Evet. Temel Program’da 90 gün, Marka ve Görünürlük Programı’nda 180 gün, Kariyer Mentorluk Programı’nda 12 ay kayıt erişimi bulunur.'],
     ['Bireysel görüşme var mı?', 'Temel Program’da bireysel görüşme bulunmaz. Marka ve Görünürlük Programı’nda 3, Kariyer Mentorluk Programı’nda 8 bireysel görüşme bulunur.'],
     ['Program sonunda sertifika veriliyor mu?', 'Devam ve görev tamamlama koşullarını sağlayan katılımcılara MST Yayıncılık Yazar Kariyer Akademisi Program Tamamlama Belgesi verilebilir. Bu belge resmî veya üniversite onaylı bir sertifika değildir.'],
-    ['Eğitim sonunda kitabımın satışı artar mı?', 'Programlar satış adedine ilişkin taahhüt içermez. Amaç, katılımcının hedef okurunu, içeriğini, tanıtımını ve kariyer planını düzenli biçimde yönetmesidir.'],
+    ['Eğitim sonunda kitabımın satışı artar mı?', 'Eğitim programı satış garantisi vermez. Katılımcının hedef okurunu, içeriğini, tanıtımını ve kariyer planını daha düzenli yönetmesini amaçlar.'],
     ['Reklam bütçesi programa dahil mi?', 'Hayır. Reklam bütçesi, reklam yönetimi ve prodüksiyon hizmetleri ayrıca planlanır.'],
     ['Program ücretine kitap basımı dahil mi?', 'Hayır. Akademi programları ile yayın paketleri birbirinden ayrı hizmetlerdir.'],
 ];
@@ -213,10 +219,10 @@ MST_Randevu::seo_hazirla('akademi'); // arama başlığı/açıklaması (wp_head
         <div class="uyg-kap akd-sahne__in">
             <p class="akd-sahne__yaz" data-akd-daktilo>MST Yayıncılık</p>
             <h1 class="akd-sahne__baslik">Yazar <em>Akademisi</em></h1>
-            <p class="akd-sahne__alt">Yazma aşamasından profesyonel yazar markasına kadar üç seviyede, uygulama ve takip temelli eğitim programları: yazar kimliği, hedef okur, içerik üretimi, kitap lansmanı, PR ve kariyer planlaması.</p>
+            <p class="akd-sahne__alt">Yazma aşamasından profesyonel yazar markasına kadar uzanan, uygulama ve takip temelli eğitim programları. Yazar kimliğinizi netleştirin, doğru okura ulaşın, içerik sisteminizi kurun ve kariyerinizi planlı biçimde yönetin.</p>
 
             <div class="akd-sahne__cta">
-                <a class="uyg-btn uyg-btn--altin" href="#programlar">Programları inceleyin</a>
+                <a class="uyg-btn uyg-btn--altin" href="#programlar">Programları İnceleyin <?php echo $ik('ok', 18); ?></a>
                 <a class="akd-bilet-btn" href="#ucretsiz"><span class="akd-bilet-btn__kocan">Ücretsiz</span><span class="akd-bilet-btn__metin">Başlangıç eğitimi</span></a>
             </div>
         </div>
@@ -228,53 +234,76 @@ MST_Randevu::seo_hazirla('akademi'); // arama başlığı/açıklaması (wp_head
         </div>
     </nav>
 
-    <!-- ============ I. Neden akademi ============ -->
+    <!-- ============ Sorun alanı ============ -->
     <section class="uyg-bolum uyg-bolum--acik" id="sorun">
-        <div class="uyg-kap">
-            <?php echo $bas('I', 'Neden akademi', 'İyi bir kitap, doğru okura ulaşmadığında potansiyelinin altında kalır.'); ?>
-            <div class="akd-ikili">
-                <div>
-                    <p class="akd-paragraf">Kitabını tamamlayan yazarların önemli bir kısmı yayın sonrasında hangi adımları, hangi sırayla atacağını bilemez. Sosyal medya, video, yapay zekâ, lansman, PR, okur topluluğu ve satış kanalları çoğu zaman birbirinden kopuk yürütülür.</p>
-                    <p class="akd-paragraf">Yazar Kariyer Akademisi bu alanları belirli bir sırayla ele alır. Katılımcı konu seçmez; her program, kendi yeterlilik seviyesine göre hazırlanmış sabit bir müfredatla yürür.</p>
+        <div class="uyg-kap uyg-iki">
+            <div>
+                <header class="uyg-baslik uyg-baslik--sol">
+                    <span class="uyg-ust"><?php echo $ik('kitap', 18); ?> Neden akademi?</span>
+                    <h2>İyi bir kitap, doğru okura ulaşmadığında potansiyelinin altında kalır.</h2>
+                </header>
+                <p class="akd-paragraf">Birçok yazar kitabını tamamladıktan sonra ne yapacağını bilemez. Sosyal medya kullanımı, video üretimi, yapay zekâ, lansman, PR, okur topluluğu ve satış kanalları birbirinden bağımsız ilerler.</p>
+                <p class="akd-paragraf">Yazar Kariyer Akademisi bütün bu alanları <strong>belirli bir sıra içinde</strong> ele alır. Katılımcı konu seçmez; her program kendi yeterlilik seviyesine göre hazırlanmış sabit bir müfredatla yürür.</p>
+            </div>
+            <div class="akd-duzen" aria-hidden="true">
+                <div class="akd-duzen__daginik">
+                    <?php foreach (['Sosyal medya', 'Video', 'Yapay zekâ', 'Lansman', 'PR', 'Okur topluluğu', 'Satış kanalları'] as $i => $c) : ?>
+                        <span style="--i:<?php echo (int) $i; ?>"><?php echo esc_html($c); ?></span>
+                    <?php endforeach; ?>
+                    <small>Birbirinden bağımsız</small>
                 </div>
-                <div>
-                    <p class="akd-kucuk-baslik">Müfredat sırası</p>
-                    <ol class="akd-sira">
-                        <?php foreach (['Kimlik ve hedef okur', 'Marka ve profil', 'İçerik sistemi', 'Video ve yapay zekâ', 'Lansman ve PR', 'Topluluk ve satış'] as $c) : ?><li><?php echo esc_html($c); ?></li><?php endforeach; ?>
-                    </ol>
-                </div>
+                <div class="akd-duzen__ok"><?php echo $ik('ok', 28); ?></div>
+                <ol class="akd-duzen__sirali">
+                    <?php foreach (['Kimlik ve hedef okur', 'Marka ve profil', 'İçerik sistemi', 'Video ve yapay zekâ', 'Lansman ve PR', 'Topluluk ve satış'] as $c) : ?>
+                        <li><?php echo esc_html($c); ?></li>
+                    <?php endforeach; ?>
+                </ol>
             </div>
         </div>
     </section>
 
-    <!-- ============ II. Eğitim yaklaşımı ============ -->
+    <!-- ============ Eğitim yaklaşımı ============ -->
     <section class="uyg-bolum uyg-bolum--koyu" id="yaklasim">
         <div class="uyg-kap">
-            <?php echo $bas('II', 'Eğitim yaklaşımı', 'Her program aynı beş adımlık döngüyle ilerler.', 'Dersler izlenip bırakılmaz; her konu uygulanır, değerlendirilir ve bir sonraki adıma bağlanır.'); ?>
-            <ol class="akd-adimlar">
-                <?php foreach ($dongu as $i => $d) : ?><li><span><?php echo $i + 1; ?></span><strong><?php echo esc_html($d[0]); ?></strong><p><?php echo esc_html($d[1]); ?></p></li><?php endforeach; ?>
+            <header class="uyg-baslik">
+                <span class="uyg-ust"><?php echo $ik('dongu', 18); ?> Eğitim yaklaşımı</span>
+                <h2>İzlenen bir kurs değil; uygulanan ve takip edilen bir sistem.</h2>
+            </header>
+            <ol class="akd-cark">
+                <?php foreach ($dongu as $i => $d) : ?><li><span><?php echo $i + 1; ?></span><?php echo esc_html($d); ?></li><?php endforeach; ?>
             </ol>
-            <p class="akd-kucuk-baslik">Programların ortak kuralları</p>
-            <ol class="akd-kurallar">
-                <?php foreach ($kurallar as $k) : ?><li><?php echo esc_html($k); ?></li><?php endforeach; ?>
-            </ol>
+            <div class="akd-kurallar">
+                <?php foreach ($kurallar as $k) : ?>
+                    <div class="akd-kural"><span class="akd-kural__ic"><?php echo $ik($k[0], 20); ?></span><p><?php echo esc_html($k[1]); ?></p></div>
+                <?php endforeach; ?>
+            </div>
         </div>
     </section>
 
-    <!-- ============ III. 12 konu alanı ============ -->
+    <!-- ============ 12 konu alanı ============ -->
     <section class="uyg-bolum" id="alanlar">
         <div class="uyg-kap">
-            <?php echo $bas('III', 'Eğitim alanları', 'Kariyer eğitimlerinin 12 temel alanı', 'İçerikler katılımcının seçimine bırakılmaz; ilgili programın müfredatı içinde sırasıyla işlenir.'); ?>
-            <ol class="akd-icindekiler">
-                <?php foreach ($alanlar as $i => $a) : ?><li><span><?php echo sprintf('%02d', $i + 1); ?></span><?php echo esc_html($a); ?></li><?php endforeach; ?>
+            <header class="uyg-baslik">
+                <span class="uyg-ust"><?php echo $ik('kitap', 18); ?> Eğitim havuzu</span>
+                <h2>Kariyer eğitimlerinin 12 temel alanı</h2>
+                <p>Katılımcı bu alanlardan seçim yapmaz; içerikler, ilgili programın sabit müfredatı içinde sırasıyla verilir.</p>
+            </header>
+            <ol class="akd-alanlar">
+                <?php foreach ($alanlar as $i => $a) : ?>
+                    <li><span class="akd-alanlar__no"><?php echo sprintf('%02d', $i + 1); ?></span><span class="akd-alanlar__ic"><?php echo $ik($a[0], 20); ?></span><strong><?php echo esc_html($a[1]); ?></strong></li>
+                <?php endforeach; ?>
             </ol>
         </div>
     </section>
 
-    <!-- ============ IV. Programlar ============ -->
+    <!-- ============ Programlar ============ -->
     <section class="uyg-bolum akd-lacivert" id="programlar">
         <div class="uyg-kap">
-            <?php echo $bas('IV', 'Programlar', 'Seviyenize göre üç program', 'Üst programlarda kontenjan azalır, kişisel takip artar. ' . ($donem ? 'Sonraki dönem: <b>' . esc_html($donem) . '</b>.' : 'Kayıtlar dönem başlangıcında alınır.')); ?>
+            <header class="uyg-baslik">
+                <span class="uyg-ust"><?php echo $ik('dosya', 18); ?> Programlar</span>
+                <h2>Seviyenize göre üç program</h2>
+                <p>Üst programlarda kontenjan azalır, kişisel takip artar. <?php echo $donem ? 'Sonraki dönem: <b>' . esc_html($donem) . '</b>.' : 'Kayıtlar dönem başlangıcında alınır.'; ?></p>
+            </header>
             <div class="akd-program-sekme" role="tablist">
                 <?php foreach ($programlar as $k => $p) : ?>
                     <a href="#program-<?php echo esc_attr($k); ?>" role="tab"><span><?php echo esc_html($p['no']); ?></span><?php echo esc_html(MST_Akademi::PROGRAMLAR[$k][1]); ?></a>
@@ -284,18 +313,29 @@ MST_Randevu::seo_hazirla('akademi'); // arama başlığı/açıklaması (wp_head
             <?php foreach ($programlar as $k => $p) : ?>
                 <article class="akd-program akd-program--<?php echo esc_attr($k); ?>" id="program-<?php echo esc_attr($k); ?>">
                     <header class="akd-program__bas">
-                        <p class="akd-program__seviye">Program <?php echo esc_html($p['no']); ?> · <?php echo esc_html($p['seviye']); ?></p>
-                        <h3><?php echo esc_html(MST_Akademi::PROGRAMLAR[$k][0]); ?></h3>
-                        <p><?php echo esc_html($p['kimler']); ?></p>
+                        <span class="akd-program__no"><?php echo esc_html($p['no']); ?></span>
+                        <div>
+                            <span class="akd-program__seviye"><?php echo esc_html($p['seviye']); ?></span>
+                            <h3><?php echo esc_html(MST_Akademi::PROGRAMLAR[$k][0]); ?></h3>
+                            <p><?php echo esc_html($p['kimler']); ?></p>
+                        </div>
                     </header>
+                    <div class="akd-program__ikili">
+                        <div class="akd-kutu"><small>Katılımcının yaşadığı sorun</small><p><?php echo esc_html($p['sorun']); ?></p></div>
+                        <div class="akd-kutu akd-kutu--altin"><small>Programın hedefi</small><p><?php echo esc_html($p['hedef']); ?></p></div>
+                    </div>
                     <dl class="akd-olcu">
                         <?php foreach ($p['olcu'] as $o) : ?><div><dt><?php echo esc_html($o[0]); ?></dt><dd><?php echo esc_html($o[1]); ?></dd></div><?php endforeach; ?>
                     </dl>
-                    <div class="akd-ikili akd-ikili--program">
-                        <div><h4>Katılımcının durumu</h4><p class="akd-program__metin"><?php echo esc_html($p['sorun']); ?></p></div>
-                        <div><h4>Programın hedefi</h4><p class="akd-program__metin"><?php echo esc_html($p['hedef']); ?></p></div>
-                        <div><h4>Süre ve ders sistemi</h4><?php echo $liste($p['yapi']); ?></div>
-                        <div><h4>Değerlendirme</h4><p class="akd-program__metin"><?php echo esc_html($p['degerlendirme']); ?></p></div>
+                    <div class="akd-program__ikili">
+                        <div>
+                            <h4>Süre ve ders sistemi</h4>
+                            <?php echo $liste($p['yapi']); ?>
+                        </div>
+                        <div>
+                            <h4>Değerlendirme</h4>
+                            <p class="akd-program__metin"><?php echo esc_html($p['degerlendirme']); ?></p>
+                        </div>
                     </div>
                     <details class="akd-acilir" <?php echo $k === 'temel' ? 'open' : ''; ?>>
                         <summary><?php echo esc_html($p['mufredat_baslik']); ?> <small><?php echo count($p['mufredat']); ?> başlık</small></summary>
@@ -311,7 +351,7 @@ MST_Randevu::seo_hazirla('akademi'); // arama başlığı/açıklaması (wp_head
                     </details>
                     <div class="akd-program__alt">
                         <div class="akd-fiyat"><small>Program bedeli</small><strong><?php echo esc_html($p['fiyat']); ?></strong><span><?php echo esc_html($p['fiyat_alt']); ?></span></div>
-                        <p class="akd-program__not">Kayıtlar dönem başlangıcında alınır. Reklam bütçesi, prodüksiyon ve yayın hizmetleri program bedeline dahil değildir (<a href="#kapsam">hizmet kapsamı</a>).</p>
+                        <p class="akd-program__not">Kayıtlar dönem başlangıcında alınır; dönem ortasında katılımcı eklenmez. Reklam bütçesi, prodüksiyon ve yayın hizmetleri fiyata dahil değildir. <a href="#kapsam">Kapsam</a></p>
                         <?php echo $secim('Bu program hakkında bilgi alın', 'Merhaba, ' . MST_Akademi::PROGRAMLAR[$k][0] . ' hakkında bilgi almak istiyorum.', $k); ?>
                     </div>
                 </article>
@@ -319,10 +359,13 @@ MST_Randevu::seo_hazirla('akademi'); // arama başlığı/açıklaması (wp_head
         </div>
     </section>
 
-    <!-- ============ V. Karşılaştırma ============ -->
+    <!-- ============ Karşılaştırma ============ -->
     <section class="uyg-bolum" id="karsilastirma">
         <div class="uyg-kap">
-            <?php echo $bas('V', 'Karşılaştırma', 'Programlar yan yana'); ?>
+            <header class="uyg-baslik">
+                <span class="uyg-ust"><?php echo $ik('grafik', 18); ?> Karşılaştırma</span>
+                <h2>Programlar yan yana</h2>
+            </header>
             <div class="akd-tablo-kap">
                 <table class="akd-tablo">
                     <thead><tr><th scope="col">Özellik</th><?php foreach (MST_Akademi::PROGRAMLAR as $k => $p) : ?><th scope="col" class="akd-tablo--<?php echo esc_attr($k); ?>"><?php echo esc_html($p[1]); ?></th><?php endforeach; ?></tr></thead>
@@ -347,58 +390,83 @@ MST_Randevu::seo_hazirla('akademi'); // arama başlığı/açıklaması (wp_head
         </div>
     </section>
 
-    <!-- ============ VI. Ücretsiz eğitim ============ -->
+    <!-- ============ Ücretsiz eğitim ============ -->
     <section class="uyg-bolum uyg-bolum--koyu akd-ucretsiz" id="ucretsiz">
-        <div class="uyg-kap">
-            <?php echo $bas('VI', 'Ücretsiz eğitim', 'Yazarlık yolculuğunuzun hangi aşamasındasınız?', 'Mevcut durumunuzu değerlendirmenizi ve size uygun programı belirlemenizi sağlayan ücretsiz bir başlangıç eğitimidir.'); ?>
-            <div class="akd-ikili">
-                <div><h3>Eğitimin içeriği</h3><?php echo $liste(['Yazarlık kariyerinin temel aşamaları', 'Yazar kimliği ve hedef okur', 'Kitap yayımlanmadan önce ve sonra yapılması gerekenler', 'Sosyal medyada yazar görünürlüğü', 'Yapay zekânın temel kullanımı ve içerik üretimi', 'PR ve lansmana giriş', 'Programların kimler için uygun olduğu']); ?></div>
-                <div>
-                    <h3>Eğitimin sonunda</h3><?php echo $liste(['Soru-cevap', 'Yazar Kariyer Analizi formu', 'Aşamanıza göre program önerisi', 'Uygun katılımcılar için ön görüşme']); ?>
-                    <p class="akd-ucretsiz__not">Katılım ücretsizdir. Tarih ve katılım bilgisi için bize yazın.</p>
-                    <?php echo $secim('Ücretsiz eğitim hakkında bilgi alın', 'Merhaba, Yazar Kariyer Akademisi ücretsiz eğitimi hakkında bilgi almak istiyorum.', '', true); ?>
-                </div>
+        <div class="uyg-kap uyg-iki">
+            <div>
+                <header class="uyg-baslik uyg-baslik--sol">
+                    <span class="uyg-ust"><?php echo $ik('takvim', 18); ?> Ücretsiz eğitim</span>
+                    <h2>Yazarlık Yolculuğunuzun Hangi Aşamasındasınız?</h2>
+                    <p>Ücretli programların kısaltılmış hâli değildir. Mevcut durumunuzu görmenizi ve size uygun yolu seçmenizi sağlayan bir başlangıç buluşmasıdır.</p>
+                </header>
+                <?php echo $secim('Ücretsiz eğitim hakkında bilgi alın', 'Merhaba, Yazar Kariyer Akademisi ücretsiz eğitimi hakkında bilgi almak istiyorum.', '', true); ?>
+            </div>
+            <div class="akd-ucretsiz__icerik">
+                <h3>Eğitimde neler var?</h3>
+                <?php echo $liste(['Yazarlık kariyerinin temel aşamaları', 'Yazar kimliği ve hedef okur', 'Kitap yayımlanmadan önce ve sonra yapılması gerekenler', 'Sosyal medyada yazar görünürlüğü', 'Yapay zekânın temel kullanımı ve içerik üretimi', 'PR ve lansmana giriş', 'Hangi programın kimler için uygun olduğu']); ?>
+                <h3>Eğitimin sonunda</h3>
+                <?php echo $liste(['Kısa soru-cevap', 'Yazar Kariyer Analizi formu', 'Aşamanıza göre program önerisi', 'Uygun kişiler için ön görüşme']); ?>
             </div>
         </div>
     </section>
 
-    <!-- ============ VII. Neden MST ============ -->
+    <!-- ============ Güven ============ -->
     <section class="uyg-bolum uyg-bolum--acik" id="guven">
         <div class="uyg-kap">
-            <?php echo $bas('VII', 'Neden MST', 'Yayıncılığın içinden gelen bir eğitim sistemi', 'MST Yayıncılık, yazarların yayın sürecini ve yayın sonrası kariyerini birlikte yönetir.'); ?>
-            <dl class="akd-farklar">
-                <?php foreach ($farklar as $f) : ?><div><dt><?php echo esc_html($f[0]); ?></dt><dd><?php echo esc_html($f[1]); ?></dd></div><?php endforeach; ?>
-            </dl>
+            <header class="uyg-baslik">
+                <span class="uyg-ust"><?php echo $ik('kalkan', 18); ?> Neden MST?</span>
+                <h2>Yayıncılığın içinden gelen bir eğitim sistemi</h2>
+                <p>MST Yayıncılık, yazarın yalnızca kitabını değil kariyerini de geliştiren bir yayın ve eğitim merkezidir.</p>
+            </header>
+            <div class="akd-guven">
+                <?php foreach ([
+                    ['kitap', 'Editoryal, yayın, tanıtım ve kariyer süreçleri birlikte ele alınır.'],
+                    ['kisi', 'Eğitimler genel sosyal medya anlatımı yerine yazarların ihtiyaçlarına göre hazırlanır.'],
+                    ['dongu', 'Teorik bilgi, uygulama ve değerlendirme birlikte yürür.'],
+                    ['dosya', 'Program sonunda kendi kullanabileceğiniz plan ve çalışma dosyalarına sahip olursunuz.'],
+                    ['kisiler', 'Üst programlarda bireysel strateji görüşmeleri ve gelişim takibi bulunur.'],
+                ] as $g) : ?>
+                    <article class="uyg-ozellik"><span class="uyg-ozellik__ic"><?php echo $ik($g[0], 22); ?></span><p><?php echo esc_html($g[1]); ?></p></article>
+                <?php endforeach; ?>
+            </div>
         </div>
     </section>
 
-    <!-- ============ VIII. Kalite ve kapsam ============ -->
+    <!-- ============ Kalite ve kapsam ============ -->
     <section class="uyg-bolum" id="kapsam">
         <div class="uyg-kap">
-            <?php echo $bas('VIII', 'Kalite standartları', 'Kalite Standartları ve Hizmet Kapsamı', 'Programlarımızın koşulları, kazanımları ve kapsam dışında kalan hizmetler aşağıda tanımlanmıştır.'); ?>
-            <div class="akd-ikili akd-kapsam">
-                <div>
-                    <h3>Program Tamamlama Belgesi</h3>
-                    <p class="akd-program__metin">En az <b>%80 devam</b> ve görevlerin en az <b>%70’ini tamamlama</b> şartını sağlayan katılımcılara MST Yayıncılık Yazar Kariyer Akademisi Program Tamamlama Belgesi düzenlenir. Belge, resmî veya üniversite onaylı sertifika niteliği taşımaz.</p>
+            <header class="uyg-baslik">
+                <span class="uyg-ust"><?php echo $ik('yildiz', 18); ?> Kalite standartları</span>
+                <h2>Kalite Standartları ve Hizmet Kapsamı</h2>
+                <p>Programlarımızın koşulları, kazanımları ve kapsam dışında kalan hizmetler aşağıda tanımlanmıştır.</p>
+            </header>
+            <div class="akd-kapsam">
+                <div class="akd-kapsam__kart">
+                    <h3><?php echo $ik('yildiz', 20); ?> Program Tamamlama Belgesi</h3>
+                    <p>En az <b>%80 devam</b> ve görevlerin en az <b>%70’ini tamamlama</b> şartını sağlayan katılımcılara <em>MST Yayıncılık Yazar Kariyer Akademisi Program Tamamlama Belgesi</em> düzenlenir. Belge, resmî veya üniversite onaylı sertifika niteliği taşımaz.</p>
                     <?php echo $liste(['Ders kayıtları: Program seviyesine göre belirlenen süre boyunca erişime açıktır; üçüncü kişilerle paylaşılamaz.', 'Gizlilik: Grup çalışmalarında paylaşılan eser ve fikirler gizli tutulur.', 'Bireysel görüşmeler: Süre ve adetler her programda ayrıca belirtilir.', 'Telafi, iptal ve iade: Koşullar kayıt sözleşmesinde düzenlenir.']); ?>
                 </div>
-                <div>
-                    <h3>Sonuç Taahhüdü</h3>
-                    <p class="akd-program__metin">Programlar aşağıdaki sonuçlara ilişkin taahhüt içermez; sonuçlar katılımcının uygulama düzenine, eserine ve hedef kitlesine göre farklılık gösterir.</p>
-                    <?php echo $liste(['Kitap satış adedi', 'Takipçi sayısı ve erişim', 'Basın ve medyada yer alma', 'Yayınevi tarafından kabul']); ?>
-                    <h3>Program Bedeline Dahil Olmayan Hizmetler</h3>
-                    <?php echo $liste(['Reklam bütçesi ve reklam yönetimi', 'Profesyonel video prodüksiyonu', 'Ücretli basın ve medya yayınları', 'Web sitesi tasarımı ve yapımı', 'Kitap basımı ve yayın sözleşmesi']); ?>
+                <div class="akd-kapsam__kart akd-kapsam__kart--sinir">
+                    <h3><?php echo $ik('carpi', 20); ?> Sonuç Taahhüdü</h3>
+                    <p>Programlar aşağıdaki sonuçlara ilişkin taahhüt içermez; sonuçlar katılımcının uygulama düzenine, eserine ve hedef kitlesine göre farklılık gösterir.</p>
+                    <ul class="akd-sinir">
+                        <?php foreach (['Kitap satış adedi', 'Takipçi sayısı ve erişim', 'Basın ve medyada yer alma', 'Yayınevi tarafından kabul'] as $x) : ?><li><?php echo esc_html($x); ?></li><?php endforeach; ?>
+                    </ul>
+                    <h3 class="akd-kapsam__ara"><?php echo $ik('carpi', 20); ?> Program Bedeline Dahil Olmayan Hizmetler</h3>
+                    <ul class="akd-sinir">
+                        <?php foreach (['Reklam bütçesi ve reklam yönetimi', 'Profesyonel video prodüksiyonu', 'Ücretli basın ve medya yayınları', 'Web sitesi tasarımı ve yapımı', 'Kitap basımı ve yayın sözleşmesi'] as $x) : ?><li><?php echo esc_html($x); ?></li><?php endforeach; ?>
+                    </ul>
                     <p class="akd-kapsam__not">Eğitim içerikleri ve çalışma dosyaları MST Yayıncılık’ın izni olmadan çoğaltılamaz ve paylaşılamaz.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- ============ IX. SSS ============ -->
+    <!-- ============ SSS ============ -->
     <section class="uyg-bolum uyg-bolum--acik" id="sss">
-        <div class="uyg-kap">
-            <?php echo $bas('IX', 'Sık sorulan sorular', 'Sık sorulan sorular'); ?>
-            <div class="uyg-sss akd-sss">
+        <div class="uyg-kap uyg-dar">
+            <header class="uyg-baslik"><span class="uyg-ust"><?php echo $ik('soru', 18); ?> Sık sorulan sorular</span><h2>Aklınızdaki sorular</h2></header>
+            <div class="uyg-sss">
                 <?php foreach ($sss as $s) : ?>
                     <details><summary><?php echo esc_html($s[0]); ?></summary><p><?php echo esc_html($s[1]); ?></p></details>
                 <?php endforeach; ?>
@@ -409,10 +477,13 @@ MST_Randevu::seo_hazirla('akademi'); // arama başlığı/açıklaması (wp_head
     <!-- ============ İletişim ============ -->
     <section class="uyg-bolum uyg-bolum--koyu akd-iletisim" id="iletisim">
         <div class="uyg-kap akd-iletisim__in">
-            <h2>Hangi programın size uygun olduğunu birlikte belirleyelim.</h2>
-            <p>Programlar, dönem tarihleri ve ücretsiz eğitim hakkında bilgi almak için WhatsApp’tan yazabilir ya da ücretsiz ön görüşme randevusu alabilirsiniz.</p>
+            <header class="uyg-baslik">
+                <span class="uyg-ust"><?php echo $ik('soru', 18); ?> Sorularınız mı var?</span>
+                <h2>Hangi programın size uygun olduğunu birlikte konuşalım.</h2>
+                <p>Programlar, dönem tarihleri ve ücretsiz eğitim hakkında bilgi almak için WhatsApp'tan yazın ya da ücretsiz ön görüşme randevusu alın.</p>
+            </header>
             <div class="akd-iletisim__butonlar">
-                <?php if ($wa) : ?><a class="uyg-btn uyg-btn--altin" href="<?php echo esc_url($wa); ?>" target="_blank" rel="noopener"><?php echo MST_Randevu::icon('wa'); ?> WhatsApp’tan bilgi alın</a><?php endif; ?>
+                <?php if ($wa) : ?><a class="uyg-btn uyg-btn--altin" href="<?php echo esc_url($wa); ?>" target="_blank" rel="noopener"><?php echo MST_Randevu::icon('wa'); ?> WhatsApp'tan bilgi alın</a><?php endif; ?>
                 <a class="uyg-btn uyg-btn--cizgi" href="<?php echo esc_url($randevu); ?>">Ücretsiz ön görüşme randevusu</a>
             </div>
         </div>
