@@ -330,7 +330,7 @@ class MST_Randevu
             : $d;
     }
 
-    private static function client_ip()
+    public static function client_ip()
     {
         return isset($_SERVER['REMOTE_ADDR']) ? sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR'])) : '0';
     }
@@ -525,6 +525,10 @@ class MST_Randevu
             'Yazar Kariyer Akademisi: Yazarlık Eğitimi | MST Yayıncılık',
             'Yazarlar için online yazarlık ve kariyer eğitimi: yazar kimliği, hedef okur, sosyal medya, kitap lansmanı ve PR. Üç seviyeli program, ücretsiz başlangıç eğitimi.',
         ],
+        'cinebook' => [
+            'CineBook: Kitaptan Fragman ve Çizgi Film | MST Yayıncılık',
+            'Kitabınızı fragmana, çocuk kitabınızı çizgi filme dönüştürüyoruz. CineBook ve MST Çocuk ile hikâyeniz ekranda ve sosyal medyada okurlarıyla buluşsun.',
+        ],
         'akademi-randevu' => [
             'Yazar Kariyer Akademisi Ön Görüşme | MST Yayıncılık',
             'Yazar Kariyer Akademisi programları için ücretsiz ön görüşme randevusu alın. Size uygun saati seçin, akademi danışmanımız sizi arasın.',
@@ -573,6 +577,7 @@ class MST_Randevu
             self::SABLON     => 'main.mst-sayfa__main',
             self::SABLON_UYG => 'main.uyg',
             'mst-akademi-tam-sayfa' => 'main.akd',
+            'mst-cinebook-tam-sayfa' => 'main.cb',
         ][get_page_template_slug($post)] ?? '';
         if (!$secici) return;
         $url = $post->post_status === 'publish' ? get_permalink($post) : get_preview_post_link($post);
@@ -1620,3 +1625,4 @@ class MST_Randevu
 
 MST_Randevu::init();
 require_once __DIR__ . '/akademi.php'; // Yazar Kariyer Akademisi sayfası ve başvuruları
+require_once __DIR__ . '/cinebook.php'; // CineBook ve MST Çocuk sayfası ve başvuruları

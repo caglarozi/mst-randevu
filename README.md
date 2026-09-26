@@ -60,6 +60,15 @@ Yeni sayfa → başlık (ör. “Akademi Ön Görüşme”) → *Şablon →* **
 - Sayfa yayımlanınca akademi sayfasındaki “bilgi alın” düğmeleri küçük bir seçim kutusu açar: **WhatsApp’tan yazın** ya da **Ön görüşme randevusu alın** (telefonda alttan açılır). Sayfa yoksa düğmeler eskisi gibi doğrudan WhatsApp’a gider; üstteki “Ön Görüşme Al” da yazar randevu sayfasına döner.
 - **Randevular** listesinde Tür sütunu ve Tümü / Yazar adayı / Akademi süzgeci vardır. Bildirim e-postası ve CRM’e giden veride tür (`tur`: `yazar` | `akademi`) yer alır.
 
+## CineBook ve MST Çocuk sayfası (taslak)
+
+Yeni sayfa → başlık (ör. “CineBook”) → *Şablon →* **MST CineBook ve MST Çocuk (Tam Sayfa)** → Yayımla.
+
+- Üstte CineBook (koyu, sinematik: fragman, 4 adımlı süreç, projeler), ortada açık ve renkli **MST Çocuk** bölümü (çocuk kitabından çizgi film), altta sosyal medya, başvuru formu ve SSS. Sayfada tek H1 vardır.
+- **Yazar Randevu → CineBook Ayarları**: öne çıkan fragman (YouTube), MST Çocuk örnek videosu, YouTube / Instagram / Facebook / TikTok adresleri. Boş alanlar sayfada yer tutucu olarak görünür. Videolar tıklanınca yüklenir (açılışta YouTube yüklenmez).
+- **Başvuru formu**: tür (CineBook / MST Çocuk), eser adı, ad soyad, telefon, e-posta (isteğe bağlı), kısa özet, KVKK onayı. Başvurular **Yazar Randevu → CineBook Başvuruları**'nda listelenir, bildirim e-postasına gider ve webhook'a `cinebook.basvuru` olayı olarak iletilir (CRM tarafı henüz bu olayı işlemiyor). `?tur=cocuk` ile gelinirse MST Çocuk seçili gelir.
+- Arama başlığı/açıklaması `MST_Randevu::SEO['cinebook']`'tadır.
+
 ## Yerel önizleme (WordPress olmadan)
 
 ```bash
@@ -69,6 +78,8 @@ node demo-sunucu.js
 Windows'ta kısaca: `onizleme.bat`'a çift tıklayın (masaüstüne kısayolu konabilir). En güncel `main-dayiyo`'yu indirir, önizleme kapalıysa açar ve Akademi sayfasını gösterir.
 
 Ardından http://localhost:8788 — eklentinin kendi CSS/JS'i sahte verilerle çalışır; kayıtlar yalnızca sayfada tutulur.
+
+CineBook ve MST Çocuk: http://localhost:8788/cinebook (`demo/cinebook.html`).
 
 Yazar Kariyer Akademisi: http://localhost:8788/akademi (`demo/akademi.html`). Akademi ön görüşme randevusu: http://localhost:8788/akademi-randevu (`demo/akademi-randevu.html`); akademi sayfasındaki “bilgi alın” seçimleri buraya bağlıdır.
 
@@ -81,6 +92,7 @@ MST Yazar Paneli tanıtım sayfası: http://localhost:8788/uygulama (`demo/uygul
 | `mst-randevu/mst-randevu.php` | Eklenti: veritabanı, AJAX, bildirim, yönetim paneli |
 | `mst-randevu/templates/tam-sayfa.php` | "MST Randevu (Tam Sayfa)" ve "MST Akademi Ön Görüşme Randevusu (Tam Sayfa)" sayfa şablonları |
 | `mst-randevu/akademi.php` + `templates/akademi.php` + `assets/akademi.css/js` | Yazar Kariyer Akademisi bilgi sayfası ve ayarları |
+| `mst-randevu/cinebook.php` + `templates/cinebook.php` + `assets/cinebook.css/js` | CineBook ve MST Çocuk sayfası, ayarları ve başvuruları |
 | `mst-randevu/templates/uygulama.php` + `assets/uygulama.css` | "MST Yazar Paneli Tanıtım (Tam Sayfa)" şablonu — yazar uygulamasının tanıtım sayfası |
 | `mst-randevu/assets/` | CSS, JS, logo |
 | `mst-randevu/lib/plugin-update-checker/` | GitHub'dan güncelleme kütüphanesi (Plugin Update Checker 5.7, MIT) |
