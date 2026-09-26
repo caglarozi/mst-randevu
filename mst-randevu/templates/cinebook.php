@@ -24,7 +24,7 @@ $oynatici = function ($id, $baslik, $etiket, $sinif = '') {
 };
 
 $bolumler = [
-    ['#nedir', 'CineBook nedir?'], ['#surec', 'Süreç'], ['#projeler', 'Projeler'], ['#cocuk', 'MST Çocuk'],
+    ['#nedir', 'CineBook'], ['#surec', 'Süreç'], ['#projeler', 'Projeler'], ['#cocuk', 'MST Çocuk'],
     ['#izle', 'İzleyin'], ['#basvuru', 'Başvuru'], ['#sss', 'SSS'],
 ];
 
@@ -37,7 +37,7 @@ $nedir = [
 $surec = [
     ['Eser seçimi', 'Hikâye, karakterler ve görsel anlatım potansiyeli değerlendirilir.'],
     ['Senaryo uyarlaması', 'Kitabın en güçlü sahneleri kısa bir anlatıya dönüştürülür.'],
-    ['Fragman yapımı', 'Görsel tasarım, kurgu, seslendirme ve müzik bir araya gelir.'],
+    ['Storyboard ve yapım', 'Sahneler karelere çizilir; görsel tasarım, kurgu, seslendirme ve müzikle fragman hazırlanır.'],
     ['Dijital yayın', 'Fragman CineBook kanallarında ve yazarın hesaplarında yayınlanır.'],
 ];
 
@@ -78,7 +78,7 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
     <meta name="theme-color" content="#0b0b0d">
     <meta name="color-scheme" content="only light">
     <?php echo MST_Randevu::seo_aciklama('cinebook'); ?>
-    <script>document.documentElement.classList.add('uyg-js');</script>
+    <script>document.documentElement.classList.add('uyg-js');if(!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)&&innerHeight>=480)document.documentElement.classList.add('cb-hareket');</script>
     <?php wp_head(); ?>
     <?php
     foreach (['mst-randevu' => 'randevu.css', 'mst-uygulama' => 'uygulama.css', 'mst-cinebook' => 'cinebook.css'] as $h => $dosya) {
@@ -94,26 +94,43 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
 
 <main class="uyg cb" lang="tr">
 
-    <!-- ============ Giriş ============ -->
-    <section class="cb-giris" id="giris">
-        <div class="uyg-kap cb-giris__kap">
-            <div class="cb-giris__metin">
-                <p class="cb-ust">MST Yayıncılık · CineBook</p>
-                <h1>Kitabınız ekranda <em>hayat bulsun.</em></h1>
-                <p class="cb-giris__alt">CineBook, kitapları fragmana, kısa dijital anlatılara ve sosyal medya içeriklerine dönüştüren MST Yayıncılık yapım birimidir. MST Çocuk ise çocuk kitaplarını çizgi filme uyarlar.</p>
-                <div class="cb-giris__yollar">
-                    <a class="cb-yol" href="#basvuru" data-cb-tur="cinebook"><small>Kitabım için</small><strong>CineBook başvurusu</strong></a>
-                    <a class="cb-yol cb-yol--cocuk" href="#cocuk"><small>Çocuk kitabım için</small><strong>MST Çocuk</strong></a>
+    <!-- ============ Giriş: kitap sayfası film karesine dönüşür ============
+         Kaydırdıkça (cinebook.js --cb-p değişkenini 0→1 yapar) sinema bantları kapanır, sayfa kararır ve
+         film karesi belirir. JS yoksa ya da "hareketi azalt" açıksa sayfa ve kare alt alta durağan görünür. -->
+    <section class="cb-sahne" id="giris" data-cb-sahne>
+        <div class="cb-sahne__pin">
+            <article class="cb-kagit" aria-labelledby="cb-baslik">
+                <header class="cb-kagit__ust"><span lang="en">CineBook</span><span>MST Yayıncılık</span></header>
+                <p class="cb-kagit__bolum">Birinci bölüm</p>
+                <h1 id="cb-baslik">Kitabınız ekranda hayat bulsun.</h1>
+                <p class="cb-kagit__metin">Her hikâye önce bir sayfada doğar. Okur onu satır satır kurar; karakterlerin yüzünü, sokakların sesini kendi zihninde çizer. CineBook bu sayfayı bir adım öteye taşır: kitabın en güçlü sahnelerini fragmana, kısa dijital anlatılara ve sosyal medya için hazırlanmış videolara dönüştürür. <span class="cb-kagit__son">Böylece kitap yalnızca rafta değil, ekranda da okurunu bulur.</span></p>
+                <p class="cb-kagit__no">1</p>
+                <p class="cb-kagit__ipucu" aria-hidden="true">Kaydırın, sayfa ekrana dönüşsün</p>
+            </article>
+            <div class="cb-kare">
+                <div class="cb-kare__video">
+                    <?php echo $oynatici($fragman, $o['fragman_ad'] ?: 'Öne çıkan fragman', 'Şimdi izle · ' . ($o['fragman_ad'] ?: 'Fragman') . ' — İlk fragman'); ?>
+                    <p class="cb-altyazi" aria-hidden="true">Böylece kitap yalnızca rafta değil, ekranda da okurunu bulur.</p>
                 </div>
+                <p class="cb-kare__imza"><span>Şimdi izle</span> <?php echo esc_html($o['fragman_ad'] ?: 'Öne çıkan fragman'); ?> — İlk fragman</p>
             </div>
-            <div class="cb-giris__sahne">
-                <div class="cb-serit">
-                    <?php echo $oynatici($fragman, $o['fragman_ad'] ?: 'Öne çıkan fragman', 'Şimdi izle · ' . ($o['fragman_ad'] ?: 'Fragman') . ' — İlk fragman', 'cb-video--genis'); ?>
-                </div>
-                <p class="cb-giris__imza"><span>Şimdi izle</span> <?php echo esc_html($o['fragman_ad'] ?: 'Öne çıkan fragman'); ?> — İlk fragman</p>
-            </div>
+            <span class="cb-bant cb-bant--ust" aria-hidden="true"></span>
+            <span class="cb-bant cb-bant--alt" aria-hidden="true"></span>
         </div>
+    </section>
+
+    <!-- ============ Jenerik: iki yol ve rakamlar ============ -->
+    <section class="cb-jenerik" id="nedir">
         <div class="uyg-kap">
+            <p class="cb-jenerik__sunar">MST Yayıncılık sunar</p>
+            <h2 class="cb-jenerik__baslik">Kitabın görünür hâli: <em>CineBook</em></h2>
+            <div class="cb-jenerik__satirlar">
+                <?php foreach ($nedir as $n) : ?><p><span><?php echo esc_html($n[0]); ?></span><?php echo esc_html($n[1]); ?></p><?php endforeach; ?>
+            </div>
+            <div class="cb-giris__yollar">
+                <a class="cb-yol" href="#basvuru" data-cb-tur="cinebook"><small>Kitabım için</small><strong>CineBook başvurusu</strong></a>
+                <a class="cb-yol cb-yol--cocuk" href="#cocuk"><small>Çocuk kitabım için</small><strong>MST Çocuk</strong></a>
+            </div>
             <dl class="cb-rakamlar">
                 <div><dt>Yayınlanan fragman</dt><dd class="cb-yer">—</dd></div>
                 <div><dt>Toplam izlenme</dt><dd class="cb-yer">—</dd></div>
@@ -129,63 +146,103 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
         </div>
     </nav>
 
-    <!-- ============ CineBook nedir? ============ -->
-    <section class="cb-bolum cb-bolum--koyu" id="nedir">
-        <div class="uyg-kap cb-iki">
-            <header class="cb-bas">
-                <p class="cb-ust">CineBook nedir?</p>
-                <h2>Kitabın görünür hâli.</h2>
-                <p>Bir kitabın okura ulaşmasının yolu artık yalnızca raflardan geçmiyor. CineBook, eserin hikâyesini kısa ve etkileyici görsel anlatılarla izleyiciye taşır; izleyiciyi kitabın okuruna dönüştürür.</p>
-            </header>
-            <ol class="cb-liste">
-                <?php foreach ($nedir as $i => $n) : ?>
-                    <li><span><?php echo esc_html(sprintf('%02d', $i + 1)); ?></span><div><h3><?php echo esc_html($n[0]); ?></h3><p><?php echo esc_html($n[1]); ?></p></div></li>
-                <?php endforeach; ?>
-            </ol>
-        </div>
-    </section>
-
-    <!-- ============ Süreç ============ -->
+    <!-- ============ Süreç: aynı sahnenin dört hâli ============ -->
     <section class="cb-bolum cb-bolum--siyah" id="surec">
         <div class="uyg-kap">
             <header class="cb-bas cb-bas--orta">
                 <p class="cb-ust">Süreç</p>
-                <h2>Kitaptan ekrana dört adım</h2>
+                <h2>Aynı sahne, dört hâl</h2>
+                <p>Bir kitap sahnesinin ekrana ulaşana kadar geçtiği yol. <em class="cb-not">Örnek sahne</em></p>
             </header>
-            <ol class="cb-film">
-                <?php foreach ($surec as $i => $s) : ?>
-                    <li><span class="cb-film__no"><?php echo esc_html(sprintf('%02d', $i + 1)); ?></span><h3><?php echo esc_html($s[0]); ?></h3><p><?php echo esc_html($s[1]); ?></p></li>
-                <?php endforeach; ?>
+            <ol class="cb-hal">
+                <li>
+                    <div class="cb-hal__kagit cb-hal__kagit--kitap">
+                        <p><span class="cb-ilk">G</span>üneş denize gömülürken Deniz, kumların arasında yarısı ıslanmış bir mektup buldu. Zarfın üzerinde, silik mürekkeple, kendi adı yazıyordu.</p>
+                        <small>s. 112</small>
+                    </div>
+                    <h3><span>01</span><?php echo esc_html($surec[0][0]); ?></h3><p><?php echo esc_html($surec[0][1]); ?></p>
+                </li>
+                <li>
+                    <div class="cb-hal__kagit cb-hal__kagit--senaryo">
+                        <p class="cb-sn-bas">SAHNE 12 — DIŞ. SAHİL — ALACAKARANLIK</p>
+                        <p>DENİZ (10) kumda eğilir, ıslak bir zarf çıkarır. Zarfı ışığa tutar.</p>
+                        <p class="cb-sn-kim">DENİZ</p>
+                        <p class="cb-sn-parantez">(fısıltıyla)</p>
+                        <p class="cb-sn-soz">Bu… benim adım.</p>
+                    </div>
+                    <h3><span>02</span><?php echo esc_html($surec[1][0]); ?></h3><p><?php echo esc_html($surec[1][1]); ?></p>
+                </li>
+                <li>
+                    <div class="cb-hal__kagit cb-hal__kagit--story">
+                        <svg viewBox="0 0 240 150" aria-hidden="true">
+                            <rect x="6" y="6" width="228" height="138" fill="none" stroke="#5c5750" stroke-width="2"/>
+                            <path d="M8,92 C60,90 120,93 232,90" stroke="#77716a" stroke-width="1.6" fill="none"/>
+                            <path d="M150,92 a26,26 0 0 1 52,0" stroke="#77716a" stroke-width="1.6" fill="none"/>
+                            <path d="M8,112 C50,106 90,118 140,110 S210,104 232,112" stroke="#9a948c" stroke-width="1.2" fill="none"/>
+                            <g stroke="#3f3a34" stroke-width="2.2" fill="none" stroke-linecap="round">
+                                <circle cx="86" cy="96" r="6"/><path d="M86,102 C84,112 80,118 74,124 M83,110 L96,118 M78,122 L72,138 M76,124 L86,138"/>
+                            </g>
+                            <path d="M100,126 l14,-4 l2,6 z" fill="#b5ada2"/>
+                            <path d="M30,30 L70,52" stroke="#c0392b" stroke-width="2" stroke-dasharray="5 4"/>
+                            <path d="M70,52 l-9,-1 l5,-7" fill="none" stroke="#c0392b" stroke-width="2"/>
+                        </svg>
+                        <p class="cb-sb-not"><b>12A</b> Kamera: yavaş yaklaşma</p>
+                    </div>
+                    <h3><span>03</span><?php echo esc_html($surec[2][0]); ?></h3><p><?php echo esc_html($surec[2][1]); ?></p>
+                </li>
+                <li>
+                    <div class="cb-hal__kagit cb-hal__kagit--ekran">
+                        <svg viewBox="0 0 240 150" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+                            <defs>
+                                <linearGradient id="cbGok" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2b2046"/><stop offset=".55" stop-color="#c8643a"/><stop offset="1" stop-color="#f2b25c"/></linearGradient>
+                                <linearGradient id="cbDeniz" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a3350"/><stop offset="1" stop-color="#151320"/></linearGradient>
+                            </defs>
+                            <rect width="240" height="96" fill="url(#cbGok)"/>
+                            <circle cx="176" cy="96" r="22" fill="#ffd79a"/>
+                            <rect y="94" width="240" height="56" fill="url(#cbDeniz)"/>
+                            <path d="M150,100 h52 M160,106 h32" stroke="#ffd79a" stroke-opacity=".5" stroke-width="2"/>
+                            <g fill="#0d0b12"><circle cx="86" cy="100" r="5.5"/><path d="M82,106 C80,114 76,120 70,126 L96,122 C92,114 90,110 90,106 Z"/><path d="M70,124 L66,142 L72,142 L78,126 Z M88,122 L92,142 L98,142 L94,122 Z"/></g>
+                        </svg>
+                        <p class="cb-altyazi cb-altyazi--kucuk">Bu… benim adım.</p>
+                    </div>
+                    <h3><span>04</span><?php echo esc_html($surec[3][0]); ?></h3><p><?php echo esc_html($surec[3][1]); ?></p>
+                </li>
             </ol>
         </div>
     </section>
 
-    <!-- ============ Projeler ============ -->
+    <!-- ============ Projeler: kontakt baskı ============ -->
     <section class="cb-bolum cb-bolum--koyu" id="projeler">
         <div class="uyg-kap">
             <header class="cb-bas cb-bas--orta">
                 <p class="cb-ust">Projeler</p>
                 <h2>Öne çıkan hikâyeler</h2>
             </header>
-            <div class="cb-projeler">
-                <article class="cb-proje">
-                    <div class="cb-afis"><span class="cb-afis__ust">CineBook sunar</span><strong><?php echo esc_html($o['fragman_ad'] ?: 'Gökbörü'); ?></strong><span class="cb-afis__alt">Afiş eklenecek</span></div>
-                    <div class="cb-proje__alt"><p><span class="cb-rozet">Yayında</span> İlk fragman</p><a href="#giris">İzle</a></div>
-                </article>
-                <article class="cb-proje">
-                    <div class="cb-afis cb-afis--yakinda"><span class="cb-afis__ust">Yapım aşamasında</span><strong>Yakında</strong><span class="cb-afis__alt">Proje adı eklenecek</span></div>
-                    <div class="cb-proje__alt"><p><span class="cb-rozet cb-rozet--gri">Yakında</span> CineBook’ta</p></div>
-                </article>
-                <a class="cb-proje cb-proje--davet" href="#basvuru" data-cb-tur="cinebook">
-                    <span>Sıradaki hikâye</span><strong>sizinki olabilir.</strong><em>Başvurun</em>
-                </a>
+            <div class="cb-kontakt">
+                <p class="cb-kontakt__kenar" aria-hidden="true"><span>MST CINEBOOK 400</span><span>▸ 23</span><span>▸ 23A</span><span>▸ 24</span><span>▸ 24A</span><span>▸ 25</span></p>
+                <div class="cb-kontakt__kareler">
+                    <article class="cb-kontakt__kare cb-kontakt__kare--secili">
+                        <div class="cb-afis"><span class="cb-afis__ust"><span lang="en">CineBook</span> sunar</span><strong><?php echo esc_html($o['fragman_ad'] ?: 'Gökbörü'); ?></strong><span class="cb-afis__alt">Afiş eklenecek</span></div>
+                        <svg class="cb-kalem" viewBox="0 0 300 420" preserveAspectRatio="none" aria-hidden="true"><path d="M150,14 C250,10 292,80 290,200 C288,330 236,408 146,406 C52,404 10,320 12,204 C14,90 60,20 162,18" fill="none" stroke="#e03a2b" stroke-width="4" stroke-linecap="round" vector-effect="non-scaling-stroke" opacity=".9"/></svg>
+                        <p class="cb-kontakt__not"><b>Yayında</b> İlk fragman · <a href="#giris">İzle</a></p>
+                    </article>
+                    <article class="cb-kontakt__kare">
+                        <div class="cb-afis cb-afis--yakinda"><span class="cb-afis__ust">Yapım aşamasında</span><strong>Yakında</strong><span class="cb-afis__alt">Proje adı eklenecek</span></div>
+                        <p class="cb-kontakt__not"><b class="gri">Yakında</b> CineBook’ta</p>
+                    </article>
+                    <a class="cb-kontakt__kare cb-kontakt__kare--bos" href="#basvuru" data-cb-tur="cinebook">
+                        <span class="cb-kontakt__bos"><small>Sıradaki kare</small><strong>Sizin hikâyeniz</strong><em>Başvurun</em></span>
+                        <p class="cb-kontakt__not">&nbsp;</p>
+                    </a>
+                </div>
+                <p class="cb-kontakt__kenar" aria-hidden="true"><span>▸ 25A</span><span>KODAK ◆ 5219</span><span>▸ 26</span><span>▸ 26A</span><span>MST</span><span>▸ 27</span></p>
             </div>
         </div>
     </section>
 
     <!-- ============ MST Çocuk ============ -->
     <section class="cb-cocuk" id="cocuk">
-        <svg class="cb-dalga" viewBox="0 0 1440 80" preserveAspectRatio="none" aria-hidden="true"><path d="M0,0 H1440 V38 C1260,82 1080,82 900,52 C720,22 540,22 360,52 C220,76 100,70 0,44 Z" fill="#0f0f12"/></svg>
+        <svg class="cb-dalga" viewBox="0 0 1440 80" preserveAspectRatio="none" aria-hidden="true"><path d="M0,0 H1440 V38 C1260,82 1080,82 900,52 C720,22 540,22 360,52 C220,76 100,70 0,44 Z" fill="#131316"/></svg>
         <div class="uyg-kap">
             <div class="cb-cocuk__giris">
                 <div>
@@ -241,7 +298,7 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
     </section>
 
     <!-- ============ Başvuru ============ -->
-    <section class="cb-bolum cb-bolum--siyah" id="basvuru">
+    <section class="cb-bolum cb-bolum--kagit" id="basvuru">
         <div class="uyg-kap cb-iki cb-iki--basvuru">
             <header class="cb-bas">
                 <p class="cb-ust">Başvuru</p>
@@ -278,7 +335,7 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
     </section>
 
     <!-- ============ SSS ============ -->
-    <section class="cb-bolum cb-bolum--koyu" id="sss">
+    <section class="cb-bolum cb-bolum--kagit cb-bolum--sss" id="sss">
         <div class="uyg-kap uyg-dar">
             <header class="cb-bas cb-bas--orta">
                 <p class="cb-ust">SSS</p>
@@ -296,7 +353,7 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
         <div class="uyg-kap cb-alt__in">
             <a class="cb-alt__marka" href="<?php echo esc_url(home_url('/')); ?>">
                 <img src="<?php echo esc_url(MST_Randevu::logo_url()); ?>" alt="" width="40" height="40" loading="lazy">
-                <span><strong>MST Yayıncılık</strong><small>CineBook · MST Çocuk</small></span>
+                <span><strong>MST Yayıncılık</strong><small><span lang="en">CineBook</span> · MST Çocuk</small></span>
             </a>
             <nav class="cb-alt__linkler" aria-label="Alt menü">
                 <a href="#projeler">Projeler</a>

@@ -112,7 +112,8 @@ class MST_CineBook
         if (!self::is_page()) return;
         wp_register_style('mst-cinebook', MST_Randevu::varlik('cinebook.css'), ['mst-uygulama'], null);
         wp_register_script('mst-cinebook', MST_Randevu::varlik('cinebook.js'), [], null, true);
-        wp_enqueue_style('mst-cinebook-font', 'https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&display=swap', [], null);
+        // Kitap sayfası için IBM Plex Serif, senaryo ve etiketler için IBM Plex Mono (başlık yazısı IBM Plex Sans'ın aileleri)
+        wp_enqueue_style('mst-cinebook-font', 'https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&display=swap', [], null);
         wp_enqueue_style('mst-randevu-font');
         wp_enqueue_style('mst-cinebook');
         wp_enqueue_script('mst-randevu');

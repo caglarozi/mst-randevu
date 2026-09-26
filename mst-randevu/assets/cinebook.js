@@ -13,7 +13,7 @@
         f.title = b.getAttribute('aria-label') || 'Video';
         f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
         f.allowFullscreen = true;
-        b.appendChild(f);
+        b.appendChild(f); b.classList.add('is-oynuyor');
         b.removeAttribute('data-cb-video');
       }, { once: true });
     });
@@ -66,6 +66,32 @@
     });
   }
 
-  function basla() { videolar(); turBaglantilari(); form(); }
+  // Giriş sahnesi: kaydırdıkça kitap sayfası film karesine dönüşür (0 = sayfa, 1 = kare)
+  function sahne() {
+    var s = document.querySelector('[data-cb-sahne]');
+    if (!s || !document.documentElement.classList.contains('cb-hareket')) return;
+    var pin = s.querySelector('.cb-sahne__pin'), bekliyor = false;
+    function ara(p, a, b) { var x = Math.min(1, Math.max(0, (p - a) / (b - a))); return x * x * (3 - 2 * x); }
+    function ciz() {
+      bekliyor = false;
+      var ust = parseFloat(getComputedStyle(pin).top) || 0; // sabitlenen alan üst çubuğun altında durur
+      var r = s.getBoundingClientRect(), yol = s.offsetHeight - pin.offsetHeight;
+      var p = yol > 0 ? Math.min(1, Math.max(0, (ust - r.top) / yol)) : 1;
+      var st = s.style;
+      st.setProperty('--cb-p', p.toFixed(3));
+      st.setProperty('--cb-kucul', ara(p, .08, .5).toFixed(3));
+      st.setProperty('--cb-sayfa', (1 - ara(p, .3, .56)).toFixed(3));
+      st.setProperty('--cb-karart', ara(p, .2, .56).toFixed(3));
+      st.setProperty('--cb-bant', ara(p, .25, .6).toFixed(3));
+      st.setProperty('--cb-film', ara(p, .5, .8).toFixed(3));
+      s.classList.toggle('is-film', p > .6);
+    }
+    function iste() { if (!bekliyor) { bekliyor = true; requestAnimationFrame(ciz); } }
+    window.addEventListener('scroll', iste, { passive: true });
+    window.addEventListener('resize', iste);
+    ciz();
+  }
+
+  function basla() { sahne(); videolar(); turBaglantilari(); form(); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', basla); else basla();
 })();
