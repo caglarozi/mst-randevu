@@ -110,14 +110,17 @@ class MST_CineBook
     public static function assets()
     {
         if (!self::is_page()) return;
-        wp_register_style('mst-cinebook', MST_Randevu::varlik('cinebook.css'), ['mst-uygulama'], null);
+        // Tasarım dili akademi sayfasıyla aynı: akademi.css / akademi.js (sahne ışığı, daktilo, bölüm menüsü)
+        if (!wp_style_is('mst-akademi', 'registered')) wp_register_style('mst-akademi', MST_Randevu::varlik('akademi.css'), ['mst-uygulama'], null);
+        if (!wp_script_is('mst-akademi', 'registered')) wp_register_script('mst-akademi', MST_Randevu::varlik('akademi.js'), [], null, true);
+        wp_register_style('mst-cinebook', MST_Randevu::varlik('cinebook.css'), ['mst-akademi'], null);
         wp_register_script('mst-cinebook', MST_Randevu::varlik('cinebook.js'), [], null, true);
-        // Kitap sayfası için IBM Plex Serif, senaryo ve etiketler için IBM Plex Mono (başlık yazısı IBM Plex Sans'ın aileleri)
-        wp_enqueue_style('mst-cinebook-font', 'https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&display=swap', [], null);
+        wp_enqueue_style('mst-cinebook-font', 'https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&display=swap', [], null);
         wp_enqueue_style('mst-randevu-font');
         wp_enqueue_style('mst-cinebook');
         wp_enqueue_script('mst-randevu');
         wp_enqueue_script('mst-uygulama');
+        wp_enqueue_script('mst-akademi');
         wp_enqueue_script('mst-cinebook');
         wp_localize_script('mst-cinebook', 'MST_CB', [
             'ajax'  => admin_url('admin-ajax.php'),
@@ -128,7 +131,7 @@ class MST_CineBook
     public static function isolate_styles()
     {
         if (!self::is_page()) return;
-        $keep = ['mst-randevu', 'mst-randevu-font', 'mst-cinebook-font', 'mst-uygulama', 'mst-cinebook', 'admin-bar', 'dashicons'];
+        $keep = ['mst-randevu', 'mst-randevu-font', 'mst-cinebook-font', 'mst-uygulama', 'mst-akademi', 'mst-cinebook', 'admin-bar', 'dashicons'];
         foreach (wp_styles()->queue as $handle) {
             if (!in_array($handle, $keep, true)) wp_dequeue_style($handle);
         }

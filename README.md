@@ -64,7 +64,7 @@ Yeni sayfa → başlık (ör. “Akademi Ön Görüşme”) → *Şablon →* **
 
 Yeni sayfa → başlık (ör. “CineBook”) → *Şablon →* **MST CineBook ve MST Çocuk (Tam Sayfa)** → Yayımla.
 
-- Üstte CineBook (koyu, sinematik: fragman, 4 adımlı süreç, projeler), ortada açık ve renkli **MST Çocuk** bölümü (çocuk kitabından çizgi film), altta sosyal medya, başvuru formu ve SSS. Sayfada tek H1 vardır.
+- Tasarım dili akademi sayfasıyla aynıdır (akademi.css / akademi.js: sahne ışığı, bir kez yazılan başlık, bölüm menüsü, simgeli kartlar, kurumsal alt bilgi). Bölümler: CineBook nedir, yapım süreci, öne çıkan fragman, projeler, açık ve renkli **MST Çocuk** bölümü (çocuk kitabından çizgi film), sosyal medya, neden CineBook, başvuru formu ve SSS. Sayfada tek H1 vardır.
 - **Yazar Randevu → CineBook Ayarları**: öne çıkan fragman (YouTube), MST Çocuk örnek videosu, YouTube / Instagram / Facebook / TikTok adresleri. Boş alanlar sayfada yer tutucu olarak görünür. Videolar tıklanınca yüklenir (açılışta YouTube yüklenmez).
 - **Başvuru formu**: tür (CineBook / MST Çocuk), eser adı, ad soyad, telefon, e-posta (isteğe bağlı), kısa özet, KVKK onayı. Başvurular **Yazar Randevu → CineBook Başvuruları**'nda listelenir, bildirim e-postasına gider ve webhook'a `cinebook.basvuru` olayı olarak iletilir (CRM tarafı henüz bu olayı işlemiyor). `?tur=cocuk` ile gelinirse MST Çocuk seçili gelir.
 - Arama başlığı/açıklaması `MST_Randevu::SEO['cinebook']`'tadır.
