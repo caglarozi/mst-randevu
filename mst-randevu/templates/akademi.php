@@ -24,7 +24,7 @@ $secim = function ($etiket, $wa_metin, $program = '', $wa_ikon = false) use ($ak
         return $wa ? '<a class="uyg-btn uyg-btn--altin" href="' . esc_url($wa) . '" target="_blank" rel="noopener">' . ($wa_ikon ? MST_Randevu::icon('wa') . ' ' : '') . esc_html($etiket) . '</a>' : '';
     }
     $rnd = $program ? add_query_arg('program', $program, $akd_rnd) : $akd_rnd;
-    $h  = '<details class="akd-secim"><summary class="uyg-btn uyg-btn--altin">' . esc_html($etiket) . '</summary>';
+    $h  = '<details class="akd-secim"><summary class="uyg-btn uyg-btn--altin">' . esc_html($etiket) . '<span class="akd-secim__ok" aria-hidden="true"></span></summary>';
     $h .= '<div class="akd-secim__panel"><p class="akd-secim__baslik">Nasıl bilgi almak istersiniz?</p>';
     if ($wa) $h .= '<a class="akd-secim__secenek" href="' . esc_url($wa) . '" target="_blank" rel="noopener">' . MST_Randevu::icon('wa') . '<span><strong>WhatsApp’tan yazın</strong><small>Sorularınızı yazılı iletin</small></span></a>';
     $h .= '<a class="akd-secim__secenek" href="' . esc_url($rnd) . '">' . MST_Randevu::icon('saat') . '<span><strong>Ön görüşme randevusu alın</strong><small>Size uygun saatte sizi arayalım</small></span></a>';

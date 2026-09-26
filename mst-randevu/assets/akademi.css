@@ -408,11 +408,13 @@ body.admin-bar .akd-gezinti { top: 108px; }
 .akd-secim { position: relative; display: inline-block; }
 .akd-secim > summary { list-style: none; cursor: pointer; }
 .akd-secim > summary::-webkit-details-marker { display: none; }
-.akd-secim > summary::after {
-  content: ""; width: 7px; height: 7px; margin: -3px 0 0 4px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor;
-  transform: rotate(45deg); transition: transform .2s;
+/* Ok ayrı öğede: düğmenin ::after'ı altın düğmelerin parlama efektine ait */
+.akd-secim__ok {
+  width: 7px; height: 7px; margin: -3px 0 0 2px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor;
+  transform: rotate(45deg); transition: transform .2s, margin .2s;
 }
-.akd-secim[open] > summary::after { transform: rotate(-135deg); margin-top: 3px; }
+.akd-secim > summary:hover .akd-secim__ok { margin-top: 1px; }
+.akd-secim[open] .akd-secim__ok { transform: rotate(-135deg); margin-top: 4px; }
 .akd-secim__panel {
   position: absolute; z-index: 60; top: calc(100% + 8px); left: 0; width: 300px; padding: 10px;
   background: #fff; border: 1px solid var(--mst-cizgi); border-radius: 16px; box-shadow: 0 18px 40px rgba(0, 0, 0, .18); text-align: left;
