@@ -97,6 +97,7 @@ Her randevu MST CRM'e (caglarozi/mstcrm) düşer:
 - CRM'deki **Web Randevuları** sekmesinde tüm kullanıcılar görür; "Arandı / Ulaşılamadı" olarak işaretlenir.
 - CRM uygulaması yüklü telefonlara bildirim gider.
 - Panelden iptal edilen randevu CRM'de de "İptal" olur.
+- Akademi ön görüşmeleri (`tur: akademi`) aynı sekmede **🎓 Akademi** rozetiyle görünür; yeni kayıtların kaynağı **"Akademi randevu"** olur, telefona "🎓 Yeni akademi randevusu" bildirimi gider (mstcrm PR #3 ve worker yayını gerekir).
 
 Kurulum (bir kez):
 
