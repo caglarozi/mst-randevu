@@ -71,7 +71,7 @@ Windows'ta kısaca: `onizleme.bat`'a çift tıklayın (masaüstüne kısayolu ko
 
 Ardından http://localhost:8788 — eklentinin kendi CSS/JS'i sahte verilerle çalışır; kayıtlar yalnızca sayfada tutulur.
 
-Yazar Kariyer Akademisi: http://localhost:8788/akademi (`demo/akademi.html`).
+Yazar Kariyer Akademisi: http://localhost:8788/akademi (`demo/akademi.html`). Akademi ön görüşme randevusu: http://localhost:8788/akademi-randevu (`demo/akademi-randevu.html`); akademi sayfasındaki “bilgi alın” seçimleri buraya bağlıdır.
 
 MST Yazar Paneli tanıtım sayfası: http://localhost:8788/uygulama (`demo/uygulama.html`, `templates/uygulama.php`'nin çıktısından üretilmiştir; şablon değişince yeniden üretilmeli).
 
@@ -97,6 +97,8 @@ Her randevu MST CRM'e (caglarozi/mstcrm) düşer:
 - CRM'deki **Web Randevuları** sekmesinde tüm kullanıcılar görür; "Arandı / Ulaşılamadı" olarak işaretlenir.
 - CRM uygulaması yüklü telefonlara bildirim gider.
 - Panelden iptal edilen randevu CRM'de de "İptal" olur.
+- **Danışmanların CRM'de elle koyduğu görüşmeler** (yazar kartındaki görüşme tarihi + saati) sitedeki **yazar adayı** takviminde yer tutar: 12:00'ye elle görüşme konduysa o saatte siteden en fazla 1 kişi randevu alabilir, iki görüşme varsa saat dolu görünür. Aradaki saatler içine düştüğü aralığı doldurur (12:15 → 12:00). Eklenti CRM'e webhook adresi ve anahtarıyla `{"olay":"dolu.sorgu"}` gönderir; CRM yalnızca tarih/saat döner (isim, telefon gitmez). Cevap 2 dakika saklanır; CRM cevap veremezse son bilinen liste kullanılır. Siteden alınan randevular iki kez sayılmaz. **Saatler** ekranında bu görüşmeler "(1 CRM)" diye görünür. Akademi takvimi etkilenmez.
+- Akademi ön görüşmeleri (`tur: akademi`) aynı sekmede **🎓 Akademi** rozetiyle görünür; yeni kayıtların kaynağı **"Akademi randevu"** olur, telefona "🎓 Yeni akademi randevusu" bildirimi gider (mstcrm PR #3 ve worker yayını gerekir).
 
 Kurulum (bir kez):
 

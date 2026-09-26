@@ -2,6 +2,7 @@
 //   http://localhost:8788           randevu
 //   http://localhost:8788/uygulama  MST Yazar Paneli tanıtım
 //   http://localhost:8788/akademi   MST Yazar Kariyer Akademisi
+//   http://localhost:8788/akademi-randevu  Akademi ön görüşme randevusu
 //
 // İsteğe bağlı — alınan randevuları gerçek MST CRM'e iletmek için:
 //   node demo-sunucu.js --crm ANAHTAR
@@ -44,6 +45,7 @@ http.createServer((req, res) => {
   if (p === '/') p = '/demo/index.html';
   if (p === '/uygulama') p = '/demo/uygulama.html'; // MST Yazar Paneli tanıtım sayfası
   if (p === '/akademi') p = '/demo/akademi.html';   // MST Yazar Kariyer Akademisi
+  if (p === '/akademi-randevu') p = '/demo/akademi-randevu.html'; // Akademi ön görüşme randevusu
   const file = path.normalize(path.join(root, p));
   if (!file.startsWith(root) || !fs.existsSync(file) || fs.statSync(file).isDirectory()) { res.writeHead(404); return res.end('Bulunamadı'); }
   res.writeHead(200, { 'Content-Type': types[path.extname(file)] || 'application/octet-stream', 'Cache-Control': 'no-store' });
@@ -52,5 +54,6 @@ http.createServer((req, res) => {
   console.log('hazir http://localhost:8788  (randevu)');
   console.log('      http://localhost:8788/uygulama  (MST Yazar Paneli tanıtım)');
   console.log('      http://localhost:8788/akademi   (Yazar Kariyer Akademisi)');
+  console.log('      http://localhost:8788/akademi-randevu  (Akademi ön görüşme randevusu)');
   console.log(CRM_ANAHTAR ? `Randevular CRM'e iletilecek: ${CRM_URL}` : 'CRM\'e iletim kapalı (açmak için: node demo-sunucu.js --crm ANAHTAR)');
 });

@@ -2,7 +2,7 @@
 /**
  * Plugin Name: MST Yazar Adayı Randevu
  * Description: Yazar adaylarının müsait saatlerden görüşme randevusu alması. Kısa kod: [mst_randevu] — ya da sayfa şablonu olarak "MST Randevu (Tam Sayfa)".
- * Version:     1.5.13
+ * Version:     1.5.14
  * Author:      MST Yayıncılık
  * Text Domain: mst-randevu
  * Requires PHP: 7.4
@@ -12,7 +12,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('MST_RANDEVU_VER', '1.5.13');
+define('MST_RANDEVU_VER', '1.5.14');
 define('MST_RANDEVU_DB', 5);
 define('MST_RANDEVU_URL', plugin_dir_url(__FILE__));
 
@@ -843,6 +843,61 @@ class MST_Randevu
         return ob_get_clean();
     }
 
+    /**
+     * Danışmanların MST CRM'de elle koyduğu görüşme saatleri (['Y-m-d H:i', …]).
+     * Webhook adresine {"olay":"dolu.sorgu"} gönderilir; CRM yalnızca tarih/saat döner.
+     * Cevap 2 dakika saklanır. CRM cevap veremezse son bilinen liste kullanılır ve
+     * 1 dakika sonra yeniden denenir; takvim hiçbir durumda CRM yüzünden durmaz.
+     */
+    public static function crm_dolu()
+    {
+        $o = self::opts();
+        if (empty($o['webhook_url']) || empty($o['webhook_token'])) {
+            return [];
+        }
+        $k = 'mst_randevu_crm_dolu';
+        $v = get_transient($k);
+        if (is_array($v)) {
+            return $v;
+        }
+        $res = wp_remote_post($o['webhook_url'], [
+            'timeout' => 4,
+            'headers' => ['Content-Type' => 'application/json; charset=utf-8', 'Authorization' => 'Bearer ' . $o['webhook_token'], 'X-MST-Token' => $o['webhook_token']],
+            'body'    => wp_json_encode(['olay' => 'dolu.sorgu', 'kaynak' => 'mst-randevu', 'site' => home_url()]),
+        ]);
+        $j = (!is_wp_error($res) && wp_remote_retrieve_response_code($res) === 200) ? json_decode(wp_remote_retrieve_body($res), true) : null;
+        if (is_array($j) && !empty($j['ok']) && isset($j['dolu']) && is_array($j['dolu'])) {
+            $liste = [];
+            foreach ($j['dolu'] as $d) {
+                $t = (string) ($d['tarih'] ?? '') . ' ' . (string) ($d['saat'] ?? '');
+                if (preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/', $t)) {
+                    $liste[] = $t;
+                }
+            }
+            update_option('mst_randevu_crm_dolu_son', $liste, false);
+            set_transient($k, $liste, 2 * MINUTE_IN_SECONDS);
+            return $liste;
+        }
+        $son = get_option('mst_randevu_crm_dolu_son', []);
+        $son = is_array($son) ? $son : [];
+        set_transient($k, $son, MINUTE_IN_SECONDS);
+        return $son;
+    }
+
+    /** CRM'deki elle konmuş görüşmelerden kaçı bu saatin aralığına düşüyor (12:15 → 12:00–12:30). */
+    public static function crm_adet($baslangic, $sure, $liste)
+    {
+        $bas = substr($baslangic, 0, 16);
+        $bit = (new DateTime($baslangic, wp_timezone()))->modify('+' . max(1, (int) $sure) . ' minutes')->format('Y-m-d H:i');
+        $n = 0;
+        foreach ($liste as $t) {
+            if ($t >= $bas && $t < $bit) {
+                $n++;
+            }
+        }
+        return $n;
+    }
+
     /** Açık saatleri (dolu olanlar dahil) AJAX ile verir; böylece sayfa önbelleğe alınsa bile saatler hep günceldir. */
     public static function ajax_slots()
     {
@@ -862,6 +917,8 @@ class MST_Randevu
             $max
         ));
 
+        // Yazar adayı saatlerinde CRM'de danışmanların elle koyduğu görüşmeler de yer tutar
+        $crm = $tur === 'yazar' ? self::crm_dolu() : [];
         $out = [];
         foreach ($rows as $r) {
             $out[] = [
@@ -872,7 +929,7 @@ class MST_Randevu
                 'no'     => self::fmt($r->baslangic, 'j M'),
                 'saat'   => self::fmt($r->baslangic, 'H:i'),
                 'sure'   => (int) $r->sure,
-                'kalan'  => max(0, (int) $r->kapasite - (int) $r->dolu),
+                'kalan'  => max(0, (int) $r->kapasite - (int) $r->dolu - ($crm ? self::crm_adet($r->baslangic, $r->sure, $crm) : 0)),
             ];
         }
 
@@ -929,7 +986,8 @@ class MST_Randevu
         $min = self::now()->modify('+' . (int) $o['min_saat'] . ' hours')->format('Y-m-d H:i:s');
 
         // Aynı numarayla aynı türde ileri tarihli ikinci randevu alınmasın (yazar adayı ve akademi ayrı)
-        $tur = $wpdb->get_var($wpdb->prepare("SELECT tur FROM $ts WHERE id = %d", $id)) ?: 'yazar';
+        $slot = $wpdb->get_row($wpdb->prepare("SELECT tur, baslangic, sure FROM $ts WHERE id = %d", $id));
+        $tur  = $slot && $slot->tur ? $slot->tur : 'yazar';
         $var = $wpdb->get_var($wpdb->prepare(
             "SELECT s.baslangic FROM $tr r JOIN $ts s ON s.id = r.slot_id
              WHERE r.telefon = %s AND r.durum = 'aktif' AND s.tur = %s AND s.baslangic > %s LIMIT 1",
@@ -941,10 +999,14 @@ class MST_Randevu
             wp_send_json_error(['mesaj' => sprintf('Bu numarayla zaten %s tarihine randevunuz var.', self::fmt($var))]);
         }
 
+        // CRM'de danışmanların bu saate elle koyduğu görüşmeler (yalnızca yazar adayı saatleri)
+        $crm = ($slot && $tur === 'yazar') ? self::crm_adet($slot->baslangic, $slot->sure, self::crm_dolu()) : 0;
+
         // Atomik yer ayırma: sınır dolmamışsa dolu sayısını 1 artırır (aynı anda gelen başvurular sınırı aşamaz)
         $ok = $wpdb->query($wpdb->prepare(
-            "UPDATE $ts SET dolu = dolu + 1 WHERE id = %d AND durum = 'acik' AND dolu < kapasite AND baslangic > %s",
+            "UPDATE $ts SET dolu = dolu + 1 WHERE id = %d AND durum = 'acik' AND dolu + %d < kapasite AND baslangic > %s",
             $id,
+            $crm,
             $min
         ));
         if (!$ok) {
@@ -1478,15 +1540,17 @@ class MST_Randevu
                     <tbody>
                     <?php if (!$rows) : ?>
                         <tr><td colspan="6">Henüz saat eklenmedi.</td></tr>
-                    <?php endif; foreach ($rows as $r) :
+                    <?php endif; $crm_liste = $rows ? self::crm_dolu() : []; foreach ($rows as $r) :
                         $gecmis = $r->baslangic <= $now_s;
-                        $tam    = (int) $r->dolu >= (int) $r->kapasite; ?>
+                        $crm_n  = ($r->tur === 'yazar' && !$gecmis && $crm_liste) ? self::crm_adet($r->baslangic, $r->sure, $crm_liste) : 0;
+                        $dolu_n = (int) $r->dolu + $crm_n;
+                        $tam    = $dolu_n >= (int) $r->kapasite; ?>
                         <tr style="<?php echo $gecmis ? 'opacity:.5' : ''; ?>">
                             <th class="check-column"><input class="mst-cb" type="checkbox" name="ids[]" value="<?php echo (int) $r->id; ?>"></th>
                             <td><?php echo esc_html(self::fmt($r->baslangic, 'j M Y D')); ?></td>
                             <td><strong><?php echo esc_html(self::fmt($r->baslangic, 'H:i')); ?></strong> <small>(<?php echo (int) $r->sure; ?> dk)</small></td>
                             <td><?php echo self::tur_rozet($r->tur); ?></td>
-                            <td><span style="font-weight:600;color:<?php echo $tam ? '#b32d2e' : ((int) $r->dolu ? '#996800' : '#008a20'); ?>"><?php echo (int) $r->dolu; ?> / <?php echo (int) $r->kapasite; ?></span><?php echo $tam ? ' — dolu' : ''; ?></td>
+                            <td><span style="font-weight:600;color:<?php echo $tam ? '#b32d2e' : ($dolu_n ? '#996800' : '#008a20'); ?>"><?php echo $dolu_n; ?> / <?php echo (int) $r->kapasite; ?></span><?php echo $tam ? ' — dolu' : ''; ?><?php echo $crm_n ? ' <small style="color:#646970" title="Danışmanların MST CRM\'de elle koyduğu görüşme">(' . $crm_n . ' CRM)</small>' : ''; ?></td>
                             <td><?php echo $r->durum === 'kapali' ? '<span style="color:#646970">Kapalı</span>' : 'Açık'; ?></td>
                         </tr>
                     <?php endforeach; ?>
