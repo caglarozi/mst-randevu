@@ -564,6 +564,13 @@ html.cb-perde-acik { overflow: hidden; }
 .cb .cb-gosterim__bilgi h3 { margin-top: 22px; font-family: var(--cb-serif); font-size: clamp(68px, 7.5vw, 106px); font-weight: 600; letter-spacing: -.045em; line-height: .96; text-transform: none; background: none; color: var(--cb-yazi); }
 .cb-gosterim__lead { max-width: 500px; margin-top: 28px !important; font: 600 clamp(30px, 3vw, 40px)/1.12 var(--cb-serif); color: #d7cab7; }
 .cb-gosterim__metin { max-width: 460px; margin-top: 20px !important; font-size: 16px; line-height: 1.75; color: var(--cb-soluk); }
+/* Çocuk bölümü için afiş kartı */
+.cb-gosterim--cocuk { background: linear-gradient(135deg, #1d252e, #131920); box-shadow: 0 20px 60px rgba(0,0,0,.15), inset 0 0 0 1px rgba(255,255,255,.06); }
+.cb-gosterim--cocuk .cb-gosterim__ust { color: #64b5f6; }
+.cb-gosterim--cocuk .cb-gosterim__ust span { border-color: rgba(255,255,255,.2); color: rgba(255,255,255,.6); }
+.cb .cb-gosterim--cocuk h3 { font-family: var(--mst-font); color: #fff; letter-spacing: -.03em; }
+.cb-gosterim--cocuk .cb-gosterim__lead { font-family: var(--mst-font); color: #e3f2fd; }
+.cb-gosterim--cocuk .cb-gosterim__metin { color: rgba(255,255,255,.7); }
 .cb-gosterim__cta { align-items: center; margin-top: 34px; gap: 24px; }
 .cb-gosterim__birincil { display: inline-flex; align-items: center; justify-content: space-between; gap: 24px; min-height: 52px; padding: 12px 20px; border: 0; border-radius: 12px; background: #d6c9b6; color: #25201b; font: 700 15px/1 var(--cb-govde); cursor: pointer; transition: background .2s, transform .2s; }
 .cb-gosterim__birincil:hover { background: #e2d7c8; transform: translateY(-2px); }
