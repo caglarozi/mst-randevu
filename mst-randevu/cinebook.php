@@ -51,16 +51,17 @@ class MST_CineBook
             'fragman_url'  => '',   // öne çıkan fragman (YouTube)
             'fragman_ad'   => 'Gökbörü',
             'cocuk_url'    => '',   // MST Çocuk örnek çizgi film (YouTube)
-            'youtube'      => '',
-            'instagram'    => '',
-            'facebook'     => '',
-            'tiktok'       => '',
+            'youtube'      => 'https://www.youtube.com/@cinebookoffical',
+            'instagram'    => 'https://www.instagram.com/cinebookofficial',
+            'facebook'     => 'https://www.facebook.com/search/top?q=cinebookoffical',
+            'tiktok'       => 'https://www.tiktok.com/@cinebookaffical',
         ];
     }
 
     public static function opts()
     {
-        return wp_parse_args((array) get_option(self::OPT, []), self::defaults());
+        // Boş bırakılan alanlarda varsayılan (CineBook hesapları) kullanılır
+        return wp_parse_args(array_filter((array) get_option(self::OPT, []), 'strlen'), self::defaults());
     }
 
     /** YouTube adresinden video kimliği (watch?v=, youtu.be/, shorts/, embed/). */
@@ -74,6 +75,10 @@ class MST_CineBook
     {
         $yol = trim((string) wp_parse_url($url, PHP_URL_PATH), '/');
         $yol = explode('/', $yol)[0] ?? '';
+        if ($yol === 'search') { // facebook.com/search/top?q=ad
+            parse_str((string) wp_parse_url($url, PHP_URL_QUERY), $q);
+            $yol = $q['q'] ?? '';
+        }
         return $yol === '' ? '' : '@' . ltrim($yol, '@');
     }
 
