@@ -60,15 +60,27 @@ Yeni sayfa → başlık (ör. “Akademi Ön Görüşme”) → *Şablon →* **
 - Sayfa yayımlanınca akademi sayfasındaki “bilgi alın” düğmeleri küçük bir seçim kutusu açar: **WhatsApp’tan yazın** ya da **Ön görüşme randevusu alın** (telefonda alttan açılır). Sayfa yoksa düğmeler eskisi gibi doğrudan WhatsApp’a gider; üstteki “Ön Görüşme Al” da yazar randevu sayfasına döner.
 - **Randevular** listesinde Tür sütunu ve Tümü / Yazar adayı / Akademi süzgeci vardır. Bildirim e-postası ve CRM’e giden veride tür (`tur`: `yazar` | `akademi`) yer alır.
 
+## CineBook ve MST Çocuk sayfası (taslak)
+
+Yeni sayfa → başlık (ör. “CineBook”) → *Şablon →* **MST CineBook ve MST Çocuk (Tam Sayfa)** → Yayımla.
+
+- CineBook tarafı sinemanın kendi malzemesiyle kurulur (cinebook.css / cinebook.js; büyük CINEBOOK başlığı Cinzel, diğer yazılar MST Çocuk gibi sitenin yazı tipi (Manrope); kurumsal alt bilgi akademi.css'ten gelir): kamera vizörü girişi (açılışta “ışıklar yanıyor”: karanlık ekran aydınlanır, yazılar sırayla süzülür; arkada yavaş gezinen altın ışık lekeleri ve süzülen toz; üstte bölüm menüsü bandı, gren; “Yeni bir çağ”; fragman adresi varsa arka planda sessiz döner, fragman görseli arka plan olur, “Şimdi izle” sesli açar; hareketi azalt açıksa arka plan oynamaz), **CineBook nedir?** 35 mm film şeridi (kenar yazıları, köşe işaretli kareler; kaydırınca yazı süzülür, şerit sağdan kayarak girer, kareler sırayla yanar; sayfa kaydıkça şerit film makinesindeki gibi ilerler, üstünden ışık sızıntısı geçer, kareye gelince projektör ışığı vurur), ampullü **Vizyonda** tabelası; videosu olan ilk yapım “gösterim” kartında doğrudan sayfada oynar (Instagram gömmesi bölüm yaklaşınca yüklenir, yüklenemezse “Instagram’da izleyin” bağlantısı kalır), diğerleri “Yakında” afişleri (Meçhul Tren: gece, raylar ve yaklaşan tren farı; “Çok yakında” damgası) (iki tür varsa Tümü / CineBook / MST Çocuk süzgeci; son kutu sinema bileti “Sıradaki yapım: sizin kitabınız”), **Stüdyo** (akan jenerik) ve klaketlerle **Kitapların filme yolculuğu**, açık ve renkli **MST Çocuk** bölümü ve **Başvuru** (başvuru formu, sosyal medya, SSS). Sayfada tek H1 vardır; paylaşım kartı `assets/paylasim-cinebook.jpg`.
+- Ziyaretçiye yer tutucu gösterilmez: video yoksa “Yakında”, sosyal adres yoksa o satır hiç görünmez. Yöneticiler eksik alanlar için kesikli çerçeveli bir not görür.
+- **Yazar Randevu → CineBook Ayarları**: öne çıkan video (YouTube ya da Instagram; Instagram yalnızca pencerede açılır, arka planda dönmez), adı, etiketi (ör. “İlk bölüm”) ve görseli (ortam kitaplığından), MST Çocuk videosu, **Yapımlar** listesi (ad, tür, etiket, yıl, YouTube, afiş; boşsa öne çıkan fragman tek yapım olur) ve YouTube / Instagram / Facebook / TikTok adresleri (boş bırakılırsa CineBook hesapları kullanılır). Videolar tıklanınca yüklenir.
+- **Başvuru formu**: tür (CineBook / MST Çocuk), eser adı, ad soyad, telefon, e-posta (isteğe bağlı), kısa özet, KVKK onayı. Başvurular **Yazar Randevu → CineBook Başvuruları**'nda listelenir, bildirim e-postasına gider ve webhook'a `cinebook.basvuru` olayı olarak iletilir (CRM tarafı henüz bu olayı işlemiyor). `?tur=cocuk` ile gelinirse MST Çocuk seçili gelir.
+- Arama başlığı/açıklaması `MST_Randevu::SEO['cinebook']`'tadır.
+
 ## Yerel önizleme (WordPress olmadan)
 
 ```bash
 node demo-sunucu.js
 ```
 
-Windows'ta kısaca: `onizleme.bat`'a çift tıklayın (masaüstüne kısayolu konabilir). En güncel `main-dayiyo`'yu indirir, önizleme kapalıysa açar ve Akademi sayfasını gösterir.
+Windows'ta kısaca: `onizleme.bat`'a çift tıklayın (masaüstüne kısayolu konabilir). En güncel `main-dayiyo`'yu indirir ve **canlı önizlemeyi** açar (`node demo-sunucu.js --canli`): açık kaldığı sürece her 15 saniyede GitHub'a bakar, yeni sürüm gelince kendiliğinden indirir ve tarayıcıdaki sayfayı kendiliğinden yeniler; zip indirmeye gerek kalmaz. Varsayılan sayfa CineBook'tur; başka sayfa için `onizleme.bat akademi` (randevu, uygulama, akademi, akademi-randevu, cinebook). Klasörde elle yapılan değişiklikler güncellemede silinir.
 
 Ardından http://localhost:8788 — eklentinin kendi CSS/JS'i sahte verilerle çalışır; kayıtlar yalnızca sayfada tutulur.
+
+CineBook ve MST Çocuk: http://localhost:8788/cinebook (`demo/cinebook.html`).
 
 Yazar Kariyer Akademisi: http://localhost:8788/akademi (`demo/akademi.html`). Akademi ön görüşme randevusu: http://localhost:8788/akademi-randevu (`demo/akademi-randevu.html`); akademi sayfasındaki “bilgi alın” seçimleri buraya bağlıdır.
 
@@ -81,6 +93,7 @@ MST Yazar Paneli tanıtım sayfası: http://localhost:8788/uygulama (`demo/uygul
 | `mst-randevu/mst-randevu.php` | Eklenti: veritabanı, AJAX, bildirim, yönetim paneli |
 | `mst-randevu/templates/tam-sayfa.php` | "MST Randevu (Tam Sayfa)" ve "MST Akademi Ön Görüşme Randevusu (Tam Sayfa)" sayfa şablonları |
 | `mst-randevu/akademi.php` + `templates/akademi.php` + `assets/akademi.css/js` | Yazar Kariyer Akademisi bilgi sayfası ve ayarları |
+| `mst-randevu/cinebook.php` + `templates/cinebook.php` + `assets/cinebook.css/js` | CineBook ve MST Çocuk sayfası, ayarları ve başvuruları |
 | `mst-randevu/templates/uygulama.php` + `assets/uygulama.css` | "MST Yazar Paneli Tanıtım (Tam Sayfa)" şablonu — yazar uygulamasının tanıtım sayfası |
 | `mst-randevu/assets/` | CSS, JS, logo |
 | `mst-randevu/lib/plugin-update-checker/` | GitHub'dan güncelleme kütüphanesi (Plugin Update Checker 5.7, MIT) |

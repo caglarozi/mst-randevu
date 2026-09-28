@@ -1,21 +1,20 @@
 @echo off
-rem MST onizleme: cift tiklayin. En guncel hali indirir, onizleme kapaliysa acar,
-rem tarayicida Akademi sayfasini gosterir. Bu klasorde elle yapilan degisiklikler silinir.
+rem MST yerel onizleme: cift tiklayin.
+rem Bu klasordeki calismayi korur; GitHub'dan indirip dosyalari sifirlamaz.
+rem Demo veya stil dosyalari degisince acik sayfayi yeniler.
+rem Baska sayfa icin: onizleme.bat akademi   (randevu, uygulama, akademi, akademi-randevu, cinebook)
 chcp 65001 >nul
 cd /d "%~dp0"
-echo En guncel hal indiriliyor...
-git fetch -q origin main-dayiyo || goto hata
-git checkout -q main-dayiyo || goto hata
-git reset -q --hard origin/main-dayiyo || goto hata
-netstat -ano | findstr ":8788" | findstr "LISTENING" >nul
-if errorlevel 1 (
-  echo Onizleme baslatiliyor...
-  start "MST onizleme - kapatmayin" cmd /k node demo-sunucu.js
-  timeout /t 2 >nul
-)
-start "" http://localhost:8788/akademi
+set "SAYFA=%~1"
+if "%SAYFA%"=="" set "SAYFA=cinebook"
+if /i "%SAYFA%"=="randevu" set "SAYFA="
+
+where node >nul 2>nul || (echo Node.js bulunamadi: https://nodejs.org adresinden kurun. & pause & exit /b 1)
+
+rem Eski onizleme aciksa kapat, yenisini baslat
+for /f "tokens=5" %%p in ('netstat -ano ^| findstr ":8788" ^| findstr "LISTENING"') do taskkill /pid %%p /f >nul 2>nul
+echo Canli onizleme baslatiliyor...
+start "MST yerel onizleme - kapatmayin" /min cmd /k node demo-sunucu.js --canli
+timeout /t 2 >nul
+start "" http://localhost:8788/%SAYFA%
 exit /b 0
-:hata
-echo.
-echo Guncelleme yapilamadi. Bu pencerenin ekran goruntusunu gonderin.
-pause
