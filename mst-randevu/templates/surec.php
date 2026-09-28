@@ -128,6 +128,22 @@
         opacity:0;
         animation:fadeUp 2.5s var(--ease-std) 1.5s forwards;
     }
+    .hero__img-wrap {
+        margin-top: 56px;
+        opacity:0;
+        animation:fadeUp 2.5s var(--ease-std) 1.8s forwards;
+        display: flex;
+        justify-content: center;
+        padding: 0 16px;
+    }
+    .hero__img-wrap img {
+        max-width: 100%;
+        width: 800px;
+        height: auto;
+        border-radius: 16px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.6), 0 0 60px rgba(197,160,89,0.1);
+        border: 1px solid rgba(255,255,255,0.05);
+    }
     .btn {
         display:inline-flex;
         align-items:center;
@@ -630,6 +646,9 @@
         </a>
     </div>
 
+    <div class="hero__img-wrap">
+        <img src="<?php echo MST_RANDEVU_URL; ?>assets/surec-hero.jpg" alt="Kitap Yayınlama Süreci" loading="lazy">
+    </div>
 
 </section>
 

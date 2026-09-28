@@ -128,6 +128,24 @@
         opacity:0;
         animation:fadeUp 2.5s var(--ease-std) 1.5s forwards;
     }
+    .hero__img-wrap {
+        margin-top: 56px;
+        opacity:0;
+        animation:fadeUp 2.5s var(--ease-std) 1.8s forwards;
+        display: flex;
+        justify-content: center;
+        width: 100%;
+    }
+    .hero__img-wrap img {
+        width: 100%;
+        max-width: 1200px;
+        height: auto;
+        border-radius: 0;
+        box-shadow: none;
+        border: none;
+        mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+        -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+    }
     .btn {
         display:inline-flex;
         align-items:center;
@@ -630,6 +648,9 @@
         </a>
     </div>
 
+    <div class="hero__img-wrap">
+        <img src="/mst-randevu/assets/surec-hero.jpg" alt="Kitap Yayınlama Süreci" loading="lazy">
+    </div>
 
 </section>
 
