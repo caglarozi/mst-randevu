@@ -134,15 +134,16 @@
         animation:fadeUp 2.5s var(--ease-std) 1.8s forwards;
         display: flex;
         justify-content: center;
-        padding: 0 16px;
+        width: 100%;
     }
     .hero__img-wrap img {
-        max-width: 100%;
-        width: 800px;
+        width: 100%;
+        max-width: 1200px;
         height: auto;
-        border-radius: 16px;
-        box-shadow: 0 20px 40px rgba(0,0,0,0.6), 0 0 60px rgba(197,160,89,0.1);
-        border: 1px solid rgba(255,255,255,0.05);
+        border-radius: 0;
+        box-shadow: none;
+        border: none;
+        mix-blend-mode: lighten;
     }
     .btn {
         display:inline-flex;
@@ -260,6 +261,24 @@
         transition: height .1s ease-out;
         bottom:auto;
     }
+
+    .tl-image {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        opacity: 0.9;
+    }
+    .tl-image img {
+        max-width: 100%;
+        max-height: 280px;
+        object-fit: contain;
+        filter: drop-shadow(0 10px 20px rgba(0,0,0,0.4));
+        transition: transform 0.3s var(--ease-std);
+    }
+    .tl-image img:hover {
+        transform: translateY(-5px) scale(1.05);
+    }
     @media(max-width:820px){ .timeline::before, .timeline::after {left:28px;} }
 
     .tl-item {
@@ -273,16 +292,16 @@
     }
     .tl-item.visible{opacity:1;transform:none;}
     .tl-item:nth-child(odd)  .tl-card{grid-column:1;grid-row:1;}
-    .tl-item:nth-child(odd)  .tl-empty{grid-column:3;}
+    .tl-item:nth-child(odd)  .tl-image{grid-column:3;}
     .tl-item:nth-child(even) .tl-card{grid-column:3;grid-row:1;}
-    .tl-item:nth-child(even) .tl-empty{grid-column:1;}
+    .tl-item:nth-child(even) .tl-image{grid-column:1;}
     .tl-node{grid-column:2;grid-row:1;display:flex;justify-content:center;padding-top:32px;position:relative;z-index:2;}
     @media(max-width:820px){
         .timeline{padding-left:80px;}
         .tl-item{grid-template-columns:none;display:block;position:relative;padding-left:0;}
         .tl-item:nth-child(even) .tl-card,
         .tl-item:nth-child(odd)  .tl-card{grid-column:unset;}
-        .tl-empty{display:none;}
+        .tl-image{display:none;}
         .tl-node{position:absolute;top:24px;left:-80px;grid-column:unset;padding-top:0;}
     }
 
@@ -678,12 +697,12 @@
                     </div>
                 </div>
                 <div class="tl-node"><div class="tl-dot">01</div></div>
-                <div class="tl-empty"></div>
+                <div class="tl-image"><img src="<?php echo MST_RANDEVU_URL; ?>assets/adim-1.png" alt="Adım Karakteri" onerror="this.src='https://placehold.co/400x300/0f111a/d4af37?text=Adim+Gorseli'"></div>
             </div>
 
             <!-- Adım 2 -->
             <div class="tl-item">
-                <div class="tl-empty"></div>
+                <div class="tl-image"><img src="<?php echo MST_RANDEVU_URL; ?>assets/adim-2.png" alt="Adım Karakteri" onerror="this.src='https://placehold.co/400x300/0f111a/d4af37?text=Adim+Gorseli'"></div>
                 <div class="tl-node"><div class="tl-dot">02</div></div>
                 <div class="tl-card">
                     <div class="tl-card__badge">Sözleşme</div>
@@ -716,12 +735,12 @@
                     </div>
                 </div>
                 <div class="tl-node"><div class="tl-dot">03</div></div>
-                <div class="tl-empty"></div>
+                <div class="tl-image"><img src="<?php echo MST_RANDEVU_URL; ?>assets/adim-3.png" alt="Adım Karakteri" onerror="this.src='https://placehold.co/400x300/0f111a/d4af37?text=Adim+Gorseli'"></div>
             </div>
 
             <!-- Adım 4 -->
             <div class="tl-item">
-                <div class="tl-empty"></div>
+                <div class="tl-image"><img src="<?php echo MST_RANDEVU_URL; ?>assets/adim-4.png" alt="Adım Karakteri" onerror="this.src='https://placehold.co/400x300/0f111a/d4af37?text=Adim+Gorseli'"></div>
                 <div class="tl-node"><div class="tl-dot">04</div></div>
                 <div class="tl-card">
                     <div class="tl-card__badge">Yasal Süreç</div>
@@ -754,12 +773,12 @@
                     </div>
                 </div>
                 <div class="tl-node"><div class="tl-dot">05</div></div>
-                <div class="tl-empty"></div>
+                <div class="tl-image"><img src="<?php echo MST_RANDEVU_URL; ?>assets/adim-5.png" alt="Adım Karakteri" onerror="this.src='https://placehold.co/400x300/0f111a/d4af37?text=Adim+Gorseli'"></div>
             </div>
 
             <!-- Adım 6 -->
             <div class="tl-item">
-                <div class="tl-empty"></div>
+                <div class="tl-image"><img src="<?php echo MST_RANDEVU_URL; ?>assets/adim-6.png" alt="Adım Karakteri" onerror="this.src='https://placehold.co/400x300/0f111a/d4af37?text=Adim+Gorseli'"></div>
                 <div class="tl-node"><div class="tl-dot">06</div></div>
                 <div class="tl-card">
                     <div class="tl-card__badge">Dağıtım</div>
@@ -792,7 +811,7 @@
                     </div>
                 </div>
                 <div class="tl-node"><div class="tl-dot">07</div></div>
-                <div class="tl-empty"></div>
+                <div class="tl-image"><img src="<?php echo MST_RANDEVU_URL; ?>assets/adim-7.png" alt="Adım Karakteri" onerror="this.src='https://placehold.co/400x300/0f111a/d4af37?text=Adim+Gorseli'"></div>
             </div>
 
         </div>
