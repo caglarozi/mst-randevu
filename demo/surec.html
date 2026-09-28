@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yayıncılık Sürecimiz | MST Yayıncılık</title>
+    <meta name="description" content="Sözleşmeden raflara — MST Yayıncılık ile kitabınızın tüm süreci 30 günde, şeffaf ve sizinle.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/mst-randevu/assets/randevu.css">
+
+    <style>
+    /* ==============================
+       TOKENS & RESET
+    ============================== */
+    :root {
+        --dark:       #090a0e;
+        --dark-2:     #0f111a;
+        --dark-3:     #171926;
+        --dark-4:     #1e2130;
+        --gold:       #c5a059;
+        --gold-light: #d4b572;
+        --gold-dim:   rgba(197,160,89,.12);
+        --gold-glow:  rgba(197,160,89,.35);
+        --white:      #f0f1f5;
+        --muted:      #8892a0;
+        --muted-2:    #5c6678;
+        --border:     rgba(255,255,255,.07);
+        --border-g:   rgba(197,160,89,.22);
+        --r-card:     20px;
+        --r-xl:       32px;
+        --ease:       cubic-bezier(.22,.68,0,1.2);
+        --ease-std:   cubic-bezier(.25,.8,.25,1);
+    }
+    *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+    html { scroll-behavior:smooth; }
+    body {
+        font-family:'Manrope',sans-serif;
+        background:var(--dark);
+        color:var(--white);
+        overflow-x:hidden;
+        line-height:1.65;
+    }
+    a { text-decoration:none; color:inherit; }
+    img { display:block; max-width:100%; }
+
+    /* ==============================
+       HERO
+    ============================== */
+    .hero {
+        position:relative;
+        z-index:1;
+        min-height:100svh;
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        justify-content:center;
+        text-align:center;
+        padding:140px 24px 80px;
+        overflow:hidden;
+    }
+    .hero__orb {
+        display: none;
+    }
+    .hero__kicker {
+        display:inline-flex;
+        align-items:center;
+        gap:8px;
+        background:rgba(255,255,255,.03);
+        color:var(--gold);
+        padding:8px 18px;
+        border-radius:99px;
+        font-size:.82rem;
+        font-weight:600;
+        letter-spacing:.08em;
+        text-transform:uppercase;
+        margin-bottom:2rem;
+        opacity:0;
+        animation:fadeUp .9s var(--ease-std) .2s forwards;
+    }
+    .hero__kicker::before {
+        content:'';
+        display:inline-block;
+        width:6px;height:6px;
+        border-radius:50%;
+        background:var(--gold);
+        box-shadow:0 0 8px rgba(197,160,89,.6);
+        animation:blinkDot 4s ease-in-out infinite;
+    }
+    @keyframes blinkDot {0%,100%{opacity:1}50%{opacity:.5}}
+    .hero__title {
+        font-size:clamp(2.8rem,7vw,6rem);
+        font-weight:900;
+        line-height:1.05;
+        letter-spacing:-.03em;
+        margin-bottom:1.6rem;
+        opacity:0;
+        animation:textReveal 2.8s cubic-bezier(0.2, 0.8, 0.2, 1) .2s forwards;
+    }
+    @keyframes textReveal {
+        0% { opacity: 0; transform: translateY(30px) scale(0.95); filter: blur(8px); }
+        100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+    }
+    .hero__title span {
+        background:linear-gradient(135deg,#fff 0%,rgba(255,255,255,.55) 100%);
+        -webkit-background-clip:text;
+        -webkit-text-fill-color:transparent;
+    }
+    .hero__title em {
+        font-style:normal;
+        background:linear-gradient(135deg,var(--gold) 10%,#e8cc82 60%,var(--gold-light) 100%);
+        -webkit-background-clip:text;
+        -webkit-text-fill-color:transparent;
+    }
+    .hero__sub {
+        font-size:clamp(1rem,2vw,1.25rem);
+        color:var(--muted);
+        max-width:680px;
+        margin:0 auto 2.8rem;
+        opacity:0;
+        animation:fadeUp 2.5s var(--ease-std) 1s forwards;
+    }
+    .hero__cta {
+        display:flex;
+        gap:14px;
+        flex-wrap:wrap;
+        justify-content:center;
+        opacity:0;
+        animation:fadeUp 2.5s var(--ease-std) 1.5s forwards;
+    }
+    .btn {
+        display:inline-flex;
+        align-items:center;
+        gap:8px;
+        padding:14px 28px;
+        border-radius:99px;
+        font-family:inherit;
+        font-weight:700;
+        font-size:1rem;
+        cursor:pointer;
+        border:none;
+        transition:all .3s var(--ease-std);
+        position:relative;
+        overflow:hidden;
+    }
+    .btn--gold { background:var(--gold); color:#0a0a0a; }
+    .btn--gold::after {
+        content:'';
+        position:absolute;
+        top:0; left:-100%;
+        width:50%; height:100%;
+        background:linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,.6) 50%, rgba(255,255,255,0) 100%);
+        transform:skewX(-25deg);
+        animation:sweepGlow 5s infinite;
+    }
+    @keyframes sweepGlow {
+        0%, 15% { left: -100%; }
+        25%, 100% { left: 200%; }
+    }
+    .btn--gold:hover { background:var(--gold-light); box-shadow:0 0 30px var(--gold-glow); transform:translateY(-2px); }
+    .btn--ghost { background:rgba(255,255,255,.06); color:var(--white); border:1px solid var(--border); backdrop-filter:blur(10px); }
+    .btn--ghost:hover { background:rgba(255,255,255,.1); border-color:rgba(255,255,255,.2); transform:translateY(-2px); }
+    .hero__scroll {
+        position:absolute;
+        bottom:36px;
+        left:50%;
+        transform:translateX(-50%);
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        gap:8px;
+        color:var(--muted-2);
+        font-size:.75rem;
+        letter-spacing:.1em;
+        text-transform:uppercase;
+        opacity:0;
+        animation:fadeUp .9s var(--ease-std) 1.2s forwards;
+    }
+    .hero__scroll-line {
+        width:1px;height:48px;
+        background:linear-gradient(to bottom,transparent,var(--gold),transparent);
+        animation:scrollLine 2s ease-in-out infinite;
+    }
+    @keyframes scrollLine{0%,100%{opacity:.3;transform:scaleY(1)}50%{opacity:1;transform:scaleY(1.2)}}
+
+
+
+    /* ==============================
+       SECTION COMMON
+    ============================== */
+    .section { position:relative;z-index:1;padding:120px 24px; }
+    .section--alt {
+        background: linear-gradient(
+            to bottom,
+            var(--dark) 0%,
+            var(--dark-2) 10%,
+            var(--dark-2) 85%,
+            var(--dark) 100%
+        );
+    }
+    .wrap { max-width:1200px;margin:0 auto; }
+    .section__label {
+        display:inline-flex;
+        align-items:center;
+        gap:8px;
+        font-size:.78rem;
+        font-weight:700;
+        letter-spacing:.12em;
+        text-transform:uppercase;
+        color:var(--gold);
+        margin-bottom:1rem;
+    }
+    .section__label::before { content:'';width:24px;height:1px;background:var(--gold); }
+    .section__title {
+        font-size:clamp(2rem,4.5vw,3.5rem);
+        font-weight:800;
+        line-height:1.1;
+        letter-spacing:-.02em;
+        margin-bottom:1.2rem;
+    }
+    .section__title em { font-style:normal; color:var(--gold); }
+    .section__desc { font-size:1.1rem; color:var(--muted); max-width:600px; line-height:1.7; margin-bottom:3rem; }
+
+    /* ==============================
+       TIMELINE
+    ============================== */
+    .timeline { position:relative; padding:60px 0 0; }
+    .timeline::before, .timeline::after {
+        content:'';
+        position:absolute;
+        top:0; bottom:0;
+        left:50%;
+        transform:translateX(-50%);
+        width:2px;
+        border-radius:99px;
+    }
+    .timeline::before {
+        background:rgba(255,255,255,.05);
+    }
+    .timeline::after {
+        background:linear-gradient(to bottom, var(--gold) 0%, rgba(197,160,89,.4) 100%);
+        height: var(--tl-progress, 0%);
+        box-shadow: 0 0 16px rgba(197,160,89,.4);
+        transition: height .1s ease-out;
+        bottom:auto;
+    }
+    @media(max-width:820px){ .timeline::before, .timeline::after {left:28px;} }
+
+    .tl-item {
+        display:grid;
+        grid-template-columns:1fr 72px 1fr;
+        gap:0 32px;
+        margin-bottom:80px;
+        opacity:0;
+        transform:translateY(36px);
+        transition:opacity .9s ease-out, transform .9s ease-out;
+    }
+    .tl-item.visible{opacity:1;transform:none;}
+    .tl-item:nth-child(odd)  .tl-card{grid-column:1;grid-row:1;}
+    .tl-item:nth-child(odd)  .tl-empty{grid-column:3;}
+    .tl-item:nth-child(even) .tl-card{grid-column:3;grid-row:1;}
+    .tl-item:nth-child(even) .tl-empty{grid-column:1;}
+    .tl-node{grid-column:2;grid-row:1;display:flex;justify-content:center;padding-top:32px;position:relative;z-index:2;}
+    @media(max-width:820px){
+        .timeline{padding-left:80px;}
+        .tl-item{grid-template-columns:none;display:block;position:relative;padding-left:0;}
+        .tl-item:nth-child(even) .tl-card,
+        .tl-item:nth-child(odd)  .tl-card{grid-column:unset;}
+        .tl-empty{display:none;}
+        .tl-node{position:absolute;top:24px;left:-80px;grid-column:unset;padding-top:0;}
+    }
+
+    .tl-dot {
+        width:56px;height:56px;
+        border-radius:50%;
+        background: linear-gradient(145deg, var(--dark-3), var(--dark-4));
+        border:none;
+        display:flex;align-items:center;justify-content:center;
+        font-size:1.2rem;font-weight:800;
+        color:var(--gold);
+        position:relative;
+        transition:all .6s ease;
+        flex-shrink:0;
+        box-shadow:
+            0 0 0 1px rgba(197,160,89,.12),
+            0 0 20px rgba(197,160,89,.06),
+            0 4px 12px rgba(0,0,0,.3);
+    }
+    .tl-dot::after {
+        content:'';
+        position:absolute;
+        inset:-10px;
+        border-radius:50%;
+        background: radial-gradient(circle, rgba(197,160,89,.08) 40%, transparent 70%);
+        opacity:0;
+        transition:opacity .6s ease;
+        transform:none;
+    }
+    .tl-item.visible .tl-dot::after{opacity:1;}
+    .tl-item.visible .tl-dot{
+        box-shadow:
+            0 0 0 1px rgba(197,160,89,.2),
+            0 0 30px rgba(197,160,89,.12),
+            0 4px 16px rgba(0,0,0,.3);
+    }
+
+    /* Scroll Active State (Glow) - Çizgi üzerine gelince */
+    .tl-item.is-active .tl-dot {
+        box-shadow:
+            0 0 0 1px rgba(197,160,89,.4),
+            0 8px 32px rgba(197,160,89,.15),
+            0 24px 60px rgba(0,0,0,.4);
+        transform: scale(1.05);
+    }
+    .tl-item.is-active .tl-dot::after { opacity:1; transform:scale(1.2); }
+    .tl-item.is-active .tl-card {
+        box-shadow:
+            0 0 0 1px rgba(197,160,89,.4),
+            0 12px 40px rgba(197,160,89,.15),
+            0 24px 60px rgba(0,0,0,.4);
+    }
+    .tl-item.is-active .tl-card__icon {
+        box-shadow: 0 0 24px rgba(197,160,89,.15), inset 0 0 16px rgba(197,160,89,.1);
+    }
+    .tl-item.is-active .tl-card__icon svg { opacity: 1; }
+
+    .tl-card {
+        background: linear-gradient(160deg, rgba(23,25,38,.85), rgba(23,25,38,.6));
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border:none;
+        border-radius:var(--r-xl);
+        padding:2.5rem;
+        position:relative;
+        overflow:hidden;
+        box-shadow: 0 0 0 1px rgba(255,255,255,.04), 0 8px 40px rgba(0,0,0,.25);
+        transition:box-shadow .6s ease, transform .6s ease;
+    }
+    .tl-card::before {
+        content:'';
+        position:absolute;inset:0;
+        background:linear-gradient(135deg,rgba(197,160,89,.04) 0%,transparent 50%);
+        opacity:0;
+        transition:opacity .5s ease;
+    }
+    .tl-card:hover{
+        box-shadow:
+            0 0 0 1px rgba(197,160,89,.3),
+            0 8px 32px rgba(197,160,89,.15),
+            0 24px 60px rgba(0,0,0,.4);
+        transform:translateY(-6px);
+    }
+    .tl-card:hover::before{opacity:1;}
+    
+    /* Kademeli (Staggered) Fade-in */
+    .tl-card > * {
+        opacity:0;
+        transform:translateY(16px);
+        transition:opacity 2.5s cubic-bezier(.2,.8,.2,1), transform 2.5s cubic-bezier(.2,.8,.2,1);
+    }
+    .tl-item.visible .tl-card > * { opacity:1; transform:none; }
+    .tl-item.visible .tl-card > *:nth-child(1) { transition-delay: .2s; }
+    .tl-item.visible .tl-card > *:nth-child(2) { transition-delay: .5s; }
+    .tl-item.visible .tl-card > *:nth-child(3) { transition-delay: .8s; }
+    .tl-item.visible .tl-card > *:nth-child(4) { transition-delay: 1.1s; }
+    .tl-item.visible .tl-card > *:nth-child(5) { transition-delay: 1.4s; }
+    .tl-card__icon {
+        width:56px;height:56px;
+        border-radius:18px;
+        background: linear-gradient(145deg, rgba(197,160,89,.12), rgba(197,160,89,.03));
+        display:flex;align-items:center;justify-content:center;
+        margin-bottom:1.4rem;
+        box-shadow: 0 0 20px rgba(197,160,89,.05), inset 0 0 12px rgba(197,160,89,.04);
+        transition: box-shadow .5s ease;
+    }
+    .tl-card:hover .tl-card__icon {
+        box-shadow: 0 0 24px rgba(197,160,89,.1), inset 0 0 16px rgba(197,160,89,.06);
+    }
+    .tl-card__icon svg{width:26px;height:26px;color:var(--gold);opacity:.8;transition:opacity .5s ease;}
+    .tl-card:hover .tl-card__icon svg{opacity:1;}
+    .tl-card__badge {
+        display:inline-flex;
+        align-items:center;
+        gap:8px;
+        color:var(--gold);
+        font-size:.75rem;font-weight:700;
+        letter-spacing:.1em;text-transform:uppercase;
+        margin-bottom:1rem;
+    }
+    .tl-card__badge::before {
+        content:'';
+        width:6px;height:6px;
+        border-radius:50%;
+        background:var(--gold-light);
+        box-shadow:0 0 10px rgba(197,160,89,.6);
+    }
+    .tl-card h3{font-size:1.4rem;font-weight:800;margin-bottom:.8rem;line-height:1.2;}
+    .tl-card p{color:var(--muted);font-size:1rem;line-height:1.75;}
+    .tl-card__pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:1.4rem;}
+    .pill {
+        display:inline-flex;align-items:center;gap:8px;
+        font-size:.85rem;font-weight:500;
+        color:rgba(255,255,255,.8);
+        background:rgba(255,255,255,.03);
+        padding:8px 16px;border-radius:99px;
+        transition:background .3s ease, color .3s ease;
+    }
+    .pill:hover{background:rgba(255,255,255,.06);color:rgba(255,255,255,.95);}
+    .pill svg{width:14px;height:14px;color:var(--gold);flex-shrink:0;opacity:.9;}
+
+    /* ==============================
+       FEATURES GRID
+    ============================== */
+    .features-grid {
+        display:grid;
+        grid-template-columns:repeat(3,1fr);
+        gap:20px;
+        margin-top:64px;
+    }
+    @media(max-width:820px){.features-grid{grid-template-columns:1fr 1fr;}}
+    @media(max-width:520px){.features-grid{grid-template-columns:1fr;}}
+
+    .feat-card {
+        background:var(--dark-3);
+        border:none;
+        border-radius:var(--r-card);
+        padding:2rem;
+        box-shadow:0 0 0 1px rgba(255,255,255,.04), 0 4px 20px rgba(0,0,0,.2);
+        opacity:0;
+        transform:translateY(30px);
+        transition:opacity 2s var(--ease-std),transform 2s var(--ease-std),box-shadow 1s;
+    }
+    .feat-card:nth-child(1) { transition-delay: 0s, 0s, 0s; }
+    .feat-card:nth-child(2) { transition-delay: .3s, .3s, 0s; }
+    .feat-card:nth-child(3) { transition-delay: .6s, .6s, 0s; }
+    .feat-card:nth-child(4) { transition-delay: .9s, .9s, 0s; }
+    .feat-card:nth-child(5) { transition-delay: 1.2s, 1.2s, 0s; }
+    .feat-card:nth-child(6) { transition-delay: 1.5s, 1.5s, 0s; }
+    .feat-card.visible{opacity:1;transform:none;}
+    .feat-card:hover{box-shadow:0 0 0 1px rgba(197,160,89,.18), 0 16px 40px rgba(0,0,0,.4);transform:translateY(-4px);}
+    .feat-card__ico{width:44px;height:44px;border-radius:12px;background:var(--gold-dim);display:flex;align-items:center;justify-content:center;margin-bottom:1rem;}
+    .feat-card__ico svg{width:22px;height:22px;color:var(--gold);}
+    .feat-card h4{font-size:1.1rem;font-weight:700;margin-bottom:.5rem;}
+    .feat-card p{font-size:.9rem;color:var(--muted);line-height:1.65;}
+
+
+    /* ==============================
+       GUARANTEE
+    ============================== */
+    .guarantee {
+        position:relative;z-index:1;
+        background:transparent;
+        padding:120px 24px 80px;
+        text-align:center;
+        overflow:hidden;
+    }
+    .guarantee::before { display: none; }
+    .guarantee__badge {
+        display:inline-flex;align-items:center;justify-content:center;
+        width:96px;height:96px;border-radius:50%;
+        background:var(--gold-dim);
+        margin-bottom:1.5rem;
+        box-shadow:0 0 0 1px rgba(197,160,89,.12);
+    }
+    .guarantee__badge svg{width:44px;height:44px;color:var(--gold);}
+    .guarantee h2{font-size:clamp(1.8rem,4vw,3rem);font-weight:900;letter-spacing:-.02em;margin-bottom:1rem;}
+    .guarantee h2 em{font-style:normal;color:var(--gold);}
+    .guarantee p{color:var(--muted);font-size:1.1rem;max-width:580px;margin:0 auto 2.5rem;}
+
+    /* ==============================
+       CTA
+    ============================== */
+    .cta-section{position:relative;z-index:1;padding:120px 24px;text-align:center;}
+    .cta-section h2{font-size:clamp(2rem,4.5vw,3.5rem);font-weight:900;letter-spacing:-.02em;margin-bottom:1.2rem;}
+    .cta-section p{color:var(--muted);font-size:1.1rem;max-width:520px;margin:0 auto 2.5rem;}
+    .cta-row{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;}
+
+    /* ==============================
+       FOOTER
+    ============================== */
+    .page-footer{
+        border-top: none;
+        padding:2rem 24px;
+        text-align:center;
+        color:var(--muted-2);
+        font-size:.85rem;
+        position:relative;z-index:1;
+        background: linear-gradient(to bottom, var(--dark) 0%, rgba(15,17,26,.4) 100%);
+    }
+    .page-footer a{color:var(--muted);}
+    .page-footer a:hover{color:var(--gold);}
+
+    @keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+    @media(max-width:600px){
+        .hero { padding: 120px 16px 60px; }
+        .hero__cta, .cta-row { flex-direction: column; gap: 16px; }
+        .hero__cta .btn, .cta-row .btn { width: 100%; justify-content: center; }
+        .section { padding: 80px 16px; }
+        .section__desc { margin-bottom: 2rem; }
+        .tl-item { margin-bottom: 64px; }
+        .tl-card { padding: 1.5rem; }
+        .tl-card h3 { font-size: 1.25rem; }
+        .features-grid { gap: 32px; margin-top: 48px; }
+        .guarantee { padding: 80px 16px 60px; }
+    }
+    </style>
+</head>
+<body>
+
+<!-- MST NAV -->
+<header class="mst-top">
+    <div class="mst-top__in">
+        <a class="mst-top__logo" href="https://mstyayincilik.com/" aria-label="Ana sayfa">
+            <img src="/mst-randevu/assets/mst-figur.png" alt="MST" width="50" height="50">
+        </a>
+        <button type="button" class="mst-top__menu" aria-label="Menüyü aç" aria-expanded="false" aria-controls="mst-top-menu">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="mst-top__cta" id="mst-top-menu">
+            <a class="mst-top__btn mst-top__btn--wa"
+               href="https://wa.me/905514112004?text=Merhaba"
+               target="_blank" rel="noopener" aria-label="WhatsApp'tan yazın">
+                <svg class="mst-ic" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+                <span>WhatsApp</span>
+            </a>
+            <a class="mst-top__btn mst-top__btn--mobil" href="https://mstyayincilik.com/">
+                <span>Siteye Git</span>
+                <svg class="mst-ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M19 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h5"/></svg>
+            </a>
+            <a class="mst-top__btn mst-top__btn--altin" href="/"><span>Ön Görüşme Al</span></a>
+        </div>
+    </div>
+</header>
+
+<!-- ======================== HERO ======================== -->
+<section class="hero">
+    <!-- Orbs removed -->
+
+    <h1 class="hero__title">
+        <span>Kitap Yayınlama Süreci:</span><br>
+        <em>30 Günde Raflarda.</em>
+    </h1>
+
+    <p class="hero__sub">
+        Profesyonel yayınevi güvencesiyle kitap çıkarmak artık çok kolay. Editöryel okumadan kapak tasarımına, yasal işlemlerden dağıtıma kadar tüm süreci şeffaflıkla yönetiyoruz.
+    </p>
+
+    <div class="hero__cta">
+        <a href="/" class="btn btn--gold">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            Ücretsiz Ön Görüşme
+        </a>
+        <a href="https://wa.me/905514112004?text=Merhaba" target="_blank" rel="noopener" class="btn btn--ghost">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+            WhatsApp'tan Bilgi Al
+        </a>
+    </div>
+
+
+</section>
+
+
+
+<!-- ======================== TIMELINE ======================== -->
+<section class="section" id="adimlar">
+    <div class="wrap">
+        <h2 class="section__title">Kitap Bastırma Süreci:<br><em>Her Adım Profesyonellerin Elinde</em></h2>
+        <p class="section__desc">Kitap yayımlama sürecinde belirsizliklere yer yok. Eserinizi yayınevimize teslim ettikten sonra, her aşamada sizi bilgilendiriyor ve onayınızla ilerliyoruz.</p>
+
+        <div class="timeline">
+
+            <!-- Adım 1 -->
+            <div class="tl-item">
+                <div class="tl-card">
+                    <div class="tl-card__badge">Sözleşme</div>
+                    <div class="tl-card__icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg>
+                    </div>
+                    <h3>Sözleşme ve Profesyonel Ekip Ataması</h3>
+                    <p>Kitap yayınlama sözleşmemiz imzalandığı an, eseriniz için uzman bir editör ve kapak tasarımcısı görevlendirilir. Kitabınızın türüne en uygun yayımlama stratejisi belirlenerek süreç başlatılır.</p>
+                    <div class="tl-card__pills">
+                        <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Birebir editör</span>
+                        <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Özel tasarımcı</span>
+                        <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Kişisel yayın planı</span>
+                    </div>
+                </div>
+                <div class="tl-node"><div class="tl-dot">01</div></div>
+                <div class="tl-empty"></div>
+            </div>
+
+            <!-- Adım 2 -->
+            <div class="tl-item">
+                <div class="tl-empty"></div>
+                <div class="tl-node"><div class="tl-dot">02</div></div>
+                <div class="tl-card">
+                    <div class="tl-card__badge">Editöryel</div>
+                    <div class="tl-card__icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19 7-7 3 3-7 7-3-3z"/><path d="m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="m2 2 7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
+                    </div>
+                    <h3>Editöryel Okuma ve Kapak Tasarımı</h3>
+                    <p>Kitabınız dilbilgisi, kurgu ve akıcılık yönünden titizlikle incelenir. İçerik düzenlemeleri ve profesyonel kitap kapağı tasarımı yapılırken <strong>her adım tarafınıza onaya sunulur.</strong> Siz onaylamadan asla baskıya geçilmez.</p>
+                    <div class="tl-card__pills">
+                        <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Kapsamlı editöryel inceleme</span>
+                        <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Her değişiklik onaya gönderilir</span>
+                        <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Profesyonel kapak tasarımı</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Adım 3 -->
+            <div class="tl-item">
+                <div class="tl-card">
+                    <div class="tl-card__badge">Yasal Süreç</div>
+                    <div class="tl-card__icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+                    </div>
+                    <h3>Yasal Süreç: Kültür Bakanlığı, ISBN ve Bandrol</h3>
+                    <p>Kitap yayımlamak için gereken ISBN tahsisi ve bandrol alımı gibi tüm resmî işlemleri yayınevimiz bizzat yürütür. Alınan yasal bandrolleri <strong>e-Devlet</strong> üzerinden anında sorgulayabilirsiniz.</p>
+                    <div class="tl-card__pills">
+                        <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> ISBN alınır</span>
+                        <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Bandrol e-Devlet'te görünür</span>
+                        <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Tüm evraklar sizde</span>
+                    </div>
+                </div>
+                <div class="tl-node"><div class="tl-dot">03</div></div>
+                <div class="tl-empty"></div>
+            </div>
+
+            <!-- Adım 4 -->
+            <div class="tl-item">
+                <div class="tl-empty"></div>
+                <div class="tl-node"><div class="tl-dot">04</div></div>
+                <div class="tl-card">
+                    <div class="tl-card__badge">Baskı</div>
+                    <div class="tl-card__icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><path d="M8 7h6"/><path d="M8 11h8"/></svg>
+                    </div>
+                    <h3>Matbaa, Baskı Aşaması ve Yazar Nüshaları</h3>
+                    <p>Tasarım ve yasal süreçlerin ardından kitabınız <strong>30 gün içinde basılarak</strong> hazır hale gelir. Ücretsiz yazar nüshalarınız adresinize gönderilir ve sözleşme süresince <strong>sınırsız tekrar baskı</strong> avantajından faydalanırsınız.</p>
+                    <div class="tl-card__pills">
+                        <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> 30 gün garantisi</span>
+                        <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Ücretsiz nüshalar</span>
+                        <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Sınırsız baskı hakkı</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Adım 5 -->
+            <div class="tl-item">
+                <div class="tl-card">
+                    <div class="tl-card__badge">Dağıtım</div>
+                    <div class="tl-card__icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>
+                    </div>
+                    <h3>Kitap Dağıtımı ve Online Satış Platformları</h3>
+                    <p>Eseriniz basıldıktan hemen sonra; Trendyol, Hepsiburada, D&R, İdefix, BKM Kitap ve <strong>MST Yayıncılık mağazası</strong> gibi Türkiye'nin en büyük satış platformlarında okurla buluşur. Tercihinize göre <strong>Amazon</strong> satışı da aktifleştirilir.</p>
+                    <div class="tl-card__pills">
+                        <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> 15+ yerli platform</span>
+                        <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Amazon (pakete göre)</span>
+                        <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Fuar katılımları</span>
+                    </div>
+                </div>
+                <div class="tl-node"><div class="tl-dot">05</div></div>
+                <div class="tl-empty"></div>
+            </div>
+
+            <!-- Adım 6 -->
+            <div class="tl-item">
+                <div class="tl-empty"></div>
+                <div class="tl-node"><div class="tl-dot">06</div></div>
+                <div class="tl-card">
+                    <div class="tl-card__badge">Tanıtım</div>
+                    <div class="tl-card__icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 18-5v12L3 13v-2z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>
+                    </div>
+                    <h3>Yazar Markası ve Dijital Tanıtım Çalışmaları</h3>
+                    <p>Seçilen yayın paketine göre yazar kimliğinizi güçlendirecek PR (tanıtım) çalışmaları hayata geçirilir. Sosyal medya reklamlarından basın bültenlerine kadar geniş kitlelere ulaşmanız sağlanır.</p>
+                    <div class="tl-card__pills">
+                        <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Yazar kimliği inşası</span>
+                        <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Sosyal medya tanıtımı</span>
+                        <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Pakete göre kapsamlanır</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+
+<!-- ======================== FEATURES ======================== -->
+<section class="section section--alt" id="avantajlar">
+    <div class="wrap">
+        <h2 class="section__title">Sözleşme Boyunca<br><em>Yazarımızın Yanındayız</em></h2>
+        <p class="section__desc">Kitabınız bir kez yayımlandıktan sonra süreç bitmez. Bir yayınevi olarak, sözleşme süresince yazarlarımıza sunduğumuz kalıcı avantajlar:</p>
+
+        <div class="features-grid">
+            <div class="feat-card">
+                <div class="feat-card__ico">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                </div>
+                <h4>Sınırsız Baskı Hakkı</h4>
+                <p>Sözleşme süresince ek ücret ödemeden sınırsız baskı talep edebilirsiniz. Stok tükendikçe biz yenileriz.</p>
+            </div>
+            <div class="feat-card">
+                <div class="feat-card__ico">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6h12v10H2zM14 10h4l4 4v2h-8"/><circle cx="6" cy="18" r="2"/><circle cx="18" cy="18" r="2"/></svg>
+                </div>
+                <h4>Ücretsiz Yazar Nüshaları</h4>
+                <p>Her yeni baskıda belirlenen sayıda yazar nüshası ücretsiz kargo ile adresinize teslim edilir.</p>
+            </div>
+            <div class="feat-card">
+                <div class="feat-card__ico">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+                <h4>Tüm Yasal İşlemler Bizden</h4>
+                <p>ISBN, bandrol ve kültür bakanlığı kayıtları dahil tüm resmi süreçleri siz yapmadan biz hallederiz.</p>
+            </div>
+            <div class="feat-card">
+                <div class="feat-card__ico">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="14" rx="2"/><path d="M3 10h18M16 15h2"/></svg>
+                </div>
+                <h4>Şeffaf Telif Ödemeleri</h4>
+                <p>Belirli dönemlerde düzenli telif ödemesi yapılır. Her satış ve ödeme kayıt altındadır, hesaplamaları her zaman talep edebilirsiniz.</p>
+            </div>
+            <div class="feat-card">
+                <div class="feat-card__ico">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 4 10 15 15 0 0 1-4 10 15 15 0 0 1-4-10 15 15 0 0 1 4-10z"/></svg>
+                </div>
+                <h4>Amazon &amp; Uluslararası Satış</h4>
+                <p>Seçtiğiniz pakete göre kitabınız Amazon dahil uluslararası platformlarda da okuyucuyla buluşur.</p>
+            </div>
+            <div class="feat-card">
+                <div class="feat-card__ico">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                </div>
+                <h4>Fuar Katılımları</h4>
+                <p>MST Yayıncılık'ın yıl içinde katıldığı kitap fuarlarında kitabınız temsil edilir ve okuyucuyla fiziksel olarak buluşur.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ======================== GUARANTEE ======================== -->
+<section class="guarantee">
+    <div class="guarantee__badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    </div>
+    <h2>Kitabınız güvende,<br>süreç <em>sizin elinizde.</em></h2>
+    <p>Her adım onayınızla ilerler, her hak sözleşmenizde yazılıdır. Eseriniz, onu hak ettiği okurla buluşmaya hazır.</p>
+    <div class="cta-row" style="justify-content:center;">
+        <a href="/" class="btn btn--gold" style="font-size:1.1rem;padding:16px 36px;">
+            Ücretsiz Ön Görüşme Al
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <a href="https://wa.me/905514112004?text=Merhaba" target="_blank" rel="noopener" class="btn btn--ghost" style="font-size:1.1rem;padding:16px 36px;">
+            WhatsApp'tan Bilgi Al
+        </a>
+    </div>
+</section>
+
+<!-- ======================== FOOTER ======================== -->
+<footer class="page-footer">
+    <p>© 2025 <a href="https://mstyayincilik.com/">MST Yayıncılık</a>. Tüm hakları saklıdır.</p>
+</footer>
+
+<script>
+
+/* ---- Mobile Menu ---- */
+const menuBtn=document.querySelector('.mst-top__menu');
+const mstTop=document.querySelector('.mst-top');
+if(menuBtn&&mstTop){
+    menuBtn.addEventListener('click',()=>{
+        const o=mstTop.classList.toggle('is-open');
+        menuBtn.setAttribute('aria-expanded',o);
+    });
+}
+
+/* ---- Scroll reveal ---- */
+const io=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+        if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);}
+    });
+},{threshold:.15});
+document.querySelectorAll('.tl-item,.feat-card,.stat-item').forEach(el=>io.observe(el));
+
+/* ---- Counter animation ---- */
+function animCounter(el){
+    const target=+el.dataset.to;
+    const start=performance.now();
+    const dur=1600;
+    (function step(now){
+        const p=Math.min((now-start)/dur,1);
+        const ease=1-Math.pow(1-p,3);
+        el.textContent=Math.round(ease*target);
+        if(p<1)requestAnimationFrame(step);
+    })(start);
+}
+const cIo=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+        if(e.isIntersecting){
+            e.target.querySelectorAll('.counter').forEach(animCounter);
+            cIo.unobserve(e.target);
+        }
+    });
+},{threshold:.5});
+document.querySelectorAll('.stats-band__inner').forEach(el=>cIo.observe(el));
+
+/* ---- Timeline Scroll Progress ---- */
+const timeline = document.querySelector('.timeline');
+if (timeline) {
+    const tlItems = timeline.querySelectorAll('.tl-item');
+    window.addEventListener('scroll', () => {
+        const rect = timeline.getBoundingClientRect();
+        // Çizginin başlama noktasını ekranın ortası olarak alıyoruz
+        const start = rect.top - (window.innerHeight / 2); 
+        const end = rect.height;
+        
+        let progress = 0;
+        if (start < 0) {
+            progress = Math.abs(start) / end;
+            if (progress > 1) progress = 1;
+            timeline.style.setProperty('--tl-progress', `${progress * 100}%`);
+        } else {
+            timeline.style.setProperty('--tl-progress', `0%`);
+        }
+
+        // Her bir adım için, çizginin ucu o adıma ulaştı mı kontrol et
+        const lineBottomPx = progress * end;
+        
+        tlItems.forEach(item => {
+            // Kutucuğun (dot) timeline içindeki dikey konumu yaklaşık offsetTop + 32 civarıdır.
+            const dotThreshold = item.offsetTop + 32;
+            
+            // Eğer progress çizgisi bu noktayı geçtiyse parlat (is-active)
+            if (lineBottomPx >= dotThreshold) {
+                item.classList.add('is-active');
+            } else {
+                item.classList.remove('is-active');
+            }
+        });
+
+    }, {passive:true});
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sıkça Sorulan Sorular | MST Yayıncılık</title>
+    <link rel="stylesheet" href="mst-randevu/assets/randevu.css">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0b0c10;
+            --bg-lighter: #13151a;
+            --text-main: #f8f9fa;
+            --text-muted: #a0aab2;
+            --accent-gold: #c5a059;
+            --accent-gold-hover: #d4b572;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Manrope', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* --- Hero Section with Video --- */
+        .hero {
+            position: relative;
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            overflow: hidden;
+            padding: 2rem;
+            margin-top: 64px; /* for fixed mst-top */
+        }
+
+        .hero-video-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            opacity: 0.3;
+            filter: grayscale(80%) sepia(20%) hue-rotate(5deg);
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(11,12,16,0.5) 0%, rgba(11,12,16,1) 100%);
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            transform: translateY(30px);
+            opacity: 0;
+            animation: fadeUp 1s ease forwards 0.5s;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #fff, var(--accent-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+
+
+        /* --- Main Content Layout (FAQ & Creative Visuals) --- */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 6rem 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5rem;
+            align-items: center;
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr;
+                gap: 4rem;
+            }
+        }
+
+        /* --- Creative Visuals (Avatar Style) --- */
+        .creative-visuals {
+            position: relative;
+            height: 500px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .avatar-wrap {
+            position: absolute;
+            border-radius: 50%;
+            overflow: hidden;
+            background: #2ed573;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            opacity: 0;
+            transition: var(--transition);
+            border: 8px solid var(--bg-color);
+        }
+
+        .avatar-wrap.visible {
+            opacity: 1;
+            transform: scale(1) translate(0, 0);
+        }
+
+        .avatar-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .avatar-wrap:hover {
+            transform: scale(1.05) translateY(-10px) !important;
+            z-index: 5 !important;
+        }
+
+        .avatar-1 { 
+            width: 350px; 
+            height: 350px; 
+            z-index: 2;
+            transform: scale(0.8) translateY(30px);
+        }
+        
+        .avatar-2 { 
+            width: 200px; 
+            height: 200px; 
+            left: 5%;
+            top: 10%;
+            z-index: 1;
+            transform: scale(0.8) translateX(-30px);
+        }
+
+        .avatar-3 { 
+            width: 220px; 
+            height: 220px; 
+            right: 0%;
+            bottom: 5%;
+            z-index: 3;
+            transform: scale(0.8) translateX(30px);
+        }
+
+
+
+        /* --- FAQ Filters --- */
+        .faq-header {
+            margin-bottom: 2rem;
+        }
+        
+        .faq-header h2 {
+            font-size: 2.5rem;
+            color: var(--text-main);
+            margin-bottom: 1.5rem;
+        }
+
+        .faq-filters {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .filter-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-muted);
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            font-family: inherit;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .filter-btn:hover {
+            border-color: rgba(197, 160, 89, 0.5);
+            color: var(--text-main);
+        }
+
+        .filter-btn.active {
+            background: var(--accent-gold);
+            border-color: var(--accent-gold);
+            color: #000;
+        }
+
+        /* --- FAQ Accordion --- */
+        .faq-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .faq-item {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            transition: var(--transition);
+            transform: translateY(20px);
+            opacity: 0;
+            display: block;
+        }
+
+        .faq-item.visible {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .faq-item:hover {
+            border-color: rgba(197, 160, 89, 0.4);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transform: translateY(-2px);
+        }
+
+        .faq-question {
+            width: 100%;
+            text-align: left;
+            padding: 1.5rem 2rem;
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            font-size: 1.2rem;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .faq-question::after {
+            content: '+';
+            font-size: 1.5rem;
+            color: var(--accent-gold);
+            transition: transform 0.4s ease;
+        }
+
+        .faq-item.active .faq-question::after {
+            transform: rotate(45deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s cubic-bezier(0, 1, 0, 1);
+            background: rgba(0,0,0,0.2);
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 600px;
+        }
+
+        .faq-answer-inner {
+            padding: 0 2rem 1.5rem 2rem;
+            color: var(--text-muted);
+            line-height: 1.8;
+        }
+
+        .video-block {
+            margin-top: 1.5rem;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--accent-gold);
+            box-shadow: 0 0 20px rgba(197, 160, 89, 0.15);
+        }
+
+        .video-block video {
+            width: 100%;
+            display: block;
+        }
+
+        /* Animations */
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .ink-splash {
+            position: absolute;
+            top: -100px;
+            right: -250px;
+            width: 800px;
+            height: 800px;
+            z-index: -2;
+            opacity: 0.8;
+            pointer-events: none;
+            filter: blur(4px);
+        }
+
+        .glow-orb {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(197,160,89,0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            top: 20%;
+            left: -200px;
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        .badge {
+            display: inline-block;
+            background: rgba(197, 160, 89, 0.2);
+            color: var(--accent-gold);
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="mst-top">
+        <div class="mst-top__in">
+            <a class="mst-top__logo" href="https://mstyayincilik.com/" aria-label="Ana sayfa">
+                <img src="mst-randevu/assets/mst-figur.png" alt="MST" width="50" height="50">
+            </a>
+            <button type="button" class="mst-top__menu" aria-label="Menüyü aç" aria-expanded="false" aria-controls="mst-top-menu"><span></span><span></span><span></span></button>
+            <div class="mst-top__cta" id="mst-top-menu">
+                <a class="mst-top__btn mst-top__btn--wa" href="https://wa.me/905514112004?text=Merhaba" target="_blank" rel="noopener" aria-label="WhatsApp'tan yazın"><svg class="mst-ic" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg><span>WhatsApp</span></a>
+                <a class="mst-top__btn mst-top__btn--mobil" href="https://mstyayincilik.com/"><span>Siteye Git</span><svg class="mst-ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M19 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h5"/></svg></a>
+                <a class="mst-top__btn mst-top__btn--altin" href="/akademi-randevu"><span>Ön Görüşme Al</span></a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <!-- Background Video (using a fast loading generic creative video) -->
+        <video class="hero-video-bg" autoplay loop muted playsinline>
+            <source src="https://cdn.pixabay.com/video/2015/09/25/780-140131435_large.mp4" type="video/mp4">
+        </video>
+        <div class="hero-overlay"></div>
+        
+        <div class="hero-content">
+            <span class="badge">MST Yazar Kariyer Merkezi</span>
+            <h1>Yayıncılık Serüveninizi Birlikte Planlayalım</h1>
+            <p>Aklınızdaki tüm soruların cevaplarını bulun, modern matbaa teknolojimiz ve profesyonel editör ekibimizle kitabınızı okurlarla buluşturmak için ilk adımı atın.</p>
+            <a href="#sss" class="hero-btn" style="display: inline-block; padding: 1rem 2.5rem; background: var(--accent-gold); color: #000; text-decoration: none; font-weight: 800; border-radius: 50px; transition: 0.3s; margin-top: 1rem;">Yanıtları İncele</a>
+        </div>
+    </section>
+
+
+
+    <div class="glow-orb"></div>
+
+    <main class="container" id="sss" style="position: relative; z-index: 1;">
+        
+        <!-- Dark Navy Ink Splash Background -->
+        <svg class="ink-splash" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+            <path fill="#0a192f" d="M165.7,-215.1C219,-194.2,270.8,-159.5,302.3,-108.6C333.8,-57.7,345,9.4,321.4,63.1C297.8,116.8,239.5,157.1,185.1,196.2C130.8,235.4,80.3,273.4,24.1,283.4C-32.2,293.4,-94.1,275.5,-142.1,238.1C-190.1,200.7,-224.2,143.8,-243.2,85.1C-262.2,26.4,-266.1,-34.2,-245.9,-87.3C-225.7,-140.4,-181.4,-186.2,-129.5,-208.5C-77.5,-230.8,-17.9,-229.6,38.2,-220C94.3,-210.3,112.4,-236.1,165.7,-215.1Z" transform="translate(200 200) scale(0.9)" />
+            <!-- Droplets -->
+            <circle fill="#0a192f" cx="350" cy="50" r="15"/>
+            <circle fill="#0a192f" cx="380" cy="90" r="8"/>
+            <circle fill="#0a192f" cx="40" cy="350" r="20"/>
+            <circle fill="#0a192f" cx="80" cy="380" r="12"/>
+            <circle fill="#0a192f" cx="320" cy="350" r="10"/>
+        </svg>
+
+        <!-- Creative Visuals (Avatar Style) -->
+        <div class="creative-visuals">
+            <div class="avatar-wrap avatar-2">
+                <img src="https://api.dicebear.com/8.x/micah/svg?seed=Harley&backgroundColor=3742fa" alt="Genç">
+            </div>
+            <div class="avatar-wrap avatar-1">
+                <img src="https://api.dicebear.com/8.x/micah/svg?seed=Jocelyn&backgroundColor=ff4757" alt="Kadın">
+            </div>
+            <div class="avatar-wrap avatar-3">
+                <img src="https://api.dicebear.com/8.x/micah/svg?seed=Oliver&backgroundColor=ffa502" alt="Erkek">
+            </div>
+        </div>
+
+        <!-- FAQ Column -->
+        <div class="faq-container">
+            <div class="faq-header">
+                <h2>Sıkça Sorulan Sorular</h2>
+                
+                <!-- Filters -->
+                <div class="faq-filters">
+                    <button class="filter-btn active" data-filter="all">Tümü</button>
+                    <button class="filter-btn" data-filter="video">🎥 Videolu Yanıtlar</button>
+                    <button class="filter-btn" data-filter="text">📄 Sadece Metin</button>
+                </div>
+            </div>
+
+            <div class="faq-section">
+                
+                <div class="faq-item" data-type="text">
+                    <button class="faq-question">Dosyamı size nasıl ulaştırabilirim?</button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            <p>Eserinizi tamamladıktan sonra web sitemizdeki başvuru formunu doldurarak veya doğrudan <strong>dosya@mstyayincilik.com</strong> adresine PDF veya Word formatında gönderebilirsiniz. Editörlerimiz dosyanızı teslim aldıktan sonra size bir onay e-postası iletecektir.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item" data-type="video">
+                    <button class="faq-question">Yayın süreciniz ne kadar sürüyor?</button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            <p>Dosyanızın incelenmesi genellikle 2 ila 4 hafta sürer. Olumlu sonuçlanması durumunda, sözleşme aşamasından kitabın raflara çıkmasına kadar geçen editöryel, mizanpaj ve basım süreci ortalama <strong>3 ila 5 ay</strong> arasında tamamlanmaktadır. Aşağıdaki videomuzda matbaa aşamasını izleyebilirsiniz.</p>
+                            
+                            <!-- Embedded Video Example -->
+                            <div class="video-block">
+                                <video autoplay loop muted playsinline style="max-height: 250px; width: 100%; object-fit: cover;">
+                                    <source src="https://cdn.pixabay.com/video/2016/08/22/4762-180769493_large.mp4" type="video/mp4">
+                                </video>
+                                <p style="padding: 10px; font-size: 0.9rem; text-align: center; margin-bottom: 0;">Matbaamızda basım aşaması</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item" data-type="text">
+                    <button class="faq-question">Telif oranları ve sözleşme şartları nelerdir?</button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            <p>MST Yayıncılık olarak yazarlarımızla şeffaf bir telif modeli uyguluyoruz. Standart telif oranımız, kitabın satış fiyatı üzerinden hesaplanır ve sözleşme detayları eserin türüne, yazarın daha önceki çalışmalarına göre karşılıklı görüşme (Yazar Paneli) ile belirlenir.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="faq-item" data-type="video">
+                    <button class="faq-question">Editöryel süreç neleri kapsıyor?</button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            <p>Eseriniz sadece imla hataları için değil, kurgu, akıcılık, karakter gelişimi ve anlatım bütünlüğü açısından da incelenir. Editörlerimiz sizinle koordineli çalışarak kitabınızın en mükemmel haline ulaşmasını sağlar.</p>
+                            <div class="video-block">
+                                <video autoplay loop muted playsinline style="max-height: 250px; width: 100%; object-fit: cover;">
+                                    <source src="https://cdn.pixabay.com/video/2021/01/29/63345-506180373_tiny.mp4" type="video/mp4">
+                                </video>
+                                <p style="padding: 10px; font-size: 0.9rem; text-align: center; margin-bottom: 0;">Editöryel çalışma masası</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item" data-type="text">
+                    <button class="faq-question">Kitabımın dağıtımı nerelere yapılacak?</button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            <p>Kitabınız Türkiye'nin önde gelen tüm kitap satış sitelerinde (D&R, İdefix, Kitapyurdu, BKM Kitap vb.) ve seçkin kitabevlerinde yerini alır. Ayrıca fuar katılımlarımızla kitabınızın okurla fiziksel olarak buluşması sağlanır.</p>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Accordion functionality
+        document.querySelectorAll('.faq-question').forEach(button => {
+            button.addEventListener('click', () => {
+                const item = button.parentElement;
+                
+                // Close others
+                document.querySelectorAll('.faq-item').forEach(otherItem => {
+                    if(otherItem !== item) {
+                        otherItem.classList.remove('active');
+                    }
+                });
+                
+                // Toggle current
+                item.classList.toggle('active');
+            });
+        });
+
+        // Filter functionality
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const faqItems = document.querySelectorAll('.faq-item');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Update active button
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // Filter items
+                const filterValue = btn.getAttribute('data-filter');
+                
+                faqItems.forEach(item => {
+                    item.classList.remove('active'); // Close opened accordions when filtering
+                    
+                    if (filterValue === 'all' || item.getAttribute('data-type') === filterValue) {
+                        item.classList.remove('hidden');
+                        setTimeout(() => item.classList.add('visible'), 50); // slight delay for smooth reflow
+                    } else {
+                        item.classList.add('hidden');
+                        item.classList.remove('visible');
+                    }
+                });
+            });
+        });
+
+        // Scroll Reveal Animation
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.classList.add('visible');
+                    }, index * 100); 
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+
+        document.querySelectorAll('.faq-item, .avatar-wrap').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Button hover color tweak
+        const btn = document.querySelector('.hero-btn');
+        if (btn) {
+            btn.addEventListener('mouseover', () => btn.style.backgroundColor = 'var(--accent-gold-hover)');
+            btn.addEventListener('mouseout', () => btn.style.backgroundColor = 'var(--accent-gold)');
+        }
+        
+        // Mobile menu toggle script for mst-top
+        const menuBtn = document.querySelector('.mst-top__menu');
+        const mstTop = document.querySelector('.mst-top');
+        if (menuBtn) {
+            menuBtn.addEventListener('click', () => {
+                const isOpen = mstTop.classList.toggle('is-open');
+                menuBtn.setAttribute('aria-expanded', isOpen);
+            });
+        }
+    </script>
+</body>
+</html>

@@ -2,7 +2,7 @@
 /**
  * Plugin Name: MST Yazar Adayı Randevu
  * Description: Yazar adaylarının müsait saatlerden görüşme randevusu alması. Kısa kod: [mst_randevu] — ya da sayfa şablonu olarak "MST Randevu (Tam Sayfa)".
- * Version:     1.5.16
+ * Version:     1.5.17
  * Author:      MST Yayıncılık
  * Text Domain: mst-randevu
  * Requires PHP: 7.4
@@ -12,7 +12,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('MST_RANDEVU_VER', '1.5.16');
+define('MST_RANDEVU_VER', '1.5.17');
 define('MST_RANDEVU_DB', 5);
 define('MST_RANDEVU_URL', plugin_dir_url(__FILE__));
 
@@ -43,6 +43,7 @@ class MST_Randevu
     const SABLON = 'mst-randevu-tam-sayfa';
     const SABLON_UYG = 'mst-uygulama-tam-sayfa'; // MST Yazar Paneli tanıtım sayfası
     const SABLON_AKD = 'mst-akademi-randevu-tam-sayfa'; // Yazar Kariyer Akademisi ön görüşme randevusu
+    const SABLON_SUREC = 'mst-surec-tam-sayfa'; // MST Kitap Yayınlama Süreci
     /** Randevu türleri: her saat her tür için ayrı açılır, kişi sınırı türe göre ayrı sayılır. */
     const TURLER = ['yazar' => 'Yazar adayı', 'akademi' => 'Akademi'];
     const OTO    = 'mst_randevu_otomatik';
@@ -396,30 +397,37 @@ class MST_Randevu
         return is_page() && get_page_template_slug() === self::SABLON_UYG;
     }
 
+    public static function is_surec_page()
+    {
+        return is_page() && get_page_template_slug() === self::SABLON_SUREC;
+    }
+
     public static function page_templates($templates)
     {
         $templates[self::SABLON]     = 'MST Randevu (Tam Sayfa)';
         $templates[self::SABLON_UYG] = 'MST Yazar Paneli Tanıtım (Tam Sayfa)';
         $templates[self::SABLON_AKD] = 'MST Akademi Ön Görüşme Randevusu (Tam Sayfa)';
+        $templates[self::SABLON_SUREC] = 'MST Kitap Yayınlama Süreci (Tam Sayfa)';
         return $templates;
     }
 
     public static function template_include($template)
     {
         $uyg = self::is_app_page();
-        if (!$uyg && !self::is_full_page() && !self::is_akd_rnd_page()) return $template;
+        if (!$uyg && !self::is_full_page() && !self::is_akd_rnd_page() && !self::is_surec_page()) return $template;
         // Önbellek/hızlandırma eklentileri (LiteSpeed, WP Rocket, W3TC, Autoptimize…) bu sayfanın
         // CSS/JS'ini birleştirip küçültmesin; ziyaretçide stil dosyası kaybolabiliyordu.
         foreach (['LITESPEED_NO_OPTM', 'DONOTROCKETOPTIMIZE', 'DONOTMINIFYCSS', 'DONOTMINIFYJS'] as $sabit) {
             if (!defined($sabit)) define($sabit, true);
         }
+        if (self::is_surec_page()) return __DIR__ . '/templates/surec.php';
         return __DIR__ . ($uyg ? '/templates/uygulama.php' : '/templates/tam-sayfa.php');
     }
 
     /** Tam sayfada tema stillerini devre dışı bırakır; sayfa her temada aynı görünür. */
     public static function isolate_styles()
     {
-        if (!self::is_full_page() && !self::is_app_page() && !self::is_akd_rnd_page()) return;
+        if (!self::is_full_page() && !self::is_app_page() && !self::is_akd_rnd_page() && !self::is_surec_page()) return;
         $keep = ['mst-randevu', 'mst-randevu-font', 'mst-uygulama', 'admin-bar', 'dashicons'];
         foreach (wp_styles()->queue as $handle) {
             if (!in_array($handle, $keep, true)) wp_dequeue_style($handle);
@@ -582,6 +590,7 @@ class MST_Randevu
             self::SABLON_UYG => 'main.uyg',
             'mst-akademi-tam-sayfa' => 'main.akd',
             'mst-cinebook-tam-sayfa' => 'main.cb',
+            self::SABLON_SUREC => 'body',
         ][get_page_template_slug($post)] ?? '';
         if (!$secici) return;
         $url = $post->post_status === 'publish' ? get_permalink($post) : get_preview_post_link($post);

@@ -5,17 +5,16 @@
 //   http://localhost:8788/akademi-randevu  Akademi ön görüşme randevusu
 //   http://localhost:8788/cinebook  CineBook ve MST Çocuk
 //
-// Canlı önizleme (onizleme.bat bunu kullanır):
+// Canlı yerel önizleme (onizleme.bat bunu kullanır):
 //   node demo-sunucu.js --canli
-// Her 15 saniyede GitHub'daki main-dayiyo dalına bakar; yeni bir değişiklik varsa indirir ve
-// açık sayfaları kendiliğinden yeniler. Bu klasörde elle yapılan değişiklikler silinir.
+// Demo veya stil dosyaları değişince açık sayfaları yeniler; yerel dosyaları sıfırlamaz.
 //
 // İsteğe bağlı — alınan randevuları gerçek MST CRM'e iletmek için:
 //   node demo-sunucu.js --crm ANAHTAR
 // ANAHTAR, CRM servisindeki RANDEVU_SECRET ile aynı olmalı. Anahtar yalnızca bu
 // sunucuda kalır, tarayıcıya gönderilmez. Farklı bir CRM adresi için:
 //   node demo-sunucu.js --crm ANAHTAR --crm-url https://…/randevu
-const http = require('http'), fs = require('fs'), path = require('path'), { execFile } = require('child_process');
+const http = require('http'), fs = require('fs'), path = require('path');
 const root = __dirname;
 const types = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.webp': 'image/webp', '.png': 'image/png', '.jpg': 'image/jpeg' };
 
@@ -24,15 +23,9 @@ const CRM_ANAHTAR = arg('--crm');
 const CRM_URL = arg('--crm-url') || 'https://yazar-crm-whatsapp-webhook.mst-ajans.workers.dev/randevu';
 const CANLI = process.argv.includes('--canli');
 
-/* ---- Canlı önizleme: GitHub'dan otomatik güncelleme ve sayfayı yenileme ---- */
+/* ---- Canlı önizleme: yerel dosya değişince sayfayı yenileme ---- */
 const dinleyenler = new Set();
-const git = (...a) => new Promise(ok => execFile('git', a, { cwd: root }, (h, cikti) => ok(h ? null : String(cikti).trim())));
-async function guncelle() {
-  if ((await git('fetch', '-q', 'origin', 'main-dayiyo')) === null) return; // internet yoksa sessizce bekle
-  const yerel = await git('rev-parse', 'HEAD'), uzak = await git('rev-parse', 'origin/main-dayiyo');
-  if (!yerel || !uzak || yerel === uzak) return;
-  if ((await git('reset', '-q', '--hard', 'origin/main-dayiyo')) === null) return console.log('Güncelleme uygulanamadı.');
-  console.log(new Date().toLocaleTimeString('tr-TR') + '  Yeni sürüm indirildi, açık sayfalar yenileniyor.');
+function yenile() {
   for (const r of dinleyenler) r.write('data: yenile\n\n');
 }
 const CANLI_BETIK = '<script>(function(){try{var k=new EventSource("/canli");k.onmessage=function(){location.reload()}}catch(e){}})();</script>';
@@ -72,6 +65,7 @@ http.createServer((req, res) => {
   if (p === '/akademi') p = '/demo/akademi.html';   // MST Yazar Kariyer Akademisi
   if (p === '/akademi-randevu') p = '/demo/akademi-randevu.html'; // Akademi ön görüşme randevusu
   if (p === '/cinebook') p = '/demo/cinebook.html'; // CineBook ve MST Çocuk
+  if (p === '/surec') p = '/demo/surec.html';       // MST Yayıncılık Süreç Sayfası
   const file = path.normalize(path.join(root, p));
   if (!file.startsWith(root) || !fs.existsSync(file) || fs.statSync(file).isDirectory()) { res.writeHead(404); return res.end('Bulunamadı'); }
   res.writeHead(200, { 'Content-Type': types[path.extname(file)] || 'application/octet-stream', 'Cache-Control': 'no-store' });
@@ -85,7 +79,10 @@ http.createServer((req, res) => {
   console.log('      http://localhost:8788/cinebook  (CineBook ve MST Çocuk)');
   console.log(CRM_ANAHTAR ? `Randevular CRM'e iletilecek: ${CRM_URL}` : 'CRM\'e iletim kapalı (açmak için: node demo-sunucu.js --crm ANAHTAR)');
   if (CANLI) {
-    console.log('Canlı önizleme açık: yeni sürümler kendiliğinden iner, sayfa kendiliğinden yenilenir. Bu pencereyi kapatmayın.');
-    guncelle(); setInterval(guncelle, 15000);
+    console.log('Canlı yerel önizleme açık: dosyalar değişince sayfa yenilenir. Bu pencereyi kapatmayın.');
+    let bekle;
+    [path.join(root, 'demo'), path.join(root, 'mst-randevu', 'assets')].forEach(dizin => {
+      fs.watch(dizin, () => { clearTimeout(bekle); bekle = setTimeout(yenile, 250); });
+    });
   }
 });

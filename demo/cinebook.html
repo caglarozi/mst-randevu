@@ -7,7 +7,7 @@
 <title>CineBook: Kitaptan Fragman ve Çizgi Film | MST Yayıncılık</title>
 <!-- WordPress'siz önizleme: templates/cinebook.php'nin çıktısından üretildi. Şablon değişirse yeniden üretilmeli. -->
 <script>document.documentElement.classList.add('uyg-js');</script>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=IBM+Plex+Sans:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Cormorant+Garamond:wght@500;600;700&family=IBM+Plex+Sans:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap">
 <link rel="stylesheet" href="/mst-randevu/assets/randevu.css">
 <link rel="stylesheet" href="/mst-randevu/assets/uygulama.css">
 <link rel="stylesheet" href="/mst-randevu/assets/akademi.css">
@@ -22,16 +22,14 @@
                 <button type="button" class="mst-top__menu" aria-label="Menüyü aç" aria-expanded="false" aria-controls="mst-top-menu"><span></span><span></span><span></span></button>
                 <div class="mst-top__cta" id="mst-top-menu">
                     <a class="mst-top__btn mst-top__btn--wa" href="https://wa.me/905551112233?text=Merhaba%2C%20CineBook%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum." target="_blank" rel="noopener" aria-label="WhatsApp'tan yazın"><svg class="mst-ic" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg><span>WhatsApp</span></a>                    <a class="mst-top__btn mst-top__btn--mobil" href="https://mstyayincilik.com/"><span>Siteye Git</span><svg class="mst-ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M19 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h5"/></svg></a>
-                    <a class="mst-top__btn mst-top__btn--altin" href="#basvuru"><span>Başvuru Yap</span></a>                </div>
+                    <a class="mst-top__btn mst-top__btn--altin" href="#yapimlar"><span>Yapımları Gör</span></a>                </div>
             </div>
         </header>
         
 <main class="uyg cb" lang="tr">
 
     <!-- ============ Perde: kamera vizörü ============
-         Üstte sinema bandı (bölüm menüsü), altın ışık, toz ve gren.
-         Fragman adresi varsa arka planda sessiz döner (hareketi azalt açıksa dönmez); fragman görseli
-         video yüklenene kadar ve video yoksa arka plan olur. "Şimdi izle" aynı fragmanı sesli açar. -->
+         Sinema bandı, ışık, toz ve gren korunur. Öne çıkan afiş videoyu perdelikte açar. -->
     <section class="cb-reel" id="showreel" >
         <div class="cb-reel__arka" aria-hidden="true">
                     </div>
@@ -42,24 +40,25 @@
         <div class="cb-karartma" aria-hidden="true"></div>
 
         <nav class="cb-bant cb-bant--ust" aria-label="Sayfa bölümleri">
-            <span class="cb-bant__marka" lang="en">CineBook</span>
-            <span class="cb-bant__linkler"><a href="#nedir">Hakkında</a><a href="#yapimlar">Vizyonda</a><a href="#studyo">Stüdyo</a><a href="#cocuk">MST Çocuk</a><a href="#basvuru">Başvuru</a></span>
+            <a class="cb-bant__marka" href="#showreel" aria-label="CineBook, sayfanın başına dön"><img src="/mst-randevu/assets/cinebook-logo-transparent.png" alt="CineBook" width="2172" height="724" fetchpriority="high" decoding="async"></a>
+            <span class="cb-bant__linkler"><a href="#nedir">Hakkında</a><a href="#yapimlar">Vizyonda</a><a href="#studyo">Stüdyo</a><a href="#cocuk">MST Çocuk</a><a href="#takip">Takip Et</a></span>
         </nav>
 
         <div class="cb-vizor">
 
             <div class="cb-reel__in">
-                <p class="cb-reel__ust">Yeni bir çağ</p>
-                <h1 class="cb-reel__baslik"><span lang="en">CineBook</span></h1>
+                <p class="cb-reel__ust">Hikâye ekrana dönüşüyor</p>
+                <h1 class="cb-reel__baslik"><img src="/mst-randevu/assets/cinebook-logo-transparent.png" alt="CineBook" width="2172" height="724" fetchpriority="high" decoding="async"></h1>
                 <p class="cb-reel__soz">Hikâyeleri sadece yayımlamıyoruz, <em>ekrana taşıyoruz.</em></p>
                 <p class="cb-reel__alt"><span lang="en">CineBook</span>, MST Yayıncılık bünyesinde kitapları fragmanlara, kısa sahnelere ve dijital film projelerine dönüştüren yeni nesil bir hikâye platformudur.</p>
                 <div class="cb-reel__cta">
                                             <button type="button" class="cb-oynat-btn" data-cb-video-ac="ig:DdW_g0xhye3" data-cb-baslik="Gökbörü · İlk bölüm">
                             <i aria-hidden="true"></i><span><strong>Şimdi izle</strong><small>Gökbörü • İlk bölüm</small></span>
                         </button>
-                                        <a class="cb-cizgi-btn" href="#basvuru">Başvuru yap</a>
+                                        <a class="cb-cizgi-btn" href="#yapimlar">Yapımları keşfet</a>
                 </div>
             </div>
+            <figure class="cb-reel__afis"><button type="button" class="cb-reel__afis-kapak" data-cb-video-ac="ig:DdW_g0xhye3" data-cb-baslik="Gökbörü · İlk bölüm" aria-label="Gökbörü videosunu izle"><img src="/mst-randevu/assets/gokboru-afis.jpg" alt="Gökbörü afişi" fetchpriority="high" decoding="async"></button><figcaption><strong>Gökbörü</strong><span>İlk bölüm · İzle ↗</span></figcaption></figure>
 
         </div>
 
@@ -81,7 +80,6 @@
             <span class="cb-serit__sizinti" aria-hidden="true"></span>
             <ol class="cb-serit__kareler">
                                     <li class="cb-kare" data-cb-gir="kare" style="--sira: 0">
-                        <span class="cb-kare__kod" aria-hidden="true">◂ 12&ensp;<bdi lang="en">CINEBOOK</bdi> 5219&ensp;▸ 13A</span>
                         <div class="cb-kare__goruntu">
                             <span class="cb-kare__no" aria-hidden="true">01</span>
                             <h3>Dijital anlatı platformu</h3>
@@ -89,7 +87,6 @@
                         </div>
                     </li>
                                     <li class="cb-kare" data-cb-gir="kare" style="--sira: 1">
-                        <span class="cb-kare__kod" aria-hidden="true">◂ 16&ensp;<bdi lang="en">CINEBOOK</bdi> 5219&ensp;▸ 17A</span>
                         <div class="cb-kare__goruntu">
                             <span class="cb-kare__no" aria-hidden="true">02</span>
                             <h3>Yazar, okur, izleyici</h3>
@@ -97,7 +94,6 @@
                         </div>
                     </li>
                                     <li class="cb-kare" data-cb-gir="kare" style="--sira: 2">
-                        <span class="cb-kare__kod" aria-hidden="true">◂ 20&ensp;<bdi lang="en">CINEBOOK</bdi> 5219&ensp;▸ 21A</span>
                         <div class="cb-kare__goruntu">
                             <span class="cb-kare__no" aria-hidden="true">03</span>
                             <h3>Sosyal medya odaklı büyüme</h3>
@@ -108,59 +104,40 @@
         </div>
     </section>
 
-    <!-- ============ Vizyonda: öne çıkan yapım sayfada oynar, diğerleri afiş ============
-         Videosu olan ilk yapım "gösterim" kartında doğrudan görünür (Instagram gömme ya da YouTube).
-         Instagram'ın gömme betiği bölüm ekrana yaklaşınca yüklenir (cinebook.js). -->
+    <!-- ============ Vizyonda: öne çıkan yapımın afişi ve diğer yapımlar ============ -->
         <section class="cb-bolum cb-bolum--yapim cb-vizyon" id="yapimlar">
         <div class="uyg-kap">
             <header class="cb-vizyon__bas" data-cb-gir>
                 <div class="cb-tabela" aria-hidden="true"><span>Vizyonda</span></div>
                 <h2 class="cb-gizli">Yapımlar</h2>
-                <p class="cb-bas__metin">Kitaplardan uyarlanan fragmanlar, kısa sahneler ve çizgi filmler. Her yapım, eserin kendi dünyasından doğar.</p>
+                <p class="cb-bas__metin">Yayındaki ilk bölümü izleyin; sıradaki yapımları keşfedin.</p>
             </header>
 
                             <article class="cb-gosterim" data-cb-gir>
-                    <div class="cb-gosterim__ekran cb-gosterim__ekran--dikey">
-                        <p class="cb-gosterim__serit" aria-hidden="true"><span><i></i>Yayında</span><span>Gökbörü · İlk bölüm</span></p>
-                                                    <div class="cb-ig" data-cb-ig>
-                                <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DdW_g0xhye3/?utm_source=ig_embed" data-instgrm-version="14">
-                                    <a href="https://www.instagram.com/p/DdW_g0xhye3/" target="_blank" rel="noopener">Gökbörü — İlk bölüm · Instagram’da izleyin</a>
-                                </blockquote>
-                            </div>
-                                            </div>
+                    <button type="button" class="cb-gosterim__kapak" data-cb-video-ac="ig:DdW_g0xhye3" data-cb-baslik="Gökbörü · İlk bölüm" aria-label="Gökbörü videosunu izle"><img src="/mst-randevu/assets/gokboru-afis.jpg" alt="Gökbörü afişi" loading="lazy" decoding="async"><span class="cb-gosterim__play" aria-hidden="true">▶</span></button>
                     <div class="cb-gosterim__bilgi">
-                        <p class="cb-gosterim__rozet"><i></i>Şimdi vizyonda</p>
+                        <p class="cb-gosterim__ust">Şimdi vizyonda <span>İlk bölüm</span></p>
                         <h3>Gökbörü</h3>
-                        <p class="cb-gosterim__meta">İlk bölüm · <bdi lang="en">CineBook</bdi> yapımı</p>
-                        <p class="cb-gosterim__metin">Gökbörü, <bdi lang="en">CineBook</bdi> kanallarında yayında. Kitaptan ekrana taşınan hikâyenin yeni bölümleri için bizi takip edin.</p>
-                        <div class="cb-gosterim__cta">
-                            <a class="cb-cizgi-btn" href="https://www.instagram.com/p/DdW_g0xhye3/" target="_blank" rel="noopener">Instagram’da aç ↗</a>                            <a class="cb-cizgi-btn cb-cizgi-btn--sade" href="https://www.instagram.com/cinebookofficial" target="_blank" rel="noopener">Takip et</a>                        </div>
+                        <p class="cb-gosterim__lead">Bir bakış. Bir kılıç. Gökbörü.</p>
+                        <p class="cb-gosterim__metin">Gökbörü’nün karanlık ve destansı atmosferi ilk bölümüyle ekranda. Hikâyeyi şimdi izleyin.</p>
+                        <div class="cb-gosterim__cta"><button type="button" class="cb-gosterim__birincil" data-cb-video-ac="ig:DdW_g0xhye3" data-cb-baslik="Gökbörü · İlk bölüm">Bölümü izle <span aria-hidden="true">↗</span></button><a class="cb-gosterim__harici" href="https://www.instagram.com/p/DdW_g0xhye3/" target="_blank" rel="noopener">Instagram’da aç ↗</a></div>
                     </div>
                 </article>
             
             <p class="cb-etiket cb-vizyon__ara" data-cb-gir>Yakında</p>
             <ul class="cb-filmografi">
                                     <li data-cb-grup="cinebook" data-cb-gir="kare" style="--sira: 0">
-                        <div class="cb-afis cb-afis--mechul-tren cb-afis--yazi">
-                                                                                        <span class="cb-afis__sahne" aria-hidden="true"><svg class="cb-afis__ray" viewBox="0 0 270 405" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false"><defs><linearGradient id="cbRay" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#8a6a44"/><stop offset=".75" stop-color="#e9c68a"/><stop offset="1" stop-color="#fff1cf"/></linearGradient></defs><g class="cb-afis__traversler" stroke="#6e5538" stroke-linecap="round"><line x1="134.3" y1="173.5" x2="135.7" y2="173.5" stroke-width="0.62"/><line x1="132.3" y1="177.8" x2="137.7" y2="177.8" stroke-width="0.66"/><line x1="129.2" y1="184.5" x2="140.8" y2="184.5" stroke-width="0.74"/><line x1="124.9" y1="193.6" x2="145.1" y2="193.6" stroke-width="0.84"/><line x1="119.6" y1="204.9" x2="150.4" y2="204.9" stroke-width="0.97"/><line x1="113.2" y1="218.6" x2="156.8" y2="218.6" stroke-width="1.12"/><line x1="105.8" y1="234.4" x2="164.2" y2="234.4" stroke-width="1.30"/><line x1="97.4" y1="252.5" x2="172.6" y2="252.5" stroke-width="1.50"/><line x1="87.9" y1="272.6" x2="182.1" y2="272.6" stroke-width="1.72"/><line x1="77.5" y1="294.9" x2="192.5" y2="294.9" stroke-width="1.97"/><line x1="66.1" y1="319.4" x2="203.9" y2="319.4" stroke-width="2.24"/><line x1="53.7" y1="345.8" x2="216.3" y2="345.8" stroke-width="2.54"/><line x1="40.3" y1="374.4" x2="229.7" y2="374.4" stroke-width="2.86"/><line x1="26.0" y1="405.0" x2="244.0" y2="405.0" stroke-width="3.20"/></g><path d="M40,405 L133,172" stroke="url(#cbRay)" stroke-width="3" fill="none"/><path d="M230,405 L137,172" stroke="url(#cbRay)" stroke-width="3" fill="none"/></svg><i class="cb-afis__far"></i><i class="cb-afis__sis"></i></span>
-                                <span class="cb-afis__yazi">
-                                    <small><bdi lang="en">CineBook</bdi> sunar</small>
-                                    <strong>Meçhul Tren</strong>
-                                    <em>Çok yakında sizlerle</em>
-                                    <span class="cb-afis__jenerik">MST Yayıncılık · <bdi lang="en">CineBook</bdi> · 2026</span>
-                                </span>
-                                <span class="cb-afis__damga" aria-hidden="true">Çok yakında</span>                                                                                </div>
+                        <div class="cb-afis cb-afis--mechul-tren cb-afis--gorsel"><img src="/mst-randevu/assets/mechul-tren-afis.png" alt="Meçhul Tren afişi" loading="lazy" decoding="async"><span class="cb-afis__damga" aria-hidden="true">Çok yakında</span></div>
                         <h3>Meçhul Tren</h3>
                         <p>Çok yakında sizlerle · <span class="cb-durum is-yapimda">Yakında</span></p>
                     </li>
                                 <li data-cb-grup="hepsi" class="cb-filmografi__siradaki" data-cb-gir="kare" style="--sira: 1">
-                    <a class="cb-bilet" href="#basvuru">
-                        <span class="cb-bilet__ust"><small>Bilet</small><small>No 003</small></span>
-                        <span class="cb-bilet__orta"><small>Sıradaki yapım</small><strong>Sizin kitabınız</strong><em>Fragman ya da çizgi film</em></span>
-                        <span class="cb-bilet__koc">Başvurun <i aria-hidden="true">→</i></span>
+                    <a class="cb-bilet" href="#takip">
+                        <span class="cb-bilet__ust"><small>CineBook</small><small>Yeni yapımlar</small></span>
+                        <span class="cb-bilet__orta"><small>Perde devam ediyor</small><strong>Yeni sahneler</strong><em>CineBook kanallarında</em></span>
+                        <span class="cb-bilet__koc">Takip edin <i aria-hidden="true">→</i></span>
                     </a>
-                    <h3>Sizin kitabınız</h3>
-                    <p>Fragman ya da çizgi film · <span class="cb-durum">Başvuruya açık</span></p>
+                    <h3>Yeni sahneler</h3><p>Fragman ve çizgi filmler · <span class="cb-durum">Takip edin</span></p>
                 </li>
             </ul>
         </div>
@@ -232,7 +209,7 @@
                     <p class="cb-cocuk__rozet">MST Çocuk</p>
                     <h2>Çocuk kitapları <span>çizgi filme</span> dönüşüyor.</h2>
                     <p class="cb-cocuk__alt">Resimli çocuk kitaplarını, karakterlerine ve çizimlerine sadık kalarak kısa çizgi filmlere uyarlıyoruz. Çocuklar sevdikleri hikâyeyi hem okuyor hem izliyor.</p>
-                    <a class="cb-cocuk__btn" href="#basvuru" data-cb-tur="cocuk">Çocuk kitabınız için başvurun</a>
+                    <a class="cb-cocuk__btn" href="#takip">Yeni çizgi filmleri takip edin</a>
                 </div>
                 <div class="cb-cocuk__sahne">
                     <div class="cb-video cb-video--bos cb-video--cocuk"><span class="cb-video__oynat" aria-hidden="true"></span><p><strong>MST Çocuk’un ilk çizgi filmi</strong><small>Yakında burada</small></p></div>                </div>
@@ -256,55 +233,16 @@
 
 
 
-    <!-- ============ Başvuru ============ -->
-    <section class="cb-bolum cb-bolum--koyu cb-iletisim" id="basvuru">
-        <div class="uyg-kap">
-            <p class="cb-iletisim__ust">Sıradaki sahne <em>sizin.</em></p>
-            <h2 class="cb-iletisim__baslik">Başvuru</h2>
-            <div class="cb-iletisim__in">
-                <div class="cb-iletisim__sol">
-                    <p class="cb-iletisim__metin">Kitabınızın ekranda hayat bulmasını istiyorsanız eserinizi gönderin. Başvurunuzu inceleyip sizi arıyoruz; uygun eserler için uyarlama planını birlikte hazırlıyoruz.</p>
-                    <a class="cb-wa" href="https://wa.me/905551112233?text=Merhaba%2C%20CineBook%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum." target="_blank" rel="noopener"><svg class="mst-ic" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg> WhatsApp’tan yazın</a>                </div>
-            <form class="cb-form" data-cb-form novalidate>
-                <p class="cb-form__koc" aria-hidden="true"><span>Başvuru bileti</span><span><bdi lang="en">CineBook</bdi> · MST Çocuk</span></p>
-                <fieldset class="cb-form__tur">
-                    <legend>Başvuru türü</legend>
-                    <label><input type="radio" name="tur" value="cinebook" checked><span><strong>CineBook</strong><small>Kitaptan fragman / film</small></span></label>
-                    <label><input type="radio" name="tur" value="cocuk"><span><strong>MST Çocuk</strong><small>Çocuk kitabından çizgi film</small></span></label>
-                </fieldset>
-                <label class="cb-alan"><span>Eser adı</span><input type="text" name="eser_adi" required maxlength="150" autocomplete="off"></label>
-                <label class="cb-alan"><span>Ad soyad</span><input type="text" name="yazar_adi" required minlength="3" maxlength="100" autocomplete="name"></label>
-                <div class="cb-form__ikili">
-                    <label class="cb-alan"><span>Telefon</span><input type="tel" name="telefon" required inputmode="tel" autocomplete="tel" placeholder="05XX XXX XX XX"></label>
-                    <label class="cb-alan"><span>E-posta <em>(isteğe bağlı)</em></span><input type="email" name="eposta" autocomplete="email" placeholder="ornek@eposta.com"></label>
-                </div>
-                <label class="cb-alan"><span>Eserinizi kısaca anlatın <em>(isteğe bağlı)</em></span><textarea name="ozet" rows="4" maxlength="1500" placeholder="Tür, konu, hedef okur yaşı, kitap yayımlandı mı…"></textarea></label>
-                <label class="cb-hp" aria-hidden="true">Web sitesi <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
-                <label class="cb-onay"><input type="checkbox" name="kvkk" value="1" required><span><a href="https://mstyayincilik.com/kvkk-aydinlatma-metni/" target="_blank" rel="noopener">KVKK Aydınlatma Metni</a>’ni okudum. Kişisel verilerimin başvurumun değerlendirilmesi ve benimle iletişim kurulması amacıyla MST Yayıncılık tarafından işlenmesini kabul ediyorum.</span></label>
-                <p class="cb-form__hata" data-cb-hata role="alert" hidden></p>
-                <button type="submit" class="uyg-btn uyg-btn--altin cb-form__gonder">Başvuruyu Gönder</button>
-                <div class="cb-form__tamam" data-cb-tamam hidden></div>
-            </form>
-                <div class="cb-iletisim__ek">
-                                            <p class="cb-etiket cb-etiket--ara" id="takip">Takip edin</p>
-                        <ul class="cb-sosyal">
-                                                            <li><a href="https://www.youtube.com/@cinebookoffical" target="_blank" rel="noopener"><strong>YouTube</strong><span>@cinebookoffical</span><small>Fragmanlar ve tam bölümler</small></a></li>
-                                                            <li><a href="https://www.instagram.com/cinebookofficial" target="_blank" rel="noopener"><strong>Instagram</strong><span>@cinebookofficial</span><small>Kısa sahneler ve kamera arkası</small></a></li>
-                                                            <li><a href="https://www.tiktok.com/@cinebookaffical" target="_blank" rel="noopener"><strong>TikTok</strong><span>@cinebookaffical</span><small>Dikey kısa videolar</small></a></li>
-                                                            <li><a href="https://www.facebook.com/search/top?q=cinebookoffical" target="_blank" rel="noopener"><strong>Facebook</strong><span>@cinebookoffical</span><small>Duyurular ve topluluk</small></a></li>
-                                                    </ul>
-                                        <div class="cb-sss">
-                        <p class="cb-etiket cb-etiket--ara">Sık sorulanlar</p>
-                                                    <details><summary>Kitabımın yayımlanmış olması gerekir mi?</summary><p>Başvuru sırasında kitabınızın yayımlanmış ya da yayına hazır olması değerlendirmeyi kolaylaştırır. Durumunuzu formdaki kısa özet alanına yazabilirsiniz.</p></details>
-                                                    <details><summary>MST Yayıncılık dışında yayımlanmış kitaplar başvurabilir mi?</summary><p>Evet, başvurabilir. Her başvuru hikâyesine ve uyarlama potansiyeline göre ayrı değerlendirilir.</p></details>
-                                                    <details><summary>Fragman ya da çizgi film ne kadar sürede hazırlanır?</summary><p>Süre; eserin uzunluğuna, sahne sayısına ve seslendirme ihtiyacına göre değişir. Değerlendirme sonrası size bir zaman planı sunulur.</p></details>
-                                                    <details><summary>Hangi çocuk kitapları çizgi filme uygundur?</summary><p>Resimli çocuk kitapları, masallar ve kısa öyküler en uygun eserlerdir. Kitabın çizimleri karakter tasarımının temelini oluşturur.</p></details>
-                                                    <details><summary>Başvurudan sonra ne olur?</summary><p>Başvurunuz incelenir ve ekibimiz sizi arar. Uygun bulunan eserler için uyarlama planı birlikte hazırlanır.</p></details>
-                                            </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    <!-- ============ Sosyal medya ============ -->
+    <section class="cb-bolum cb-bolum--koyu cb-iletisim" id="takip"><div class="uyg-kap">
+      <p class="cb-iletisim__ust">Perde kapanmıyor, <em>hikâye sürüyor.</em></p>
+      <h2 class="cb-iletisim__baslik">Bizi takip edin</h2>
+      <p class="cb-iletisim__metin">Yeni fragmanları, sahneleri ve yapım haberlerini CineBook kanallarında izleyin.</p>
+      <ul class="cb-sosyal"><li><a href="https://www.youtube.com/@cinebookoffical" target="_blank" rel="noopener noreferrer" aria-label="YouTube hesabını yeni sekmede aç"><svg class="cb-sosyal__ikon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="4"/><path d="m10 8.5 5 3.5-5 3.5z"/></svg><span class="cb-sosyal__icerik"><strong>YouTube</strong><small>Fragmanlar ve tam bölümler</small></span><span class="cb-sosyal__ok" aria-hidden="true">↗</span></a></li>
+<li><a href="https://www.instagram.com/cinebookofficial" target="_blank" rel="noopener noreferrer" aria-label="Instagram hesabını yeni sekmede aç"><svg class="cb-sosyal__ikon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.7" r=".8" fill="currentColor" stroke="none"/></svg><span class="cb-sosyal__icerik"><strong>Instagram</strong><small>Kısa sahneler ve kamera arkası</small></span><span class="cb-sosyal__ok" aria-hidden="true">↗</span></a></li>
+<li><a href="https://www.tiktok.com/@cinebookaffical" target="_blank" rel="noopener noreferrer" aria-label="TikTok hesabını yeni sekmede aç"><svg class="cb-sosyal__ikon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3v11.2a4.2 4.2 0 1 1-4.2-4.2"/><path d="M14 3c.5 2.7 2.5 4.5 5 4.8"/></svg><span class="cb-sosyal__icerik"><strong>TikTok</strong><small>Dikey kısa videolar</small></span><span class="cb-sosyal__ok" aria-hidden="true">↗</span></a></li>
+<li><a href="https://www.facebook.com/search/top?q=cinebookoffical" target="_blank" rel="noopener noreferrer" aria-label="Facebook hesabını yeni sekmede aç"><svg class="cb-sosyal__ikon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 21v-8h3l.5-4h-3.5V7.2c0-1.2.4-2 2-2H18V2.2c-.5-.1-1.6-.2-2.8-.2-3 0-4.9 1.8-4.9 5.1V9H7.5v4h2.8v8z"/></svg><span class="cb-sosyal__icerik"><strong>Facebook</strong><small>Duyurular ve topluluk</small></span><span class="cb-sosyal__ok" aria-hidden="true">↗</span></a></li></ul>
+    </div></section>
 
     <div class="akd-alt" role="contentinfo">
         <div class="uyg-kap akd-alt__in">
@@ -317,7 +255,7 @@
                 <a href="#yapimlar">Vizyonda</a>
                 <a href="#studyo">Stüdyo</a>
                 <a href="#cocuk">MST Çocuk</a>
-                <a href="#basvuru">Başvuru</a>
+                <a href="#takip">Takip Et</a>
                 <a href="https://mstyayincilik.com/kvkk-aydinlatma-metni/">KVKK Aydınlatma Metni</a>
                 <a href="https://mstyayincilik.com/">mstyayincilik.com</a>
             </nav>
@@ -325,23 +263,6 @@
         </div>
     </div>
 </main>
-<script>
-/* Sahte sunucu: başvuru formu WordPress olmadan da denenebilsin (kayıt tutulmaz) */
-window.MST_CB = { ajax: '/wp-admin/admin-ajax.php', nonce: 'demo' };
-(function () {
-  var gercek = window.fetch;
-  window.fetch = function (url, opt) {
-    if (url !== MST_CB.ajax) return gercek.apply(this, arguments);
-    var f = opt.body, cevap = function (o) { return Promise.resolve(new Response(JSON.stringify(o), { headers: { 'Content-Type': 'application/json' } })); };
-    var tel = String(f.get('telefon') || '').replace(/\D/g, '');
-    if ((f.get('eser_adi') || '').trim().length < 2) return cevap({ success: false, data: { mesaj: 'Lütfen eserinizin adını yazın.', alan: 'eser_adi' } });
-    if ((f.get('yazar_adi') || '').trim().length < 3) return cevap({ success: false, data: { mesaj: 'Lütfen adınızı ve soyadınızı yazın.', alan: 'yazar_adi' } });
-    if (tel.length < 10) return cevap({ success: false, data: { mesaj: 'Geçerli bir telefon numarası girin (ör. 0532 123 45 67).', alan: 'telefon' } });
-    if (!f.get('kvkk')) return cevap({ success: false, data: { mesaj: 'Devam etmek için onay kutusunu işaretleyin.', alan: 'kvkk' } });
-    return new Promise(function (r) { setTimeout(r, 500); }).then(function () { return cevap({ success: true, data: { mesaj: 'Başvurunuz bize ulaştı. Eserinizi inceleyip en kısa sürede sizinle iletişime geçeceğiz.' } }); });
-  };
-})();
-</script>
 <script src="/mst-randevu/assets/randevu.js"></script>
 <script src="/mst-randevu/assets/uygulama.js"></script>
 <script src="/mst-randevu/assets/cinebook.js"></script>

@@ -77,17 +77,23 @@ class MST_CineBook
         $l = [];
         foreach ((array) ($o['yapimlar'] ?? []) as $y) {
             if (empty($y['ad'])) continue;
+            $afis = $y['afis'] ?? '';
+            if (!$afis) {
+                $ad_kodu = sanitize_title($y['ad']);
+                if ($ad_kodu === 'gokboru') $afis = $o['fragman_gorsel'] ?: MST_Randevu::varlik('gokboru-afis.jpg');
+                if ($ad_kodu === 'mechul-tren') $afis = MST_Randevu::varlik('mechul-tren-afis.png');
+            }
             $l[] = [
                 'ad' => $y['ad'], 'tur' => $y['tur'] === 'cocuk' ? 'cocuk' : 'cinebook',
                 'etiket' => $y['etiket'] ?: ($y['tur'] === 'cocuk' ? 'Çizgi film' : 'Kitap fragmanı'),
-                'yil' => $y['yil'] ?? '', 'video' => self::video_kodu($y['video'] ?? ''), 'afis' => $y['afis'] ?? '',
+                'yil' => $y['yil'] ?? '', 'video' => self::video_kodu($y['video'] ?? ''), 'afis' => $afis,
             ];
         }
         if (!$l) {
             $l[] = ['ad' => $o['fragman_ad'] ?: 'Gökbörü', 'tur' => 'cinebook', 'etiket' => $o['fragman_etiket'] ?: 'İlk bölüm', 'yil' => '',
-                    'video' => self::video_kodu($o['fragman_url']), 'afis' => $o['fragman_gorsel']];
+                    'video' => self::video_kodu($o['fragman_url']), 'afis' => $o['fragman_gorsel'] ?: MST_Randevu::varlik('gokboru-afis.jpg')];
             // Sıradaki yapım: afişi ve videosu gelince CineBook Ayarları → Yapımlar'dan güncellenir
-            $l[] = ['ad' => 'Meçhul Tren', 'tur' => 'cinebook', 'etiket' => 'Çok yakında sizlerle', 'yil' => '', 'video' => '', 'afis' => ''];
+            $l[] = ['ad' => 'Meçhul Tren', 'tur' => 'cinebook', 'etiket' => 'Çok yakında sizlerle', 'yil' => '', 'video' => '', 'afis' => MST_Randevu::varlik('mechul-tren-afis.png')];
             if (self::video_kodu($o['cocuk_url'])) {
                 $l[] = ['ad' => 'MST Çocuk', 'tur' => 'cocuk', 'etiket' => 'Çizgi film', 'yil' => '', 'video' => self::video_kodu($o['cocuk_url']), 'afis' => ''];
             }
@@ -166,7 +172,7 @@ class MST_CineBook
         if (!wp_style_is('mst-akademi', 'registered')) wp_register_style('mst-akademi', MST_Randevu::varlik('akademi.css'), ['mst-uygulama'], null);
         wp_register_style('mst-cinebook', MST_Randevu::varlik('cinebook.css'), ['mst-akademi'], null);
         wp_register_script('mst-cinebook', MST_Randevu::varlik('cinebook.js'), [], null, true);
-        wp_enqueue_style('mst-cinebook-font', 'https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap', [], null);
+        wp_enqueue_style('mst-cinebook-font', 'https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Cormorant+Garamond:wght@500;600;700&display=swap', [], null);
         wp_enqueue_style('mst-randevu-font');
         wp_enqueue_style('mst-cinebook');
         wp_enqueue_script('mst-randevu');
