@@ -45,13 +45,14 @@
     if (!d) return;
     var yer = d.querySelector('.cb-perdelik__yer'), donus = null;
     function ac(id, baslik, kaynak) {
-      var f = document.createElement('iframe');
-      f.src = ytAdres(id, 'autoplay=1&rel=0&playsinline=1');
+      var ig = id.indexOf('ig:') === 0, f = document.createElement('iframe');
+      f.src = ig ? 'https://www.instagram.com/p/' + encodeURIComponent(id.slice(3)) + '/embed/' : ytAdres(id, 'autoplay=1&rel=0&playsinline=1');
       f.title = baslik || 'Video';
       f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
       f.allowFullscreen = true;
       var k = document.createElement('div');
-      k.className = 'cb-video is-oynuyor';
+      k.className = 'cb-video is-oynuyor' + (ig ? ' cb-video--dikey' : '');
+      d.classList.toggle('cb-perdelik--dikey', ig);
       k.appendChild(f);
       yer.innerHTML = ''; yer.appendChild(k);
       d.setAttribute('aria-label', baslik || 'Video');

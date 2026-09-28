@@ -48,8 +48,9 @@ class MST_CineBook
     public static function defaults()
     {
         return [
-            'fragman_url'  => '',   // öne çıkan fragman (YouTube)
+            'fragman_url'  => 'https://www.instagram.com/p/DdW_g0xhye3/', // öne çıkan video (YouTube ya da Instagram)
             'fragman_ad'   => 'Gökbörü',
+            'fragman_etiket' => 'İlk bölüm',
             'fragman_gorsel' => '', // öne çıkan fragmanın afişi / kapak görseli
             'cocuk_url'    => '',   // MST Çocuk örnek çizgi film (YouTube)
             'youtube'      => 'https://www.youtube.com/@cinebookoffical',
@@ -79,20 +80,36 @@ class MST_CineBook
             $l[] = [
                 'ad' => $y['ad'], 'tur' => $y['tur'] === 'cocuk' ? 'cocuk' : 'cinebook',
                 'etiket' => $y['etiket'] ?: ($y['tur'] === 'cocuk' ? 'Çizgi film' : 'Kitap fragmanı'),
-                'yil' => $y['yil'] ?? '', 'video' => self::youtube_id($y['video'] ?? ''), 'afis' => $y['afis'] ?? '',
+                'yil' => $y['yil'] ?? '', 'video' => self::video_kodu($y['video'] ?? ''), 'afis' => $y['afis'] ?? '',
             ];
         }
         if (!$l) {
-            $l[] = ['ad' => $o['fragman_ad'] ?: 'Gökbörü', 'tur' => 'cinebook', 'etiket' => 'İlk fragman', 'yil' => '',
-                    'video' => self::youtube_id($o['fragman_url']), 'afis' => $o['fragman_gorsel']];
-            if (self::youtube_id($o['cocuk_url'])) {
-                $l[] = ['ad' => 'MST Çocuk', 'tur' => 'cocuk', 'etiket' => 'Çizgi film', 'yil' => '', 'video' => self::youtube_id($o['cocuk_url']), 'afis' => ''];
+            $l[] = ['ad' => $o['fragman_ad'] ?: 'Gökbörü', 'tur' => 'cinebook', 'etiket' => $o['fragman_etiket'] ?: 'İlk bölüm', 'yil' => '',
+                    'video' => self::video_kodu($o['fragman_url']), 'afis' => $o['fragman_gorsel']];
+            if (self::video_kodu($o['cocuk_url'])) {
+                $l[] = ['ad' => 'MST Çocuk', 'tur' => 'cocuk', 'etiket' => 'Çizgi film', 'yil' => '', 'video' => self::video_kodu($o['cocuk_url']), 'afis' => ''];
             }
         }
         return $l;
     }
 
     /** YouTube adresinden video kimliği (watch?v=, youtu.be/, shorts/, embed/). */
+    /**
+     * Sayfada kullanılan video kodu: YouTube için 11 karakterlik kimlik, Instagram gönderisi / reels için "ig:KOD".
+     * Instagram videoları arka planda dönemez ve kapak görseli alınamaz; yalnızca oynatıcı penceresinde açılır.
+     */
+    public static function video_kodu($url)
+    {
+        if (preg_match('~instagram\.com/(?:[A-Za-z0-9_.]+/)?(?:p|reel|reels|tv)/([A-Za-z0-9_-]+)~', (string) $url, $m)) return 'ig:' . $m[1];
+        return self::youtube_id($url);
+    }
+
+    /** Kod YouTube videosu mu (arka plan ve kapak görseli yalnızca YouTube'da) */
+    public static function youtube_mu($kod)
+    {
+        return $kod !== '' && strpos($kod, 'ig:') !== 0;
+    }
+
     public static function youtube_id($url)
     {
         return preg_match('~(?:youtu\.be/|v=|shorts/|embed/)([A-Za-z0-9_-]{11})~', (string) $url, $m) ? $m[1] : '';
@@ -266,6 +283,7 @@ class MST_CineBook
             $o[$k] = esc_url_raw(trim(wp_unslash($_POST[$k] ?? '')));
         }
         $o['fragman_ad'] = sanitize_text_field(wp_unslash($_POST['fragman_ad'] ?? ''));
+        $o['fragman_etiket'] = sanitize_text_field(wp_unslash($_POST['fragman_etiket'] ?? ''));
         $o['yapimlar'] = [];
         foreach ((array) ($_POST['yapimlar'] ?? []) as $y) {
             $y = wp_unslash((array) $y);
@@ -312,15 +330,16 @@ class MST_CineBook
                 <input type="hidden" name="action" value="mst_cinebook_ayar">
                 <h2>Videolar</h2>
                 <table class="form-table">
-                    <?php $alan('fragman_url', 'Öne çıkan fragman (YouTube)', 'Girişte arka planda sessiz döner; “Şimdi izle” sesli açar.'); ?>
+                    <?php $alan('fragman_url', 'Öne çıkan video (YouTube ya da Instagram)', '“Şimdi izle” bu videoyu açar. YouTube videosu girişte arka planda sessiz de döner; Instagram videosu yalnızca pencerede açılır.'); ?>
                     <tr><th>Fragmanın adı</th><td><input type="text" name="fragman_ad" class="regular-text" value="<?php echo esc_attr($o['fragman_ad']); ?>" placeholder="Gökbörü"></td></tr>
+                    <tr><th>Videonun etiketi</th><td><input type="text" name="fragman_etiket" class="regular-text" value="<?php echo esc_attr($o['fragman_etiket']); ?>" placeholder="İlk bölüm"><p class="description">“Şimdi izle · Gökbörü • İlk bölüm” gibi görünür.</p></td></tr>
                     <?php $alan('fragman_gorsel', 'Fragman görseli (afiş / kapak)', 'Girişin arka planında ve “Şimdi izle” kartında kullanılır. Yatay (16:9) görsel önerilir.', true); ?>
-                    <?php $alan('cocuk_url', 'MST Çocuk örnek çizgi film (YouTube)', 'MST Çocuk bölümünde gösterilir. Boşsa “yakında” görünür.'); ?>
+                    <?php $alan('cocuk_url', 'MST Çocuk çizgi filmi (YouTube ya da Instagram)', 'MST Çocuk bölümünde gösterilir. Boşsa “yakında” görünür.'); ?>
                 </table>
                 <h2>Yapımlar</h2>
                 <p class="description">Sayfadaki filmografi. Hiç yapım girilmezse öne çıkan fragman tek yapım olarak gösterilir. Satırı silmek için adı boşaltıp kaydedin. Afiş için dikey (2:3) görsel önerilir; afiş yoksa videonun kapağı kullanılır.</p>
                 <table class="widefat striped" style="max-width:1100px;margin-top:10px">
-                    <thead><tr><th>Ad</th><th>Tür</th><th>Etiket</th><th>Yıl</th><th>YouTube adresi</th><th>Afiş görseli</th></tr></thead>
+                    <thead><tr><th>Ad</th><th>Tür</th><th>Etiket</th><th>Yıl</th><th>Video (YouTube / Instagram)</th><th>Afiş görseli</th></tr></thead>
                     <tbody data-cb-yapimlar>
                     <?php foreach ($yapimlar as $i => $y) : $n = 'yapimlar[' . (int) $i . ']'; ?>
                         <tr>
