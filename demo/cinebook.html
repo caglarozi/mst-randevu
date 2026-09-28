@@ -29,82 +29,92 @@
 <main class="uyg cb" lang="tr">
 
     <!-- ============ Showreel ============
-         Fragman adresi varsa arka planda sessiz döner (hareketi azalt açıksa dönmez);
-         "Showreel'i izle" aynı videoyu sesli açar. Adres yoksa koyu sahne ve yer tutucu. -->
+         Fragman adresi varsa arka planda sessiz döner (hareketi azalt açıksa dönmez); fragman görseli
+         video yüklenene kadar ve video yoksa arka plan olur. "Şimdi izle" aynı fragmanı sesli açar. -->
     <section class="cb-reel" id="showreel" >
-        <div class="cb-reel__arka" aria-hidden="true"></div>
+        <div class="cb-reel__arka" aria-hidden="true">
+                    </div>
         <nav class="cb-reel__menu" aria-label="Sayfa bölümleri">
             <span class="cb-reel__marka" lang="en">CineBook</span>
-            <a href="#yapimlar">Yapımlar</a><a href="#studyo">Stüdyo</a><a href="#cocuk">MST Çocuk</a><a href="#iletisim">İletişim</a>
+            <a href="#nedir">Hakkında</a><a href="#yapimlar">Yapımlar</a><a href="#studyo">Stüdyo</a><a href="#cocuk">MST Çocuk</a><a href="#iletisim">İletişim</a>
         </nav>
         <div class="cb-reel__in">
-            <p class="cb-reel__ust">MST Yayıncılık yapım stüdyosu</p>
+            <p class="cb-reel__ust">Yeni bir çağ</p>
             <h1 class="cb-reel__baslik"><span lang="en">CineBook</span></h1>
-            <p class="cb-reel__alt">Kitaplardan fragman, kısa film ve çizgi film üretiyoruz.</p>
+            <p class="cb-reel__soz">Hikâyeleri sadece yayımlamıyoruz, <em>ekrana taşıyoruz.</em></p>
+            <p class="cb-reel__alt"><span lang="en">CineBook</span>, MST Yayıncılık bünyesinde kitapları fragmanlara, kısa sahnelere ve dijital film projelerine dönüştüren yeni nesil bir hikâye platformudur.</p>
             <div class="cb-reel__cta">
-                <button type="button" class="cb-oynat-btn" data-cb-ac="cb-reel-oynatici"><span aria-hidden="true"></span>Showreel’i izle</button>
-                <a class="cb-cizgi-btn" href="#iletisim">Birlikte çalışalım</a>
+                                    <a class="cb-oynat-btn" href="#yapimlar"><i aria-hidden="true"></i><span><strong>Yapımlar</strong><small>Gökbörü • İlk fragman yakında</small></span></a>
+                                <a class="cb-cizgi-btn" href="#iletisim">Birlikte çalışalım</a>
             </div>
         </div>
-        <p class="cb-reel__imza"><span>Şimdi</span> Gökbörü · İlk fragman</p>
+        <dl class="cb-kunye">
+            <div><dt>4+</dt><dd>Sosyal medya platformu</dd></div><div><dt>Yeni nesil</dt><dd>Dijital hikâye anlatımı</dd></div><div><dt>Filmleşen</dt><dd>Kitap ve fragman projeleri</dd></div>        </dl>
     </section>
 
-    <dialog class="cb-perdelik" id="cb-reel-oynatici" aria-label="Gökbörü fragmanı">
+    <dialog class="cb-perdelik" id="cb-perdelik" aria-label="Video">
         <button type="button" class="cb-perdelik__kapat" data-cb-kapat aria-label="Kapat">×</button>
-        <div class="cb-video cb-video--bos "><span class="cb-video__oynat" aria-hidden="true"></span><p><strong>Gökbörü — İlk fragman</strong><small>Video adresi CineBook Ayarları’ndan eklenecek</small></p></div>    </dialog>
+        <div class="cb-perdelik__yer"></div>
+    </dialog>
+
+    <!-- ============ CineBook nedir? ============ -->
+    <section class="cb-bolum cb-nedir" id="nedir">
+        <div class="uyg-kap">
+            <p class="cb-etiket"><span lang="en">CineBook</span> nedir?</p>
+            <h2 class="cb-nedir__soz">Kitabın görünür hâle gelen versiyonu.</h2>
+            <ol class="cb-nedir__liste">
+                                    <li><span>01</span><h3>Dijital anlatı platformu</h3><p>CineBook, kitapları yalnızca tanıtan değil, onları sahnelere ve görsel deneyimlere dönüştüren özel bir yapı sunar.</p></li>
+                                    <li><span>02</span><h3>Yazar, okur, izleyici</h3><p>Aynı hikâyeyi üç farklı kitleye ulaştırır. Okuyan için eser, izleyen için sahne, yazar için vitrin oluşturur.</p></li>
+                                    <li><span>03</span><h3>Sosyal medya odaklı büyüme</h3><p>Üretilen fragmanlar ve sahneler YouTube, Instagram, TikTok ve Facebook gibi mecralara uygun biçimde hazırlanır. Böylece hikâye rafta kalmaz, ekranda da yaşamaya devam eder.</p></li>
+                            </ol>
+        </div>
+    </section>
 
     <!-- ============ Yapımlar: filmografi ============ -->
-    <section class="cb-bolum" id="yapimlar">
+    <section class="cb-bolum cb-bolum--yapim" id="yapimlar">
         <div class="uyg-kap">
-            <header class="cb-bas">
+            <header class="cb-bas cb-bas--yan">
+                <p class="cb-etiket">Filmografi</p>
                 <h2>Yapımlar</h2>
-                <div class="cb-suzgec" role="group" aria-label="Yapımları süz">
-                    <button type="button" class="is-secili" data-cb-suz="hepsi">Tümü</button>
-                    <button type="button" data-cb-suz="cinebook"><span lang="en">CineBook</span></button>
-                    <button type="button" data-cb-suz="cocuk">MST Çocuk</button>
-                </div>
-            </header>
+                <p class="cb-bas__metin">Kitaplardan uyarlanan fragmanlar, kısa sahneler ve çizgi filmler. Her yapım, eserin kendi dünyasından doğar.</p>
+                            </header>
             <ul class="cb-filmografi">
-                                    <li data-cb-grup="cinebook" class="">
-                        <div class="cb-afis">                            <span class="cb-afis__yer"><strong>Gökbörü</strong><small>Afiş eklenecek</small></span>                                                    </div>                        <h3>Gökbörü</h3>
-                        <p>Kitap fragmanı · 2026 · <span class="cb-durum">Yayında</span></p>
-                    </li>
-                                    <li data-cb-grup="cinebook" class="is-yakinda">
-                        <div class="cb-afis">                            <span class="cb-afis__yer"><strong>Yakında</strong><small>Afiş eklenecek</small></span>                                                    </div>                        <h3>Yakında</h3>
-                        <p>Kitap fragmanı · <span class="cb-durum">Yapımda</span></p>
-                    </li>
-                                    <li data-cb-grup="cocuk" class="is-yakinda">
-                        <div class="cb-afis">                            <span class="cb-afis__yer"><strong>Yakında</strong><small>Afiş eklenecek</small></span>                                                    </div>                        <h3>Yakında</h3>
-                        <p>Çizgi film · <span class="cb-durum">Yapımda</span></p>
+                                    <li data-cb-grup="cinebook">
+                        <div class="cb-afis cb-afis--yazi">
+                                                                                        <span class="cb-afis__yazi"><small lang="en">CineBook</small><strong>Gökbörü</strong><em>İlk fragman</em></span>
+                                                                                </div>
+                        <h3>Gökbörü</h3>
+                        <p>İlk fragman · <span class="cb-durum is-yapimda">Yapımda</span></p>
                     </li>
                                 <li data-cb-grup="hepsi" class="cb-filmografi__siradaki">
                     <a class="cb-afis cb-afis--bos" href="#iletisim"><span><small>Sıradaki yapım</small><strong>Sizin kitabınız</strong><em>Başvurun</em></span></a>
                     <h3>Sizin kitabınız</h3>
-                    <p>Fragman ya da çizgi film · Başvuruya açık</p>
+                    <p>Fragman ya da çizgi film · <span class="cb-durum">Başvuruya açık</span></p>
                 </li>
             </ul>
         </div>
     </section>
 
-    <!-- ============ Stüdyo ============ -->
+    <!-- ============ Stüdyo ve kitapların filme yolculuğu ============ -->
     <section class="cb-bolum cb-bolum--koyu" id="studyo">
         <div class="uyg-kap">
             <div class="cb-studyo">
                 <div>
                     <p class="cb-etiket">Stüdyo</p>
                     <h2 class="cb-studyo__soz">Kitabı ekrana taşıyan ekip, kitabı yayına hazırlayan ekiptir.</h2>
-                    <p class="cb-studyo__metin"><span lang="en">CineBook</span>, MST Yayıncılık’ın yapım stüdyosudur. Eserin hikâyesini, karakterlerini ve atmosferini fragmana, kısa filme ve sosyal medya videolarına uyarlar; çocuk kitaplarını MST Çocuk etiketiyle çizgi filme dönüştürür.</p>
+                    <p class="cb-studyo__metin"><span lang="en">CineBook</span>, MST Yayıncılık’ın yapım stüdyosudur. Eserin hikâyesini, karakterlerini ve atmosferini fragmana, kısa sahnelere ve sosyal medya videolarına uyarlar; çocuk kitaplarını MST Çocuk etiketiyle çizgi filme dönüştürür.</p>
                 </div>
                 <div class="cb-jenerik">
                     <p class="cb-etiket">Neler yapıyoruz</p>
                     <ul><li>Senaryo uyarlaması</li><li>Storyboard</li><li>Karakter ve görsel tasarım</li><li>Kurgu</li><li>Seslendirme</li><li>Müzik ve ses tasarımı</li><li>Animasyon</li><li>Dikey video</li><li>Dijital yayın</li></ul>
                 </div>
             </div>
+            <h3 class="cb-yolculuk__baslik">Kitapların filme yolculuğu</h3>
             <ol class="cb-surec">
-                                    <li><span>1</span><h3>Eser seçimi</h3><p>Hikâye, karakterler ve görsel anlatım potansiyeli değerlendirilir.</p></li>
-                                    <li><span>2</span><h3>Senaryo uyarlaması</h3><p>Kitabın en güçlü sahneleri kısa bir anlatıya dönüştürülür.</p></li>
-                                    <li><span>3</span><h3>Yapım</h3><p>Görsel tasarım, kurgu, seslendirme ve müzik bir araya gelir.</p></li>
-                                    <li><span>4</span><h3>Yayın</h3><p>Fragman CineBook kanallarında ve yazarın hesaplarında yayınlanır.</p></li>
+                                    <li><span>01</span><h4>Eser seçimi</h4><p>Sinematik potansiyele sahip kitaplar seçilir ve projelendirilir.</p></li>
+                                    <li><span>02</span><h4>Senaryo uyarlaması</h4><p>Hikâye sahnelere ayrılır, ritim ve görsel dünya kurulmaya başlanır.</p></li>
+                                    <li><span>03</span><h4>Fragman üretimi</h4><p>Teaser, kısa sahne ve tanıtım videoları çok kanallı yayın için hazırlanır.</p></li>
+                                    <li><span>04</span><h4>Dijital yayın</h4><p>İçerik sosyal medya platformlarında izleyiciyle buluşur ve büyütülür.</p></li>
                             </ol>
         </div>
     </section>
@@ -121,7 +131,7 @@
                     <a class="cb-cocuk__btn" href="#iletisim" data-cb-tur="cocuk">Çocuk kitabınız için başvurun</a>
                 </div>
                 <div class="cb-cocuk__sahne">
-                    <div class="cb-video cb-video--bos cb-video--cocuk"><span class="cb-video__oynat" aria-hidden="true"></span><p><strong>MST Çocuk örnek çizgi film</strong><small>Video adresi CineBook Ayarları’ndan eklenecek</small></p></div>                </div>
+                    <div class="cb-video cb-video--bos cb-video--cocuk"><span class="cb-video__oynat" aria-hidden="true"></span><p><strong>MST Çocuk’un ilk çizgi filmi</strong><small>Yakında burada</small></p></div>                </div>
             </div>
 
             <ol class="cb-cocuk__surec">
@@ -149,22 +159,7 @@
             <div class="cb-iletisim__in">
                 <div class="cb-iletisim__sol">
                     <p class="cb-iletisim__metin">Kitabınızın ekranda hayat bulmasını istiyorsanız eserinizi gönderin. Başvurunuzu inceleyip sizi arıyoruz; uygun eserler için uyarlama planını birlikte hazırlıyoruz.</p>
-                    <a class="cb-wa" href="https://wa.me/905551112233?text=Merhaba%2C%20CineBook%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum." target="_blank" rel="noopener"><svg class="mst-ic" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg> WhatsApp’tan yazın</a>                    <p class="cb-etiket cb-etiket--ara">Takip edin</p>
-                    <ul class="cb-sosyal">
-                                                    <li><a href="https://www.youtube.com/@cinebookoffical" target="_blank" rel="noopener"><strong>YouTube</strong><span>@cinebookoffical</span></a></li>
-                                                    <li><a href="https://www.instagram.com/cinebookofficial" target="_blank" rel="noopener"><strong>Instagram</strong><span>@cinebookofficial</span></a></li>
-                                                    <li><a href="https://www.facebook.com/search/top?q=cinebookoffical" target="_blank" rel="noopener"><strong>Facebook</strong><span>@cinebookoffical</span></a></li>
-                                                    <li><a href="https://www.tiktok.com/@cinebookaffical" target="_blank" rel="noopener"><strong>TikTok</strong><span>@cinebookaffical</span></a></li>
-                                            </ul>
-                    <div class="cb-sss">
-                        <p class="cb-etiket cb-etiket--ara">Sık sorulanlar</p>
-                                                    <details><summary>Kitabımın yayımlanmış olması gerekir mi?</summary><p>Başvuru sırasında kitabınızın yayımlanmış ya da yayına hazır olması değerlendirmeyi kolaylaştırır. Durumunuzu formdaki kısa özet alanına yazabilirsiniz.</p></details>
-                                                    <details><summary>MST Yayıncılık dışında yayımlanmış kitaplar başvurabilir mi?</summary><p>Evet, başvurabilir. Her başvuru hikâyesine ve uyarlama potansiyeline göre ayrı değerlendirilir.</p></details>
-                                                    <details><summary>Fragman ya da çizgi film ne kadar sürede hazırlanır?</summary><p>Süre; eserin uzunluğuna, sahne sayısına ve seslendirme ihtiyacına göre değişir. Değerlendirme sonrası size bir zaman planı sunulur.</p></details>
-                                                    <details><summary>Hangi çocuk kitapları çizgi filme uygundur?</summary><p>Resimli çocuk kitapları, masallar ve kısa öyküler en uygun eserlerdir. Kitabın çizimleri karakter tasarımının temelini oluşturur.</p></details>
-                                                    <details><summary>Başvurudan sonra ne olur?</summary><p>Başvurunuz incelenir ve ekibimiz sizi arar. Uygun bulunan eserler için uyarlama planı birlikte hazırlanır.</p></details>
-                                            </div>
-                </div>
+                    <a class="cb-wa" href="https://wa.me/905551112233?text=Merhaba%2C%20CineBook%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum." target="_blank" rel="noopener"><svg class="mst-ic" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg> WhatsApp’tan yazın</a>                </div>
             <form class="cb-form" data-cb-form novalidate>
                 <fieldset class="cb-form__tur">
                     <legend>Başvuru türü</legend>
@@ -184,6 +179,23 @@
                 <button type="submit" class="uyg-btn uyg-btn--altin cb-form__gonder">Başvuruyu Gönder</button>
                 <div class="cb-form__tamam" data-cb-tamam hidden></div>
             </form>
+                <div class="cb-iletisim__ek">
+                                            <p class="cb-etiket cb-etiket--ara" id="takip">Takip edin</p>
+                        <ul class="cb-sosyal">
+                                                            <li><a href="https://www.youtube.com/@cinebookoffical" target="_blank" rel="noopener"><strong>YouTube</strong><span>@cinebookoffical</span><small>Fragmanlar ve tam bölümler</small></a></li>
+                                                            <li><a href="https://www.instagram.com/cinebookofficial" target="_blank" rel="noopener"><strong>Instagram</strong><span>@cinebookofficial</span><small>Kısa sahneler ve kamera arkası</small></a></li>
+                                                            <li><a href="https://www.tiktok.com/@cinebookaffical" target="_blank" rel="noopener"><strong>TikTok</strong><span>@cinebookaffical</span><small>Dikey kısa videolar</small></a></li>
+                                                            <li><a href="https://www.facebook.com/search/top?q=cinebookoffical" target="_blank" rel="noopener"><strong>Facebook</strong><span>@cinebookoffical</span><small>Duyurular ve topluluk</small></a></li>
+                                                    </ul>
+                                        <div class="cb-sss">
+                        <p class="cb-etiket cb-etiket--ara">Sık sorulanlar</p>
+                                                    <details><summary>Kitabımın yayımlanmış olması gerekir mi?</summary><p>Başvuru sırasında kitabınızın yayımlanmış ya da yayına hazır olması değerlendirmeyi kolaylaştırır. Durumunuzu formdaki kısa özet alanına yazabilirsiniz.</p></details>
+                                                    <details><summary>MST Yayıncılık dışında yayımlanmış kitaplar başvurabilir mi?</summary><p>Evet, başvurabilir. Her başvuru hikâyesine ve uyarlama potansiyeline göre ayrı değerlendirilir.</p></details>
+                                                    <details><summary>Fragman ya da çizgi film ne kadar sürede hazırlanır?</summary><p>Süre; eserin uzunluğuna, sahne sayısına ve seslendirme ihtiyacına göre değişir. Değerlendirme sonrası size bir zaman planı sunulur.</p></details>
+                                                    <details><summary>Hangi çocuk kitapları çizgi filme uygundur?</summary><p>Resimli çocuk kitapları, masallar ve kısa öyküler en uygun eserlerdir. Kitabın çizimleri karakter tasarımının temelini oluşturur.</p></details>
+                                                    <details><summary>Başvurudan sonra ne olur?</summary><p>Başvurunuz incelenir ve ekibimiz sizi arar. Uygun bulunan eserler için uyarlama planı birlikte hazırlanır.</p></details>
+                                            </div>
+                </div>
             </div>
         </div>
     </section>
@@ -195,6 +207,7 @@
                 <span><strong>MST Yayıncılık</strong><small><bdi lang="en">CineBook</bdi> · MST Çocuk</small></span>
             </a>
             <nav class="akd-alt__linkler" aria-label="Alt menü">
+                <a href="#nedir">Hakkında</a>
                 <a href="#yapimlar">Yapımlar</a>
                 <a href="#studyo">Stüdyo</a>
                 <a href="#cocuk">MST Çocuk</a>

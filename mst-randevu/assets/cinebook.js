@@ -39,37 +39,38 @@
     arka.appendChild(f);
   }
 
-  /* Perdelik oynatıcı: "Showreel'i izle" ve afişler açar; kapanınca video durur */
+  /* Perdelik oynatıcı: "Şimdi izle" ve afişler aynı pencerede açar; kapanınca video durur, odak geri döner */
   function perdelik() {
-    var d = document.getElementById('cb-reel-oynatici');
+    var d = document.getElementById('cb-perdelik');
     if (!d) return;
-    var ilk = d.innerHTML;
-    function ac(id) {
-      if (id) {
-        var k = d.querySelector('.cb-video');
-        var f = document.createElement('iframe');
-        f.src = ytAdres(id, 'autoplay=1&rel=0');
-        f.title = 'Video';
-        f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
-        f.allowFullscreen = true;
-        var b = document.createElement('div');
-        b.className = 'cb-video is-oynuyor';
-        b.appendChild(f);
-        if (k) k.replaceWith(b); else d.appendChild(b);
-      }
+    var yer = d.querySelector('.cb-perdelik__yer'), donus = null;
+    function ac(id, baslik, kaynak) {
+      var f = document.createElement('iframe');
+      f.src = ytAdres(id, 'autoplay=1&rel=0&playsinline=1');
+      f.title = baslik || 'Video';
+      f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+      f.allowFullscreen = true;
+      var k = document.createElement('div');
+      k.className = 'cb-video is-oynuyor';
+      k.appendChild(f);
+      yer.innerHTML = ''; yer.appendChild(k);
+      d.setAttribute('aria-label', baslik || 'Video');
+      donus = kaynak;
       if (typeof d.showModal === 'function') d.showModal(); else d.setAttribute('open', '');
+      document.documentElement.classList.add('cb-perde-acik');
     }
-    function kapat() { if (d.close) d.close(); else d.removeAttribute('open'); }
-    document.querySelectorAll('[data-cb-ac]').forEach(function (b) {
-      b.addEventListener('click', function () { ac(null); });
-    });
+    function kapat() { if (d.close) d.close(); else { d.removeAttribute('open'); d.dispatchEvent(new Event('close')); } }
     document.querySelectorAll('[data-cb-video-ac]').forEach(function (b) {
-      b.addEventListener('click', function () { ac(b.getAttribute('data-cb-video-ac')); });
+      b.addEventListener('click', function () { ac(b.getAttribute('data-cb-video-ac'), b.getAttribute('data-cb-baslik'), b); });
     });
     d.addEventListener('click', function (e) {
       if (e.target === d || e.target.closest('[data-cb-kapat]')) kapat();
     });
-    d.addEventListener('close', function () { d.innerHTML = ilk; videolar(d); });
+    d.addEventListener('close', function () {
+      yer.innerHTML = '';
+      document.documentElement.classList.remove('cb-perde-acik');
+      if (donus) donus.focus();
+    });
   }
 
   /* Filmografi süzgeci */

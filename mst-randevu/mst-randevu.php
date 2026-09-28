@@ -482,6 +482,10 @@ class MST_Randevu
             $m = ['Yazar Kariyer Akademisi | MST Yayıncılık',
                   'Yazar kimliği, sosyal medya, içerik üretimi, yapay zekâ, video, kitap lansmanı, PR ve kariyer planlaması eğitimleri. Yazma aşamasından profesyonel yazar markasına kadar sabit müfredatlı programlar.',
                   'paylasim-akademi.jpg'];
+        } elseif ($tur === 'cinebook') {
+            $m = ['CineBook: Kitaptan Fragman ve Çizgi Film | MST Yayıncılık',
+                  'Hikâyeleri sadece yayımlamıyoruz, ekrana taşıyoruz. CineBook, kitapları fragmanlara, kısa sahnelere ve dijital film projelerine dönüştürür; MST Çocuk çocuk kitaplarını çizgi filme uyarlar.',
+                  'paylasim-cinebook.jpg'];
         } else $m = $tur === 'uygulama'
             ? ['MST Yazar Paneli: kitabınızın içindekiler sayfası',
                'Yayınevinde kitabınıza ne oluyorsa, anında telefonunuzda: yayın süreci, satışlar, telif, tanıtım, kariyer planı ve 7/24 Yazar Asistanı. MST yazarlarına özel.',

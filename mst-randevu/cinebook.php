@@ -50,6 +50,7 @@ class MST_CineBook
         return [
             'fragman_url'  => '',   // öne çıkan fragman (YouTube)
             'fragman_ad'   => 'Gökbörü',
+            'fragman_gorsel' => '', // öne çıkan fragmanın afişi / kapak görseli
             'cocuk_url'    => '',   // MST Çocuk örnek çizgi film (YouTube)
             'youtube'      => 'https://www.youtube.com/@cinebookoffical',
             'instagram'    => 'https://www.instagram.com/cinebookofficial',
@@ -61,7 +62,34 @@ class MST_CineBook
     public static function opts()
     {
         // Boş bırakılan alanlarda varsayılan (CineBook hesapları) kullanılır
-        return wp_parse_args(array_filter((array) get_option(self::OPT, []), 'strlen'), self::defaults());
+        $kayit = array_filter((array) get_option(self::OPT, []), function ($v) { return is_array($v) || (string) $v !== ''; });
+        return wp_parse_args($kayit, self::defaults());
+    }
+
+    /**
+     * Filmografi. Yönetimden girilen yapımlar; hiç yoksa öne çıkan fragman ve MST Çocuk videosundan üretilir.
+     * Her satır: ad, tur (cinebook|cocuk), etiket, yil, video (YouTube kimliği), afis (görsel adresi).
+     */
+    public static function yapimlar()
+    {
+        $o = self::opts();
+        $l = [];
+        foreach ((array) ($o['yapimlar'] ?? []) as $y) {
+            if (empty($y['ad'])) continue;
+            $l[] = [
+                'ad' => $y['ad'], 'tur' => $y['tur'] === 'cocuk' ? 'cocuk' : 'cinebook',
+                'etiket' => $y['etiket'] ?: ($y['tur'] === 'cocuk' ? 'Çizgi film' : 'Kitap fragmanı'),
+                'yil' => $y['yil'] ?? '', 'video' => self::youtube_id($y['video'] ?? ''), 'afis' => $y['afis'] ?? '',
+            ];
+        }
+        if (!$l) {
+            $l[] = ['ad' => $o['fragman_ad'] ?: 'Gökbörü', 'tur' => 'cinebook', 'etiket' => 'İlk fragman', 'yil' => '',
+                    'video' => self::youtube_id($o['fragman_url']), 'afis' => $o['fragman_gorsel']];
+            if (self::youtube_id($o['cocuk_url'])) {
+                $l[] = ['ad' => 'MST Çocuk', 'tur' => 'cocuk', 'etiket' => 'Çizgi film', 'yil' => '', 'video' => self::youtube_id($o['cocuk_url']), 'afis' => ''];
+            }
+        }
+        return $l;
     }
 
     /** YouTube adresinden video kimliği (watch?v=, youtu.be/, shorts/, embed/). */
@@ -234,10 +262,23 @@ class MST_CineBook
         if (!current_user_can('manage_options')) wp_die('Yetkisiz');
         check_admin_referer('mst_cinebook_ayar');
         $o = self::opts();
-        foreach (['fragman_url', 'cocuk_url', 'youtube', 'instagram', 'facebook', 'tiktok'] as $k) {
+        foreach (['fragman_url', 'fragman_gorsel', 'cocuk_url', 'youtube', 'instagram', 'facebook', 'tiktok'] as $k) {
             $o[$k] = esc_url_raw(trim(wp_unslash($_POST[$k] ?? '')));
         }
         $o['fragman_ad'] = sanitize_text_field(wp_unslash($_POST['fragman_ad'] ?? ''));
+        $o['yapimlar'] = [];
+        foreach ((array) ($_POST['yapimlar'] ?? []) as $y) {
+            $y = wp_unslash((array) $y);
+            if (trim($y['ad'] ?? '') === '') continue;
+            $o['yapimlar'][] = [
+                'ad'     => sanitize_text_field($y['ad']),
+                'tur'    => ($y['tur'] ?? '') === 'cocuk' ? 'cocuk' : 'cinebook',
+                'etiket' => sanitize_text_field($y['etiket'] ?? ''),
+                'yil'    => preg_replace('/\D/', '', (string) ($y['yil'] ?? '')),
+                'video'  => esc_url_raw(trim($y['video'] ?? '')),
+                'afis'   => esc_url_raw(trim($y['afis'] ?? '')),
+            ];
+        }
         update_option(self::OPT, $o);
         MST_Randevu::onbellek_temizle();
         wp_safe_redirect(add_query_arg(['page' => 'mst-cinebook', 'mst_msg' => rawurlencode('Ayarlar kaydedildi.')], admin_url('admin.php')));
@@ -249,10 +290,14 @@ class MST_CineBook
         $o     = self::opts();
         $msg   = isset($_GET['mst_msg']) ? sanitize_text_field(wp_unslash($_GET['mst_msg'])) : '';
         $sayfa = self::url();
-        $alan  = function ($k, $etiket, $ipucu = '') use ($o) {
+        $alan  = function ($k, $etiket, $ipucu = '', $gorsel = false) use ($o) {
             echo '<tr><th>' . esc_html($etiket) . '</th><td><input type="url" name="' . esc_attr($k) . '" class="large-text" value="' . esc_attr($o[$k]) . '" placeholder="https://…">'
+                . ($gorsel ? ' <button type="button" class="button" data-cb-medya>Ortam kitaplığından seç</button>' : '')
                 . ($ipucu ? '<p class="description">' . esc_html($ipucu) . '</p>' : '') . '</td></tr>';
         };
+        $yapimlar = array_values((array) ($o['yapimlar'] ?? []));
+        $yapimlar[] = ['ad' => '', 'tur' => 'cinebook', 'etiket' => '', 'yil' => '', 'video' => '', 'afis' => '']; // boş satır
+        wp_enqueue_media();
         ?>
         <div class="wrap">
             <h1>CineBook ve MST Çocuk</h1>
@@ -267,10 +312,29 @@ class MST_CineBook
                 <input type="hidden" name="action" value="mst_cinebook_ayar">
                 <h2>Videolar</h2>
                 <table class="form-table">
-                    <?php $alan('fragman_url', 'Öne çıkan fragman (YouTube)', 'Sayfanın girişinde büyük oynatıcıda gösterilir. Boşsa yer tutucu görünür.'); ?>
+                    <?php $alan('fragman_url', 'Öne çıkan fragman (YouTube)', 'Girişte arka planda sessiz döner; “Şimdi izle” sesli açar.'); ?>
                     <tr><th>Fragmanın adı</th><td><input type="text" name="fragman_ad" class="regular-text" value="<?php echo esc_attr($o['fragman_ad']); ?>" placeholder="Gökbörü"></td></tr>
-                    <?php $alan('cocuk_url', 'MST Çocuk örnek çizgi film (YouTube)', 'MST Çocuk bölümünde gösterilir.'); ?>
+                    <?php $alan('fragman_gorsel', 'Fragman görseli (afiş / kapak)', 'Girişin arka planında ve “Şimdi izle” kartında kullanılır. Yatay (16:9) görsel önerilir.', true); ?>
+                    <?php $alan('cocuk_url', 'MST Çocuk örnek çizgi film (YouTube)', 'MST Çocuk bölümünde gösterilir. Boşsa “yakında” görünür.'); ?>
                 </table>
+                <h2>Yapımlar</h2>
+                <p class="description">Sayfadaki filmografi. Hiç yapım girilmezse öne çıkan fragman tek yapım olarak gösterilir. Satırı silmek için adı boşaltıp kaydedin. Afiş için dikey (2:3) görsel önerilir; afiş yoksa videonun kapağı kullanılır.</p>
+                <table class="widefat striped" style="max-width:1100px;margin-top:10px">
+                    <thead><tr><th>Ad</th><th>Tür</th><th>Etiket</th><th>Yıl</th><th>YouTube adresi</th><th>Afiş görseli</th></tr></thead>
+                    <tbody data-cb-yapimlar>
+                    <?php foreach ($yapimlar as $i => $y) : $n = 'yapimlar[' . (int) $i . ']'; ?>
+                        <tr>
+                            <td><input type="text" name="<?php echo esc_attr($n); ?>[ad]" value="<?php echo esc_attr($y['ad']); ?>" placeholder="Gökbörü" style="width:100%"></td>
+                            <td><select name="<?php echo esc_attr($n); ?>[tur]"><option value="cinebook">CineBook</option><option value="cocuk" <?php selected($y['tur'], 'cocuk'); ?>>MST Çocuk</option></select></td>
+                            <td><input type="text" name="<?php echo esc_attr($n); ?>[etiket]" value="<?php echo esc_attr($y['etiket']); ?>" placeholder="Kitap fragmanı" style="width:100%"></td>
+                            <td><input type="text" name="<?php echo esc_attr($n); ?>[yil]" value="<?php echo esc_attr($y['yil']); ?>" placeholder="<?php echo esc_attr(wp_date('Y')); ?>" size="5"></td>
+                            <td><input type="url" name="<?php echo esc_attr($n); ?>[video]" value="<?php echo esc_attr($y['video']); ?>" placeholder="https://youtu.be/…" style="width:100%"></td>
+                            <td><input type="url" name="<?php echo esc_attr($n); ?>[afis]" value="<?php echo esc_attr($y['afis']); ?>" placeholder="https://…" style="width:70%"> <button type="button" class="button" data-cb-medya>Seç</button></td>
+                        </tr>
+                    <?php endforeach; ?>
+                    </tbody>
+                </table>
+                <p><button type="button" class="button" data-cb-satir>+ Yapım ekle</button></p>
                 <h2>Sosyal medya</h2>
                 <table class="form-table">
                     <?php $alan('youtube', 'YouTube kanalı'); $alan('instagram', 'Instagram'); $alan('facebook', 'Facebook sayfası'); $alan('tiktok', 'TikTok'); ?>
@@ -278,6 +342,24 @@ class MST_CineBook
                 <?php submit_button('Kaydet'); ?>
             </form>
         </div>
+        <script>
+        (function () {
+            document.addEventListener('click', function (e) {
+                var b = e.target.closest('[data-cb-medya]');
+                if (b && window.wp && wp.media) {
+                    var girdi = b.parentNode.querySelector('input[type=url]');
+                    var c = wp.media({ title: 'Görsel seç', library: { type: 'image' }, button: { text: 'Kullan' }, multiple: false });
+                    c.on('select', function () { girdi.value = c.state().get('selection').first().toJSON().url; });
+                    c.open();
+                }
+                if (e.target.closest('[data-cb-satir]')) {
+                    var g = document.querySelector('[data-cb-yapimlar]'), son = g.lastElementChild, yeni = son.cloneNode(true), n = g.children.length;
+                    yeni.querySelectorAll('input, select').forEach(function (x) { x.name = x.name.replace(/\[\d+\]/, '[' + n + ']'); if (x.tagName === 'INPUT') x.value = ''; });
+                    g.appendChild(yeni);
+                }
+            });
+        })();
+        </script>
         <?php
     }
 }
