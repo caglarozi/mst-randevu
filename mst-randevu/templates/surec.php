@@ -7,7 +7,7 @@
     <meta name="description" content="Sözleşmeden raflara — MST Yayıncılık ile kitabınızın tüm süreci 30 günde, şeffaf ve sizinle.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/mst-randevu/assets/randevu.css">
+    <link rel="stylesheet" href="<?php echo MST_RANDEVU_URL; ?>assets/randevu.css">
 
     <style>
     /* ==============================
@@ -118,7 +118,7 @@
         max-width:680px;
         margin:0 auto 2.8rem;
         opacity:0;
-        animation:fadeUp 3s var(--ease-std) 1s forwards;
+        animation:fadeUp 2.5s var(--ease-std) 1s forwards;
     }
     .hero__cta {
         display:flex;
@@ -126,12 +126,12 @@
         flex-wrap:wrap;
         justify-content:center;
         opacity:0;
-        animation:fadeUp 3s var(--ease-std) 1.6s forwards;
+        animation:fadeUp 2.5s var(--ease-std) 1.5s forwards;
     }
     .hero__img-wrap {
         margin-top: 56px;
         opacity:0;
-        animation:fadeUp 3s var(--ease-std) 2.2s forwards;
+        animation:fadeUp 2.5s var(--ease-std) 1.8s forwards;
         display: flex;
         justify-content: center;
         width: 100%;
@@ -480,40 +480,22 @@
 
 
     /* ==============================
-       GUARANTEE (Başvuru Bileti)
+       GUARANTEE
     ============================== */
     .guarantee {
         position:relative;z-index:1;
-        margin: 120px auto 100px;
-        max-width: 900px;
-        background: linear-gradient(135deg, rgba(30,33,48,.8) 0%, rgba(15,17,26,.8) 100%);
-        border: 1px solid rgba(197,160,89,0.3);
-        border-radius: 32px;
-        padding: 80px 40px;
+        background:transparent;
+        padding:120px 24px 80px;
         text-align:center;
-        box-shadow: 0 40px 100px rgba(0,0,0,0.8), inset 0 0 40px rgba(197,160,89,0.05);
-        opacity: 0;
-        transform: translateY(40px) scale(0.95);
-        transition: opacity 1.5s var(--ease-std), transform 1.5s var(--ease-std);
+        overflow:hidden;
     }
-    .guarantee.visible {
-        opacity: 1;
-        transform: none;
-    }
-    .guarantee::before {
-        content: '';
-        position: absolute;
-        top: -1px; left: -1px; right: -1px; bottom: -1px;
-        border-radius: 32px;
-        background: linear-gradient(45deg, transparent, rgba(197,160,89,0.2), transparent);
-        z-index: -1;
-    }
+    .guarantee::before { display: none; }
     .guarantee__badge {
         display:inline-flex;align-items:center;justify-content:center;
         width:96px;height:96px;border-radius:50%;
-        background:var(--dark);
-        margin-bottom:2rem;
-        box-shadow:0 0 0 1px rgba(197,160,89,.3), 0 0 40px rgba(197,160,89,.15);
+        background:var(--gold-dim);
+        margin-bottom:1.5rem;
+        box-shadow:0 0 0 1px rgba(197,160,89,.12);
     }
     .guarantee__badge svg{width:44px;height:44px;color:var(--gold);}
     .guarantee h2{font-size:clamp(1.8rem,4vw,3rem);font-weight:900;letter-spacing:-.02em;margin-bottom:1rem;}
@@ -638,7 +620,7 @@
 <header class="mst-top">
     <div class="mst-top__in">
         <a class="mst-top__logo" href="https://mstyayincilik.com/" aria-label="Ana sayfa">
-            <img src="/mst-randevu/assets/mst-figur.png" alt="MST" width="50" height="50">
+            <img src="<?php echo MST_RANDEVU_URL; ?>assets/mst-figur.png" alt="MST" width="50" height="50">
         </a>
         <button type="button" class="mst-top__menu" aria-label="Menüyü aç" aria-expanded="false" aria-controls="mst-top-menu">
             <span></span><span></span><span></span>
@@ -962,7 +944,7 @@ const io=new IntersectionObserver(entries=>{
         if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);}
     });
 },{threshold:.15});
-document.querySelectorAll('.tl-item,.feat-card,.stat-item,.guarantee').forEach(el=>io.observe(el));
+document.querySelectorAll('.tl-item,.feat-card,.stat-item').forEach(el=>io.observe(el));
 
 /* ---- Counter animation ---- */
 function animCounter(el){

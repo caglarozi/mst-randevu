@@ -317,6 +317,24 @@
     });
   }
 
-  function basla() { videolar(); reel(); perdelik(); suzgec(); toz(); girisler(); seritAkisi(); instagram(); jenerik(); klaketler(); form(); turBaglantilari(); }
+  /* Ağır scroll (aşağı kaydırma) animasyonları */
+  function scrollReveal() {
+    if (azHareket) return;
+    var gozlemci = new IntersectionObserver(function(girdiler) {
+      girdiler.forEach(function(girdi) {
+        if (girdi.isIntersecting) {
+          girdi.target.classList.add('is-belirgin');
+          gozlemci.unobserve(girdi.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    
+    document.querySelectorAll('.cb-gosterim, .cb-filmografi .cb-afis, .cb-filmografi .cb-bilet, .cb-iletisim, .cb-form--adim, .cb-klaket').forEach(function(el) {
+      el.classList.add('cb-scroll-bekle');
+      gozlemci.observe(el);
+    });
+  }
+
+  function basla() { videolar(); reel(); perdelik(); suzgec(); toz(); girisler(); seritAkisi(); instagram(); jenerik(); klaketler(); form(); turBaglantilari(); scrollReveal(); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', basla); else basla();
 })();
