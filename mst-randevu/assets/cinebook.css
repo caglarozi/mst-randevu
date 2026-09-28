@@ -711,3 +711,7 @@ html.cb-perde-acik { overflow: hidden; }
 .cb-adim__not { margin: -6px 0 0 !important; font-size: 13px; line-height: 1.5; color: var(--mst-soluk); }
 .cb .cb-onay--mst { padding: 12px 14px; border-radius: 12px; background: #f6f1e8; color: var(--mst-koyu); font-size: 14px; }
 .cb-onay--mst.is-hata { outline: 1.5px solid var(--mst-hata); }
+
+/* Scroll animasyonlari (JS tarafindan eklenir) */
+.cb-scroll-bekle { opacity: 0; transform: translateY(40px); transition: opacity 2.5s cubic-bezier(0.2, 0.8, 0.2, 1), transform 2.5s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.cb-scroll-bekle.is-belirgin { opacity: 1; transform: none; }
