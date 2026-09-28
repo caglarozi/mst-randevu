@@ -7,7 +7,7 @@
 <title>CineBook: Kitaptan Fragman ve Çizgi Film | MST Yayıncılık</title>
 <!-- WordPress'siz önizleme: templates/cinebook.php'nin çıktısından üretildi. Şablon değişirse yeniden üretilmeli. -->
 <script>document.documentElement.classList.add('uyg-js');</script>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Cormorant+Garamond:wght@500;600;700&family=IBM+Plex+Sans:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Cinzel:wght@700&family=Cormorant+Garamond:wght@500;600;700&family=IBM+Plex+Sans:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap">
 <link rel="stylesheet" href="/mst-randevu/assets/randevu.css">
 <link rel="stylesheet" href="/mst-randevu/assets/uygulama.css">
 <link rel="stylesheet" href="/mst-randevu/assets/akademi.css">
@@ -30,9 +30,8 @@
 
     <!-- ============ Perde: kamera vizörü ============
          Sinema bandı, ışık, toz ve gren korunur. Öne çıkan afiş videoyu perdelikte açar. -->
-    <section class="cb-reel" id="showreel" >
-        <div class="cb-reel__arka" aria-hidden="true">
-                    </div>
+    <section class="cb-reel cb-reel--gorselli" id="showreel">
+        <div class="cb-reel__arka" aria-hidden="true"></div>
         <!-- Altın ışık ve toz: arkada yavaş gezinen sıcak ışık lekeleri, havada süzülen toz (cinebook.js) -->
         <div class="cb-isiklar" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
         <canvas class="cb-toz" aria-hidden="true"></canvas>
@@ -48,7 +47,7 @@
 
             <div class="cb-reel__in">
                 <p class="cb-reel__ust">Hikâye ekrana dönüşüyor</p>
-                <h1 class="cb-reel__baslik"><img src="/mst-randevu/assets/cinebook-logo-transparent.png" alt="CineBook" width="2172" height="724" fetchpriority="high" decoding="async"></h1>
+                <h1 class="cb-reel__baslik"><span lang="en">CineBook</span></h1>
                 <p class="cb-reel__soz">Hikâyeleri sadece yayımlamıyoruz, <em>ekrana taşıyoruz.</em></p>
                 <p class="cb-reel__alt"><span lang="en">CineBook</span>, MST Yayıncılık bünyesinde kitapları fragmanlara, kısa sahnelere ve dijital film projelerine dönüştüren yeni nesil bir hikâye platformudur.</p>
                 <div class="cb-reel__cta">
@@ -58,9 +57,11 @@
                                         <a class="cb-cizgi-btn" href="#yapimlar">Yapımları keşfet</a>
                 </div>
             </div>
-            <figure class="cb-reel__afis"><button type="button" class="cb-reel__afis-kapak" data-cb-video-ac="ig:DdW_g0xhye3" data-cb-baslik="Gökbörü · İlk bölüm" aria-label="Gökbörü videosunu izle"><img src="/mst-randevu/assets/gokboru-afis.jpg" alt="Gökbörü afişi" fetchpriority="high" decoding="async"></button><figcaption><strong>Gökbörü</strong><span>İlk bölüm · İzle ↗</span></figcaption></figure>
-
-        </div>
+                            <figure class="cb-reel__afis">
+                    <button type="button" class="cb-reel__afis-kapak" data-cb-video-ac="ig:DdW_g0xhye3" data-cb-baslik="Gökbörü · İlk bölüm" aria-label="Gökbörü videosunu izle">                        <img src="/mst-randevu/assets/gokboru-afis.jpg" alt="Gökbörü afişi" fetchpriority="high" decoding="async">
+                    </button>                    <figcaption><strong>Gökbörü</strong><span>İlk bölüm · İzle ↗</span></figcaption>
+                </figure>
+                    </div>
 
     </section>
 
@@ -114,20 +115,27 @@
             </header>
 
                             <article class="cb-gosterim" data-cb-gir>
-                    <button type="button" class="cb-gosterim__kapak" data-cb-video-ac="ig:DdW_g0xhye3" data-cb-baslik="Gökbörü · İlk bölüm" aria-label="Gökbörü videosunu izle"><img src="/mst-randevu/assets/gokboru-afis.jpg" alt="Gökbörü afişi" loading="lazy" decoding="async"><span class="cb-gosterim__play" aria-hidden="true">▶</span></button>
+                    <button type="button" class="cb-gosterim__kapak" data-cb-video-ac="ig:DdW_g0xhye3"
+                            data-cb-baslik="Gökbörü · İlk bölüm"
+                            aria-label="Gökbörü videosunu izle">
+                        <img src="/mst-randevu/assets/gokboru-afis.jpg" alt="Gökbörü afişi" loading="lazy" decoding="async">                        <span class="cb-gosterim__play" aria-hidden="true">▶</span>
+                    </button>
                     <div class="cb-gosterim__bilgi">
                         <p class="cb-gosterim__ust">Şimdi vizyonda <span>İlk bölüm</span></p>
                         <h3>Gökbörü</h3>
                         <p class="cb-gosterim__lead">Bir bakış. Bir kılıç. Gökbörü.</p>
                         <p class="cb-gosterim__metin">Gökbörü’nün karanlık ve destansı atmosferi ilk bölümüyle ekranda. Hikâyeyi şimdi izleyin.</p>
-                        <div class="cb-gosterim__cta"><button type="button" class="cb-gosterim__birincil" data-cb-video-ac="ig:DdW_g0xhye3" data-cb-baslik="Gökbörü · İlk bölüm">Bölümü izle <span aria-hidden="true">↗</span></button><a class="cb-gosterim__harici" href="https://www.instagram.com/p/DdW_g0xhye3/" target="_blank" rel="noopener">Instagram’da aç ↗</a></div>
+                        <div class="cb-gosterim__cta">
+                            <button type="button" class="cb-gosterim__birincil" data-cb-video-ac="ig:DdW_g0xhye3" data-cb-baslik="Gökbörü · İlk bölüm">Bölümü izle <span aria-hidden="true">↗</span></button>
+                            <a class="cb-gosterim__harici" href="https://www.instagram.com/p/DdW_g0xhye3/" target="_blank" rel="noopener">Instagram’da aç ↗</a>                        </div>
                     </div>
                 </article>
             
             <p class="cb-etiket cb-vizyon__ara" data-cb-gir>Yakında</p>
             <ul class="cb-filmografi">
                                     <li data-cb-grup="cinebook" data-cb-gir="kare" style="--sira: 0">
-                        <div class="cb-afis cb-afis--mechul-tren cb-afis--gorsel"><img src="/mst-randevu/assets/mechul-tren-afis.png" alt="Meçhul Tren afişi" loading="lazy" decoding="async"><span class="cb-afis__damga" aria-hidden="true">Çok yakında</span></div>
+                        <div class="cb-afis cb-afis--mechul-tren cb-afis--gorsel">
+                            <img src="/mst-randevu/assets/mechul-tren-afis.png" alt="" loading="lazy" decoding="async">                                                                                </div>
                         <h3>Meçhul Tren</h3>
                         <p>Çok yakında sizlerle · <span class="cb-durum is-yapimda">Yakında</span></p>
                     </li>
@@ -137,7 +145,8 @@
                         <span class="cb-bilet__orta"><small>Perde devam ediyor</small><strong>Yeni sahneler</strong><em>CineBook kanallarında</em></span>
                         <span class="cb-bilet__koc">Takip edin <i aria-hidden="true">→</i></span>
                     </a>
-                    <h3>Yeni sahneler</h3><p>Fragman ve çizgi filmler · <span class="cb-durum">Takip edin</span></p>
+                    <h3>Yeni sahneler</h3>
+                    <p>Fragman ve çizgi filmler · <span class="cb-durum">Takip edin</span></p>
                 </li>
             </ul>
         </div>
@@ -234,15 +243,43 @@
 
 
     <!-- ============ Sosyal medya ============ -->
-    <section class="cb-bolum cb-bolum--koyu cb-iletisim" id="takip"><div class="uyg-kap">
-      <p class="cb-iletisim__ust">Perde kapanmıyor, <em>hikâye sürüyor.</em></p>
-      <h2 class="cb-iletisim__baslik">Bizi takip edin</h2>
-      <p class="cb-iletisim__metin">Yeni fragmanları, sahneleri ve yapım haberlerini CineBook kanallarında izleyin.</p>
-      <ul class="cb-sosyal"><li><a href="https://www.youtube.com/@cinebookoffical" target="_blank" rel="noopener noreferrer" aria-label="YouTube hesabını yeni sekmede aç"><svg class="cb-sosyal__ikon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="4"/><path d="m10 8.5 5 3.5-5 3.5z"/></svg><span class="cb-sosyal__icerik"><strong>YouTube</strong><small>Fragmanlar ve tam bölümler</small></span><span class="cb-sosyal__ok" aria-hidden="true">↗</span></a></li>
-<li><a href="https://www.instagram.com/cinebookofficial" target="_blank" rel="noopener noreferrer" aria-label="Instagram hesabını yeni sekmede aç"><svg class="cb-sosyal__ikon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.7" r=".8" fill="currentColor" stroke="none"/></svg><span class="cb-sosyal__icerik"><strong>Instagram</strong><small>Kısa sahneler ve kamera arkası</small></span><span class="cb-sosyal__ok" aria-hidden="true">↗</span></a></li>
-<li><a href="https://www.tiktok.com/@cinebookaffical" target="_blank" rel="noopener noreferrer" aria-label="TikTok hesabını yeni sekmede aç"><svg class="cb-sosyal__ikon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3v11.2a4.2 4.2 0 1 1-4.2-4.2"/><path d="M14 3c.5 2.7 2.5 4.5 5 4.8"/></svg><span class="cb-sosyal__icerik"><strong>TikTok</strong><small>Dikey kısa videolar</small></span><span class="cb-sosyal__ok" aria-hidden="true">↗</span></a></li>
-<li><a href="https://www.facebook.com/search/top?q=cinebookoffical" target="_blank" rel="noopener noreferrer" aria-label="Facebook hesabını yeni sekmede aç"><svg class="cb-sosyal__ikon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 21v-8h3l.5-4h-3.5V7.2c0-1.2.4-2 2-2H18V2.2c-.5-.1-1.6-.2-2.8-.2-3 0-4.9 1.8-4.9 5.1V9H7.5v4h2.8v8z"/></svg><span class="cb-sosyal__icerik"><strong>Facebook</strong><small>Duyurular ve topluluk</small></span><span class="cb-sosyal__ok" aria-hidden="true">↗</span></a></li></ul>
-    </div></section>
+    <section class="cb-bolum cb-bolum--koyu cb-iletisim" id="takip">
+        <div class="uyg-kap">
+            <p class="cb-iletisim__ust">Perde kapanmıyor, <em>hikâye sürüyor.</em></p>
+            <h2 class="cb-iletisim__baslik">Bizi takip edin</h2>
+            <p class="cb-iletisim__metin">Yeni fragmanları, sahneleri ve yapım haberlerini CineBook kanallarında izleyin.</p>
+                            <ul class="cb-sosyal">
+                                            <li><a href="https://www.youtube.com/@cinebookoffical" target="_blank" rel="noopener noreferrer"
+                               aria-label="YouTube hesabını yeni sekmede aç">
+                            <svg class="cb-sosyal__ikon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+                                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="4"/><path d="m10 8.5 5 3.5-5 3.5z"/></svg>
+                            <span class="cb-sosyal__icerik"><strong>YouTube</strong><small>Fragmanlar ve tam bölümler</small></span>
+                            <span class="cb-sosyal__ok" aria-hidden="true">↗</span>
+                        </a></li>
+                                            <li><a href="https://www.instagram.com/cinebookofficial" target="_blank" rel="noopener noreferrer"
+                               aria-label="Instagram hesabını yeni sekmede aç">
+                            <svg class="cb-sosyal__ikon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+                                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.7" r=".8" fill="currentColor" stroke="none"/></svg>
+                            <span class="cb-sosyal__icerik"><strong>Instagram</strong><small>Kısa sahneler ve kamera arkası</small></span>
+                            <span class="cb-sosyal__ok" aria-hidden="true">↗</span>
+                        </a></li>
+                                            <li><a href="https://www.tiktok.com/@cinebookaffical" target="_blank" rel="noopener noreferrer"
+                               aria-label="TikTok hesabını yeni sekmede aç">
+                            <svg class="cb-sosyal__ikon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+                                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3v11.2a4.2 4.2 0 1 1-4.2-4.2"/><path d="M14 3c.5 2.7 2.5 4.5 5 4.8"/></svg>
+                            <span class="cb-sosyal__icerik"><strong>TikTok</strong><small>Dikey kısa videolar</small></span>
+                            <span class="cb-sosyal__ok" aria-hidden="true">↗</span>
+                        </a></li>
+                                            <li><a href="https://www.facebook.com/search/top?q=cinebookoffical" target="_blank" rel="noopener noreferrer"
+                               aria-label="Facebook hesabını yeni sekmede aç">
+                            <svg class="cb-sosyal__ikon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+                                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 21v-8h3l.5-4h-3.5V7.2c0-1.2.4-2 2-2H18V2.2c-.5-.1-1.6-.2-2.8-.2-3 0-4.9 1.8-4.9 5.1V9H7.5v4h2.8v8z"/></svg>
+                            <span class="cb-sosyal__icerik"><strong>Facebook</strong><small>Duyurular ve topluluk</small></span>
+                            <span class="cb-sosyal__ok" aria-hidden="true">↗</span>
+                        </a></li>
+                                    </ul>
+                    </div>
+    </section>
 
     <div class="akd-alt" role="contentinfo">
         <div class="uyg-kap akd-alt__in">
