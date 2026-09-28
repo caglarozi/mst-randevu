@@ -152,6 +152,23 @@
     guncelle();
   }
 
+  /* Instagram gömmesi: bölüm ekrana yaklaşınca Instagram'ın kendi betiği yüklenir ve videoyu sayfada gösterir.
+   * Betik yüklenemezse "Instagram'da izleyin" bağlantısı görünür kalır. */
+  function instagram() {
+    var k = document.querySelector('[data-cb-ig]');
+    if (!k) return;
+    function yukle() {
+      if (window.instgrm && window.instgrm.Embeds) { window.instgrm.Embeds.process(); return; }
+      if (document.getElementById('cb-ig-betik')) return;
+      var b = document.createElement('script');
+      b.id = 'cb-ig-betik'; b.async = true; b.src = 'https://www.instagram.com/embed.js';
+      document.body.appendChild(b);
+    }
+    if (!('IntersectionObserver' in window)) return yukle();
+    var io = new IntersectionObserver(function (e) { if (e[0].isIntersecting) { io.disconnect(); yukle(); } }, { rootMargin: '600px 0px' });
+    io.observe(k);
+  }
+
   /* Akan jenerik: kesintisiz döngü için satırlar bir kez daha eklenir (ekran okuyucudan gizli) */
   function jenerik() {
     var l = document.querySelector('.cb-jenerik__akis');
@@ -241,6 +258,6 @@
     });
   }
 
-  function basla() { videolar(); reel(); perdelik(); suzgec(); toz(); girisler(); seritAkisi(); jenerik(); klaketler(); turBaglantilari(); form(); }
+  function basla() { videolar(); reel(); perdelik(); suzgec(); toz(); girisler(); seritAkisi(); instagram(); jenerik(); klaketler(); turBaglantilari(); form(); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', basla); else basla();
 })();

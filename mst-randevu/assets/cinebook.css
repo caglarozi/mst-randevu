@@ -207,8 +207,44 @@ html.cb-perde-acik { overflow: hidden; }
 .cb-serit.cb-bekle.cb-gir { transform: rotate(-1.4deg); transition: opacity 1s ease-out, transform 1.4s cubic-bezier(.16, .8, .2, 1); }
 
 /* ---------- Vizyonda: tabela, afişler, bilet ---------- */
-.cb-bolum--yapim .uyg-kap { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: clamp(32px, 5vw, 72px); align-items: start; }
-.cb-tabela-bas { position: sticky; top: 110px; }
+/* Başlık satırı: tabela solda, açıklama sağda */
+.cb-vizyon__bas { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 24px 48px; }
+.cb-vizyon__bas .cb-bas__metin { max-width: 420px; margin: 0 !important; }
+
+/* Gösterim kartı: öne çıkan yapım sayfada oynar */
+.cb-gosterim {
+  position: relative; margin-top: clamp(40px, 5vw, 64px); display: grid; grid-template-columns: minmax(0, 420px) minmax(0, 1fr); gap: clamp(28px, 5vw, 80px); align-items: center;
+  padding: clamp(16px, 2.4vw, 30px); border-radius: 30px; isolation: isolate; overflow: hidden;
+  background: linear-gradient(145deg, #1d1712 0%, #100d0a 60%, #0c0a08 100%);
+  box-shadow: 0 0 0 1px rgba(231, 183, 101, .18), 0 60px 120px -50px rgba(0, 0, 0, .95), inset 0 1px 0 rgba(255, 220, 160, .08);
+}
+.cb-gosterim::before { content: ""; position: absolute; z-index: -1; left: -10%; top: -30%; width: 70%; height: 160%; pointer-events: none;
+  background: radial-gradient(closest-side, rgba(226, 160, 70, .22), transparent); animation: cb-nefes 7s ease-in-out infinite; }
+@keyframes cb-nefes { 50% { opacity: .6; transform: scale(1.06); } }
+.cb-gosterim__ekran { position: relative; border-radius: 20px; overflow: hidden; background: #050404;
+  box-shadow: 0 0 0 1px rgba(231, 183, 101, .4), 0 30px 60px -20px rgba(0, 0, 0, .95), 0 0 90px -10px rgba(220, 152, 20, .3); }
+.cb-gosterim__serit { display: flex; justify-content: space-between; gap: 12px; margin: 0; padding: 11px 16px; background: #0b0a09; border-bottom: 1px solid rgba(231, 183, 101, .18);
+  font-size: 11px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--cb-soluk); }
+.cb-gosterim__serit span:first-child { display: inline-flex; align-items: center; gap: 8px; color: var(--cb-yazi); }
+.cb-gosterim__serit i, .cb-gosterim__rozet i { width: 8px; height: 8px; border-radius: 50%; background: #e0302f; box-shadow: 0 0 0 0 rgba(224, 48, 47, .6); animation: cb-canli 1.8s ease-out infinite; }
+@keyframes cb-canli { 70% { box-shadow: 0 0 0 8px rgba(224, 48, 47, 0); } 100% { box-shadow: 0 0 0 0 rgba(224, 48, 47, 0); } }
+/* Instagram gömme alanı: betik gelene kadar (ya da engellenirse) koyu bir "Instagram'da izle" kartı */
+.cb-ig { min-height: 520px; display: grid; }
+.cb .cb-ig blockquote.instagram-media { margin: 0 !important; padding: 0 !important; width: 100% !important; min-width: 0 !important; max-width: none !important; border: 0 !important; border-radius: 0 !important; box-shadow: none !important;
+  display: grid; place-items: center; min-height: 520px; background: radial-gradient(70% 60% at 30% 20%, rgba(249, 160, 91, .22), transparent 60%), radial-gradient(70% 60% at 80% 90%, rgba(193, 58, 138, .22), transparent 60%), #120e0b !important; }
+.cb .cb-ig blockquote.instagram-media a { padding: 14px 20px; border-radius: 100px; border: 1.5px solid rgba(241, 235, 223, .4); color: var(--cb-yazi); font-weight: 800; font-size: 14px; text-align: center; }
+.cb .cb-ig iframe.instagram-media-rendered { width: 100% !important; min-width: 0 !important; max-width: none !important; margin: 0 !important; border: 0 !important; border-radius: 0 !important; box-shadow: none !important; }
+.cb-gosterim__bilgi { padding: 10px 10px 10px 0; }
+.cb-gosterim__rozet { display: inline-flex; align-items: center; gap: 10px; margin: 0 !important; padding: 8px 14px; border-radius: 100px; border: 1px solid rgba(231, 183, 101, .45); background: rgba(220, 152, 20, .08);
+  font-size: 12px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: var(--cb-altin); }
+.cb .cb-gosterim__bilgi h3 { margin-top: 20px; font-family: var(--cb-dar); font-size: clamp(44px, 6vw, 88px); font-weight: 800; line-height: .95; letter-spacing: -.03em; text-transform: uppercase;
+  background: linear-gradient(180deg, #fff6e2 0%, #e9c57c 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.cb-gosterim__meta { margin-top: 12px !important; font-size: 13px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--cb-soluk); }
+.cb-gosterim__metin { margin-top: 18px !important; max-width: 440px; font-size: 17px; line-height: 1.7; color: rgba(241, 235, 223, .78); }
+.cb-gosterim__cta { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 12px; }
+.cb .cb-cizgi-btn--sade { border-color: transparent; color: var(--cb-soluk); }
+.cb .cb-cizgi-btn--sade:hover { border-color: transparent; color: var(--cb-altin); }
+.cb-vizyon__ara { margin-top: clamp(56px, 7vw, 88px) !important; margin-bottom: 22px !important; }
 .cb-tabela {
   position: relative; display: inline-block; padding: 22px 30px; border-radius: 12px; background: #17120d;
   border: 2px solid #3a2b17; box-shadow: 0 0 60px rgba(220, 152, 20, .14), inset 0 0 30px rgba(0, 0, 0, .6);
@@ -217,13 +253,30 @@ html.cb-perde-acik { overflow: hidden; }
 .cb-tabela::after { inset: 7px; border-color: #fff3d6; opacity: 0; animation: cb-ampul 1.6s steps(1) infinite; }
 @keyframes cb-ampul { 50% { opacity: 1; } }
 .cb-tabela span { position: relative; display: block; font-family: var(--cb-dar); font-weight: 700; font-size: clamp(32px, 3.4vw, 48px); line-height: 1.05; text-transform: uppercase; letter-spacing: .06em; color: #ffe9b8; text-shadow: 0 0 18px rgba(255, 190, 80, .55), 0 0 2px #fff; }
-.cb-tabela-bas .cb-suzgec { margin-top: 24px; flex-wrap: wrap; }
 .cb-suzgec { display: flex; gap: 6px; }
 .cb-suzgec button { padding: 9px 16px; border-radius: 100px; border: 1px solid var(--cb-cizgi); background: transparent; color: var(--cb-soluk); font: 500 14px/1 var(--cb-govde); letter-spacing: .03em; cursor: pointer; transition: color .15s, border-color .15s, background .15s; }
 .cb-suzgec button:hover { color: var(--cb-yazi); }
 .cb-suzgec button.is-secili { background: var(--cb-yazi); border-color: var(--cb-yazi); color: #111; }
 
-.cb-filmografi { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 44px 24px; }
+.cb-filmografi { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 270px)); gap: 44px 28px; }
+
+/* "Çok yakında" damgası */
+.cb-afis__damga { position: absolute; z-index: 3; top: 48px; right: 12px; padding: 6px 10px; border: 2px solid #e0564a; border-radius: 4px; transform: rotate(-8deg);
+  font-size: 11px; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; color: #ff7a6b; background: rgba(0, 0, 0, .35); box-shadow: 0 0 20px rgba(224, 86, 74, .25); }
+.cb-afis__sahne { display: none; }
+/* Meçhul Tren afişi: gece, ufka uzanan raylar, sisin içinden yaklaşan tren farı */
+.cb .cb-afis--mechul-tren { background: linear-gradient(180deg, #07090d 0%, #10131a 38%, #1b1510 62%, #0c0a08 100%); }
+.cb-afis--mechul-tren .cb-afis__sahne { display: block; position: absolute; inset: 0; overflow: hidden; }
+.cb-afis__ray { position: absolute; inset: 0; width: 100%; height: 100%; }
+.cb-afis__traversler { animation: cb-traversler 2.4s ease-in-out infinite alternate; }
+@keyframes cb-traversler { from { opacity: .55; } to { opacity: 1; } }
+.cb-afis__far { position: absolute; left: 50%; top: 42.5%; width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%; background: #fff;
+  box-shadow: 0 0 14px 5px #fff2cc, 0 0 50px 22px rgba(255, 214, 140, .8), 0 0 150px 70px rgba(255, 190, 110, .4); animation: cb-far 7s ease-in infinite; }
+@keyframes cb-far { 0% { transform: scale(.4); opacity: .35; } 80% { transform: scale(1.25); opacity: 1; } 100% { transform: scale(1.4); opacity: .35; } }
+.cb-afis__sis { position: absolute; left: -20%; right: -20%; top: 32%; height: 24%; background: radial-gradient(50% 50% at 50% 50%, rgba(200, 190, 175, .16), transparent 70%); filter: blur(10px); animation: cb-sis 12s ease-in-out infinite alternate; }
+@keyframes cb-sis { to { transform: translateX(8%); } }
+.cb-afis--mechul-tren .cb-afis__yazi { justify-content: flex-end; padding-bottom: 46px; background: linear-gradient(180deg, transparent 55%, rgba(5, 4, 3, .75) 85%); }
+.cb-afis--mechul-tren .cb-afis__yazi strong { font-size: clamp(26px, 2.4vw, 34px); text-shadow: 0 4px 30px rgba(0, 0, 0, .9); }
 .cb-filmografi li[hidden] { display: none; }
 .cb .cb-afis { position: relative; display: block; width: 100%; aspect-ratio: 2 / 3; padding: 0; border: 0; border-radius: 4px; overflow: hidden; background: #1a1714; color: inherit; cursor: default; font: inherit; text-align: left;
   box-shadow: 0 30px 50px -24px rgba(0, 0, 0, .9); transition: transform .35s cubic-bezier(.2, .8, .2, 1), box-shadow .35s; }
@@ -410,8 +463,7 @@ html.cb-perde-acik { overflow: hidden; }
 
 /* ---------- Tablet ve telefon ---------- */
 @media (max-width: 960px) {
-  .cb-bolum--yapim .uyg-kap, .cb-studyo, .cb-iletisim__in, .cb-cocuk__giris { grid-template-columns: 1fr; }
-  .cb-tabela-bas { position: static; }
+  .cb-gosterim, .cb-studyo, .cb-iletisim__in, .cb-cocuk__giris { grid-template-columns: 1fr; }
   .cb-iletisim__sol, .cb-iletisim__ek, .cb-iletisim__in > .cb-form { grid-column: 1; grid-row: auto; }
   .cb-iletisim__in { row-gap: 40px; }
   .cb-iletisim__ek { margin-top: 0; }
@@ -431,6 +483,9 @@ html.cb-perde-acik { overflow: hidden; }
   .cb-bant__linkler { display: none; }
   .cb-vizor { margin: 12px 10px; padding: 26px 16px 22px; }
   .cb-filmografi { grid-template-columns: repeat(2, 1fr); gap: 30px 14px; }
+  .cb-gosterim { padding: 12px; border-radius: 22px; }
+  .cb-gosterim__bilgi { padding: 6px 8px 14px; }
+  .cb-afis__damga { top: 40px; right: 8px; font-size: 9px; padding: 4px 7px; }
   .cb-afis__yazi strong { font-size: 19px; }
   .cb-bilet__orta strong { font-size: 17px; }
   .cb-bilet__koc { font-size: 13px; }
@@ -448,7 +503,8 @@ html.cb-perde-acik { overflow: hidden; }
   .cb-bekle { opacity: 1; transform: none; filter: none; }
   .cb-karartma { display: none; }
   .cb-isiklar span, .cb-reel__arka img, .cb-gren, .cb .cb-reel__ust, .cb .cb-reel__baslik, .cb .cb-reel__soz, .cb-reel__alt, .cb-reel__cta,
-  .cb-tabela::after, .cb-jenerik__akis, .cb-serit__sizinti { animation: none; }
+  .cb-tabela::after, .cb-jenerik__akis, .cb-serit__sizinti, .cb-gosterim::before, .cb-gosterim__serit i, .cb-gosterim__rozet i, .cb-afis__ray, .cb-afis__sis { animation: none; }
+  .cb-afis__far, .cb-afis__traversler { animation: none; }
   .cb-serit__sizinti { display: none; }
   .cb-kare__goruntu, .cb-kare__goruntu::after, .cb-kare__no { transition: none; }
   .cb-reel__arka iframe, .cb-afis, .cb-afis img, .cb-afis__izle, .cb-bilet, .cb-klaket__cubuk { transition: none; }

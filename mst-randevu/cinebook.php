@@ -86,6 +86,8 @@ class MST_CineBook
         if (!$l) {
             $l[] = ['ad' => $o['fragman_ad'] ?: 'Gökbörü', 'tur' => 'cinebook', 'etiket' => $o['fragman_etiket'] ?: 'İlk bölüm', 'yil' => '',
                     'video' => self::video_kodu($o['fragman_url']), 'afis' => $o['fragman_gorsel']];
+            // Sıradaki yapım: afişi ve videosu gelince CineBook Ayarları → Yapımlar'dan güncellenir
+            $l[] = ['ad' => 'Meçhul Tren', 'tur' => 'cinebook', 'etiket' => 'Çok yakında sizlerle', 'yil' => '', 'video' => '', 'afis' => ''];
             if (self::video_kodu($o['cocuk_url'])) {
                 $l[] = ['ad' => 'MST Çocuk', 'tur' => 'cocuk', 'etiket' => 'Çizgi film', 'yil' => '', 'video' => self::video_kodu($o['cocuk_url']), 'afis' => ''];
             }

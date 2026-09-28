@@ -211,37 +211,67 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
         </div>
     </section>
 
-    <!-- ============ Vizyonda: yapımlar ============ -->
-    <section class="cb-bolum cb-bolum--yapim" id="yapimlar">
+    <!-- ============ Vizyonda: öne çıkan yapım sayfada oynar, diğerleri afiş ============
+         Videosu olan ilk yapım "gösterim" kartında doğrudan görünür (Instagram gömme ya da YouTube).
+         Instagram'ın gömme betiği bölüm ekrana yaklaşınca yüklenir (cinebook.js). -->
+    <?php
+    $gosterim = null; $digerleri = [];
+    foreach ($yapimlar as $y) { if (!$gosterim && $y['video']) $gosterim = $y; else $digerleri[] = $y; }
+    ?>
+    <section class="cb-bolum cb-bolum--yapim cb-vizyon" id="yapimlar">
         <div class="uyg-kap">
-            <header class="cb-tabela-bas">
+            <header class="cb-vizyon__bas" data-cb-gir>
                 <div class="cb-tabela" aria-hidden="true"><span>Vizyonda</span></div>
                 <h2 class="cb-gizli">Yapımlar</h2>
                 <p class="cb-bas__metin">Kitaplardan uyarlanan fragmanlar, kısa sahneler ve çizgi filmler. Her yapım, eserin kendi dünyasından doğar.</p>
-                <?php if (count($gruplar) > 1) : ?>
-                    <div class="cb-suzgec" role="group" aria-label="Yapımları süz">
-                        <button type="button" class="is-secili" aria-pressed="true" data-cb-suz="hepsi">Tümü</button>
-                        <button type="button" aria-pressed="false" data-cb-suz="cinebook"><span lang="en">CineBook</span></button>
-                        <button type="button" aria-pressed="false" data-cb-suz="cocuk">MST Çocuk</button>
-                    </div>
-                <?php endif; ?>
             </header>
+
+            <?php if ($gosterim) : $ig = !MST_CineBook::youtube_mu($gosterim['video']); $ig_url = $ig ? 'https://www.instagram.com/p/' . substr($gosterim['video'], 3) . '/' : ''; ?>
+                <article class="cb-gosterim" data-cb-gir>
+                    <div class="cb-gosterim__ekran<?php echo $ig ? ' cb-gosterim__ekran--dikey' : ''; ?>">
+                        <p class="cb-gosterim__serit" aria-hidden="true"><span><i></i>Yayında</span><span><?php echo esc_html($gosterim['ad'] . ' · ' . $gosterim['etiket']); ?></span></p>
+                        <?php if ($ig) : ?>
+                            <div class="cb-ig" data-cb-ig>
+                                <blockquote class="instagram-media" data-instgrm-permalink="<?php echo esc_url($ig_url); ?>?utm_source=ig_embed" data-instgrm-version="14">
+                                    <a href="<?php echo esc_url($ig_url); ?>" target="_blank" rel="noopener"><?php echo esc_html($gosterim['ad'] . ' — ' . $gosterim['etiket']); ?> · Instagram’da izleyin</a>
+                                </blockquote>
+                            </div>
+                        <?php else : ?>
+                            <?php echo $oynatici($gosterim['video'], $gosterim['ad'] . ' — ' . $gosterim['etiket'], $gosterim['ad'] . ' · ' . $gosterim['etiket'], '', $gosterim['afis']); ?>
+                        <?php endif; ?>
+                    </div>
+                    <div class="cb-gosterim__bilgi">
+                        <p class="cb-gosterim__rozet"><i></i>Şimdi vizyonda</p>
+                        <h3><?php echo esc_html($gosterim['ad']); ?></h3>
+                        <p class="cb-gosterim__meta"><?php echo esc_html($gosterim['etiket']); ?> · <bdi lang="en">CineBook</bdi> yapımı<?php echo $gosterim['yil'] ? ' · ' . esc_html($gosterim['yil']) : ''; ?></p>
+                        <p class="cb-gosterim__metin"><?php echo esc_html($gosterim['ad']); ?>, <bdi lang="en">CineBook</bdi> kanallarında yayında. Kitaptan ekrana taşınan hikâyenin yeni bölümleri için bizi takip edin.</p>
+                        <div class="cb-gosterim__cta">
+                            <?php if ($ig) : ?><a class="cb-cizgi-btn" href="<?php echo esc_url($ig_url); ?>" target="_blank" rel="noopener">Instagram’da aç ↗</a><?php endif; ?>
+                            <?php if (!empty($o['instagram'])) : ?><a class="cb-cizgi-btn cb-cizgi-btn--sade" href="<?php echo esc_url($o['instagram']); ?>" target="_blank" rel="noopener">Takip et</a><?php endif; ?>
+                        </div>
+                    </div>
+                </article>
+            <?php endif; ?>
+
+            <p class="cb-etiket cb-vizyon__ara" data-cb-gir>Yakında</p>
             <ul class="cb-filmografi">
-                <?php foreach ($yapimlar as $y) :
+                <?php foreach ($digerleri as $i => $y) :
                     $afis  = $y['afis'] ?: (MST_CineBook::youtube_mu($y['video']) ? 'https://i.ytimg.com/vi/' . $y['video'] . '/hqdefault.jpg' : '');
-                    $durum = $y['video'] ? 'Vizyonda' : 'Yapımda';
+                    $durum = $y['video'] ? 'Vizyonda' : 'Yakında';
                     $etk   = $y['video'] ? 'button type="button" data-cb-video-ac="' . esc_attr($y['video']) . '" data-cb-baslik="' . esc_attr($y['ad'] . ' · ' . $y['etiket']) . '" aria-label="' . esc_attr($y['ad'] . ' videosunu izle') . '"' : 'div';
                     ?>
-                    <li data-cb-grup="<?php echo esc_attr($y['tur']); ?>">
-                        <<?php echo $etk; // öznitelikler yukarıda kaçırıldı ?> class="cb-afis<?php echo $y['afis'] ? ' cb-afis--gorsel' : ($afis ? ' cb-afis--kapak' : ' cb-afis--yazi'); ?>">
+                    <li data-cb-grup="<?php echo esc_attr($y['tur']); ?>" data-cb-gir="kare" style="--sira: <?php echo (int) $i; ?>">
+                        <<?php echo $etk; // öznitelikler yukarıda kaçırıldı ?> class="cb-afis cb-afis--<?php echo esc_attr(sanitize_title($y['ad'])); ?><?php echo $y['afis'] ? ' cb-afis--gorsel' : ($afis ? ' cb-afis--kapak' : ' cb-afis--yazi'); ?>">
                             <?php if ($afis) : ?><img src="<?php echo esc_url($afis); ?>" alt="" loading="lazy" decoding="async"><?php endif; ?>
                             <?php if (!$y['afis']) : ?>
+                                <span class="cb-afis__sahne" aria-hidden="true"><svg class="cb-afis__ray" viewBox="0 0 270 405" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false"><defs><linearGradient id="cbRay" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#8a6a44"/><stop offset=".75" stop-color="#e9c68a"/><stop offset="1" stop-color="#fff1cf"/></linearGradient></defs><g class="cb-afis__traversler" stroke="#6e5538" stroke-linecap="round"><line x1="134.3" y1="173.5" x2="135.7" y2="173.5" stroke-width="0.62"/><line x1="132.3" y1="177.8" x2="137.7" y2="177.8" stroke-width="0.66"/><line x1="129.2" y1="184.5" x2="140.8" y2="184.5" stroke-width="0.74"/><line x1="124.9" y1="193.6" x2="145.1" y2="193.6" stroke-width="0.84"/><line x1="119.6" y1="204.9" x2="150.4" y2="204.9" stroke-width="0.97"/><line x1="113.2" y1="218.6" x2="156.8" y2="218.6" stroke-width="1.12"/><line x1="105.8" y1="234.4" x2="164.2" y2="234.4" stroke-width="1.30"/><line x1="97.4" y1="252.5" x2="172.6" y2="252.5" stroke-width="1.50"/><line x1="87.9" y1="272.6" x2="182.1" y2="272.6" stroke-width="1.72"/><line x1="77.5" y1="294.9" x2="192.5" y2="294.9" stroke-width="1.97"/><line x1="66.1" y1="319.4" x2="203.9" y2="319.4" stroke-width="2.24"/><line x1="53.7" y1="345.8" x2="216.3" y2="345.8" stroke-width="2.54"/><line x1="40.3" y1="374.4" x2="229.7" y2="374.4" stroke-width="2.86"/><line x1="26.0" y1="405.0" x2="244.0" y2="405.0" stroke-width="3.20"/></g><path d="M40,405 L133,172" stroke="url(#cbRay)" stroke-width="3" fill="none"/><path d="M230,405 L137,172" stroke="url(#cbRay)" stroke-width="3" fill="none"/></svg><i class="cb-afis__far"></i><i class="cb-afis__sis"></i></span>
                                 <span class="cb-afis__yazi">
                                     <small><?php echo $y['tur'] === 'cocuk' ? 'MST Çocuk' : '<bdi lang="en">CineBook</bdi>'; ?> sunar</small>
                                     <strong><?php echo esc_html($y['ad']); ?></strong>
                                     <em><?php echo esc_html($y['etiket']); ?></em>
                                     <span class="cb-afis__jenerik">MST Yayıncılık · <?php echo $y['tur'] === 'cocuk' ? 'MST Çocuk' : '<bdi lang="en">CineBook</bdi>'; ?> · <?php echo esc_html($y['yil'] ?: wp_date('Y')); ?></span>
                                 </span>
+                                <?php if (!$y['video']) : ?><span class="cb-afis__damga" aria-hidden="true">Çok yakında</span><?php endif; ?>
                             <?php endif; ?>
                             <?php if ($y['video']) : ?><span class="cb-afis__izle"><i aria-hidden="true"></i>İzle</span><?php endif; ?>
                         </<?php echo $y['video'] ? 'button' : 'div'; ?>>
@@ -249,7 +279,7 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
                         <p><?php echo esc_html($y['etiket']); ?><?php echo $y['yil'] ? ' · ' . esc_html($y['yil']) : ''; ?> · <span class="cb-durum<?php echo $y['video'] ? '' : ' is-yapimda'; ?>"><?php echo esc_html($durum); ?></span></p>
                     </li>
                 <?php endforeach; ?>
-                <li data-cb-grup="hepsi" class="cb-filmografi__siradaki">
+                <li data-cb-grup="hepsi" class="cb-filmografi__siradaki" data-cb-gir="kare" style="--sira: <?php echo count($digerleri); ?>">
                     <a class="cb-bilet" href="#basvuru">
                         <span class="cb-bilet__ust"><small>Bilet</small><small>No 00<?php echo count($yapimlar) + 1; ?></small></span>
                         <span class="cb-bilet__orta"><small>Sıradaki yapım</small><strong>Sizin kitabınız</strong><em>Fragman ya da çizgi film</em></span>
