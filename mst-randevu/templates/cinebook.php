@@ -153,7 +153,31 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
         <div class="cb-reel__arka" aria-hidden="true">
             <?php if ($fr_gorsel) : ?><img src="<?php echo esc_url($fr_gorsel); ?>" alt="" fetchpriority="high" decoding="async"><?php endif; ?>
         </div>
-        <div class="cb-reel__isik" aria-hidden="true"></div>
+        <!-- Kitaptan perdeye: açık kitabın ortasından yükselen ışık; harfler yükseldikçe film karelerine dönüşür (cinebook.js) -->
+        <div class="cb-sahne" aria-hidden="true">
+            <div class="cb-sahne__kitap">
+                <div class="cb-sahne__huzme"></div>
+                <svg class="cb-kitap" viewBox="0 0 640 380" aria-hidden="true" focusable="false">
+                  <defs>
+                    <linearGradient id="cbSol" x1="0" x2="1"><stop offset="0" stop-color="#d9c59d"/><stop offset=".7" stop-color="#cbb287"/><stop offset="1" stop-color="#977b4d"/></linearGradient>
+                    <linearGradient id="cbSag" x1="1" x2="0"><stop offset="0" stop-color="#ddcaa3"/><stop offset=".7" stop-color="#cfb68b"/><stop offset="1" stop-color="#9c8051"/></linearGradient>
+                    <linearGradient id="cbCevir" x1="0" x2="1"><stop offset="0" stop-color="#9c8051"/><stop offset=".5" stop-color="#eadbb8"/><stop offset="1" stop-color="#d3bb90"/></linearGradient>
+                    <radialGradient id="cbIsima"><stop offset="0" stop-color="#ffe2a8" stop-opacity=".95"/><stop offset=".45" stop-color="#f0b451" stop-opacity=".35"/><stop offset="1" stop-color="#f0b451" stop-opacity="0"/></radialGradient>
+                    <filter id="cbBulanik" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="14"/></filter>
+                  </defs>
+                  <ellipse cx="320" cy="340" rx="300" ry="26" fill="#000" opacity=".55" filter="url(#cbBulanik)"/>
+                  <path class="cb-kitap__kapak" d="M14,128 C130,106 250,112 320,146 C390,112 510,106 626,128 L626,294 C510,272 390,278 320,312 C250,278 130,272 14,294 Z"/>
+                  <g class="cb-kitap__kalinlik"><path d="M320,286.6 C250,250.6 140,244.6 36,264.6"/><path d="M320,289.2 C250,253.2 140,247.2 36,267.2"/><path d="M320,291.8 C250,255.8 140,249.8 36,269.8"/><path d="M320,294.4 C250,258.4 140,252.4 36,272.4"/><path d="M320,297.0 C250,261.0 140,255.0 36,275.0"/><path d="M320,286.6 C390,250.6 500,244.6 604,264.6"/><path d="M320,289.2 C390,253.2 500,247.2 604,267.2"/><path d="M320,291.8 C390,255.8 500,249.8 604,269.8"/><path d="M320,294.4 C390,258.4 500,252.4 604,272.4"/><path d="M320,297.0 C390,261.0 500,255.0 604,275.0"/></g>
+                  <path d="M320,140 C250,104 140,100 36,122 L36,262 C140,242 250,248 320,284 Z" fill="url(#cbSol)"/>
+                  <path d="M320,140 C390,104 500,100 604,122 L604,262 C500,242 390,248 320,284 Z" fill="url(#cbSag)"/>
+                  <g class="cb-kitap__satir"><path d="M302.5,152.1 C231.0,133.3 148.5,128.5 67.3,135.9"/><path d="M302.5,164.4 C231.0,145.5 148.5,140.6 67.3,147.8"/><path d="M302.5,176.6 C231.0,157.7 148.5,152.7 67.3,159.8"/><path d="M302.5,188.8 C231.0,169.9 148.5,164.7 67.3,171.7"/><path d="M302.5,201.1 C231.0,182.1 148.5,176.8 67.3,183.7"/><path d="M302.5,213.3 C231.0,194.3 148.5,188.9 67.3,195.6"/><path d="M302.5,225.5 C231.0,206.4 148.5,201.0 67.3,207.6"/><path d="M302.5,237.8 C231.0,218.6 148.5,213.0 67.3,219.5"/><path d="M302.5,250.0 C231.0,230.8 148.5,225.1 67.3,231.5"/><path d="M337.5,152.1 C409.0,133.3 491.5,128.5 572.7,135.9"/><path d="M337.5,164.4 C409.0,145.5 491.5,140.6 572.7,147.8"/><path d="M337.5,176.6 C409.0,157.7 491.5,152.7 572.7,159.8"/><path d="M337.5,188.8 C409.0,169.9 491.5,164.7 572.7,171.7"/><path d="M337.5,201.1 C409.0,182.1 491.5,176.8 572.7,183.7"/><path d="M337.5,213.3 C409.0,194.3 491.5,188.9 572.7,195.6"/><path d="M337.5,225.5 C409.0,206.4 491.5,201.0 572.7,207.6"/><path d="M337.5,237.8 C409.0,218.6 491.5,213.0 572.7,219.5"/><path d="M337.5,250.0 C409.0,230.8 491.5,225.1 572.7,231.5"/></g>
+                  <path class="cb-kitap__oluk" d="M320,140 L320,284"/>
+                  <g class="cb-kitap__cevir"><path d="M320,140 C390,104 500,100 604,122 L604,262 C500,242 390,248 320,284 Z" fill="url(#cbCevir)"/><g class="cb-kitap__satir"><path d="M337.5,152.1 C409.0,133.3 491.5,128.5 572.7,135.9"/><path d="M337.5,164.4 C409.0,145.5 491.5,140.6 572.7,147.8"/><path d="M337.5,176.6 C409.0,157.7 491.5,152.7 572.7,159.8"/><path d="M337.5,188.8 C409.0,169.9 491.5,164.7 572.7,171.7"/><path d="M337.5,201.1 C409.0,182.1 491.5,176.8 572.7,183.7"/><path d="M337.5,213.3 C409.0,194.3 491.5,188.9 572.7,195.6"/><path d="M337.5,225.5 C409.0,206.4 491.5,201.0 572.7,207.6"/><path d="M337.5,237.8 C409.0,218.6 491.5,213.0 572.7,219.5"/><path d="M337.5,250.0 C409.0,230.8 491.5,225.1 572.7,231.5"/></g></g>
+                  <ellipse class="cb-kitap__isima" cx="320" cy="170" rx="170" ry="70" fill="url(#cbIsima)"/>
+                </svg>
+            </div>
+            <canvas class="cb-sahne__tuval"></canvas>
+        </div>
         <div class="cb-gren" aria-hidden="true"></div>
 
         <nav class="cb-bant cb-bant--ust" aria-label="Sayfa bölümleri">
