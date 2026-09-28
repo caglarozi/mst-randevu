@@ -7,7 +7,7 @@
     <meta name="description" content="Sözleşmeden raflara — MST Yayıncılık ile kitabınızın tüm süreci 30 günde, şeffaf ve sizinle.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/mst-randevu/assets/randevu.css">
+    <link rel="stylesheet" href="<?php echo MST_RANDEVU_URL; ?>assets/randevu.css">
 
     <style>
     /* ==============================
@@ -511,7 +511,7 @@
 <header class="mst-top">
     <div class="mst-top__in">
         <a class="mst-top__logo" href="https://mstyayincilik.com/" aria-label="Ana sayfa">
-            <img src="/mst-randevu/assets/mst-figur.png" alt="MST" width="50" height="50">
+            <img src="<?php echo MST_RANDEVU_URL; ?>assets/mst-figur.png" alt="MST" width="50" height="50">
         </a>
         <button type="button" class="mst-top__menu" aria-label="Menüyü aç" aria-expanded="false" aria-controls="mst-top-menu">
             <span></span><span></span><span></span>
