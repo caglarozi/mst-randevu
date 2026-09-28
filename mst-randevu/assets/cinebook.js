@@ -211,32 +211,91 @@
     });
   }
 
-  function turSec(tur) {
+  function turSec(tur, ilerle) {
     var r = document.querySelector('.cb-form input[name="tur"][value="' + tur + '"]');
-    if (r) r.checked = true;
+    if (!r) return;
+    r.checked = true;
+    var f = r.form;
+    if (ilerle && f && f._cbGit) f._cbGit(2, true);
   }
 
   function turBaglantilari() {
     document.querySelectorAll('[data-cb-tur]').forEach(function (a) {
-      a.addEventListener('click', function () { turSec(a.getAttribute('data-cb-tur')); });
+      a.addEventListener('click', function () { turSec(a.getAttribute('data-cb-tur'), true); });
     });
     var m = /[?&]tur=(cinebook|cocuk)/.exec(location.search);
     if (m) turSec(m[1]);
   }
 
+  /* Başvuru formu: randevu sistemi gibi 3 adım (tür → eser → iletişim), sonra AJAX ile gönderim.
+   * JS yoksa adımlar alt alta görünür ve form yine gönderilebilir (sunucu tüm alanları denetler). */
   function form() {
     var f = document.querySelector('[data-cb-form]');
     if (!f || !window.MST_CB) return;
     var hata = f.querySelector('[data-cb-hata]'), tamam = f.querySelector('[data-cb-tamam]'), btn = f.querySelector('.cb-form__gonder');
-    function goster(m, alan) {
-      hata.textContent = m; hata.hidden = false;
+    var adimlar = f.querySelectorAll('[data-cb-adim]'), isaretler = f.querySelectorAll('[data-cb-adim-isaret]'), ozet = f.querySelector('[data-cb-ozet]');
+    var ALAN_ADIM = { tur: 1, eser_adi: 2, ozet: 2, mst_yazari: 2, yazar_adi: 3, telefon: 3, eposta: 3, kvkk: 3 };
+    var simdiki = 1;
+    f.classList.add('is-adimli');
+
+    function temizle() {
+      hata.hidden = true;
       f.querySelectorAll('.is-hata').forEach(function (e) { e.classList.remove('is-hata'); });
-      var el = alan && f.querySelector('[name="' + alan + '"]');
-      if (el) { var l = el.closest('.cb-alan'); if (l) l.classList.add('is-hata'); el.focus(); }
     }
+    function goster(m, alan) {
+      if (alan && ALAN_ADIM[alan]) git(ALAN_ADIM[alan], true);
+      hata.textContent = m; hata.hidden = false;
+      var el = alan && f.querySelector('[name="' + alan + '"]');
+      if (el) { var l = el.closest('.cb-alan, .cb-onay'); if (l) l.classList.add('is-hata'); el.focus(); }
+    }
+    function turAdi() {
+      var r = f.querySelector('input[name="tur"]:checked');
+      return r && r.value === 'cocuk' ? 'MST Çocuk' : 'CineBook';
+    }
+    function git(n, sessiz) {
+      simdiki = n;
+      if (!sessiz) temizle();
+      adimlar.forEach(function (a) { a.classList.toggle('is-aktif', +a.getAttribute('data-cb-adim') === n); });
+      isaretler.forEach(function (i) {
+        var k = +i.getAttribute('data-cb-adim-isaret');
+        i.classList.toggle('is-aktif', k === n); i.classList.toggle('is-bitti', k < n);
+      });
+      if (n === 3 && ozet) {
+        var eser = (f.elements.eser_adi.value || '').trim();
+        ozet.textContent = turAdi() + (eser ? ' · ' + eser : '');
+        ozet.hidden = false;
+      }
+      var hedef = f.querySelector('[data-cb-adim="' + n + '"]');
+      var ilk = hedef && hedef.querySelector('input:not([type=radio]):not([type=hidden]), textarea, input[type=radio]:checked');
+      if (ilk && !sessiz) ilk.focus({ preventScroll: true });
+      var r = f.getBoundingClientRect();
+      if (!sessiz && (r.top < 70 || r.top > window.innerHeight * .6)) f.scrollIntoView({ behavior: azHareket ? 'auto' : 'smooth', block: 'start' });
+    }
+    function denetle(n) {
+      if (n === 2 && (f.elements.eser_adi.value || '').trim().length < 2) { goster('Lütfen eserinizin adını yazın.', 'eser_adi'); return false; }
+      if (n === 2 && !f.elements.mst_yazari.checked) { goster('Başvurular yalnızca kitabı MST Yayıncılık’tan yayımlanan yazarlarımıza açıktır. Kitabınız MST Yayıncılık’tan yayımlandıysa kutuyu işaretleyin.', 'mst_yazari'); return false; }
+      return true;
+    }
+    f.querySelectorAll('[data-cb-ileri]').forEach(function (b) {
+      b.addEventListener('click', function () { if (denetle(simdiki)) git(simdiki + 1); });
+    });
+    f.querySelectorAll('[data-cb-geri]').forEach(function (b) {
+      b.addEventListener('click', function () { git(simdiki - 1); });
+    });
+    // Türü seçmek randevu sistemindeki gibi bir sonraki adıma geçirir
+    f.querySelectorAll('input[name="tur"]').forEach(function (r) {
+      r.addEventListener('change', function () { setTimeout(function () { git(2); }, 180); });
+    });
+    // Eser adında Enter bir sonraki adıma geçirir (formu yarıda göndermesin)
+    f.elements.eser_adi.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') { e.preventDefault(); if (denetle(2)) git(3); }
+    });
+    f._cbGit = git;
+
     f.addEventListener('submit', function (e) {
       e.preventDefault();
-      hata.hidden = true;
+      if (simdiki !== 3) { if (denetle(simdiki)) git(simdiki + 1); return; }
+      temizle();
       var fd = new FormData(f);
       fd.append('action', 'mst_cinebook_basvuru');
       fd.append('nonce', MST_CB.nonce);
@@ -248,7 +307,7 @@
             tamam.innerHTML = '<i>✓</i><strong>Başvurunuz alındı</strong><p></p>';
             tamam.querySelector('p').textContent = j.data.mesaj;
             tamam.hidden = false; f.classList.add('is-tamam');
-            f.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            f.scrollIntoView({ behavior: azHareket ? 'auto' : 'smooth', block: 'center' });
           } else {
             goster((j && j.data && j.data.mesaj) || 'Başvuru gönderilemedi, lütfen tekrar deneyin.', j && j.data && j.data.alan);
           }
@@ -258,6 +317,6 @@
     });
   }
 
-  function basla() { videolar(); reel(); perdelik(); suzgec(); toz(); girisler(); seritAkisi(); instagram(); jenerik(); klaketler(); turBaglantilari(); form(); }
+  function basla() { videolar(); reel(); perdelik(); suzgec(); toz(); girisler(); seritAkisi(); instagram(); jenerik(); klaketler(); form(); turBaglantilari(); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', basla); else basla();
 })();

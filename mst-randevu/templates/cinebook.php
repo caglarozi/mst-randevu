@@ -2,7 +2,7 @@
 /**
  * "MST CineBook ve MST Çocuk (Tam Sayfa)" şablonu.
  * Yapım şirketi sitesi düzeni: showreel girişi, CineBook nedir, afişlerden filmografi, stüdyo ve
- * kitapların filme yolculuğu, MST Çocuk ve sosyal medya bağlantıları.
+ * kitapların filme yolculuğu, MST Çocuk ve adım adım başvuru formu.
  * Videolar, görseller, yapımlar ve sosyal medya Yazar Randevu → CineBook Ayarları'ndan gelir.
  * Boş alanlar ziyaretçiye yer tutucu olarak değil, "yakında" ya da hiç gösterilmeden yansır.
  */
@@ -134,7 +134,7 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
 </head>
 <body <?php body_class('mst-sayfa mst-uyg mst-akd mst-cb'); ?>>
 <?php wp_body_open(); ?>
-<?php echo MST_Randevu::header_html(false, ['Yapımları Gör', '#yapimlar'], 'Merhaba, CineBook hakkında bilgi almak istiyorum.'); ?>
+<?php echo MST_Randevu::header_html(false, ['Başvuru Yap', '#basvuru'], 'Merhaba, CineBook hakkında bilgi almak istiyorum.'); ?>
 
 <main class="uyg cb" lang="tr">
 
@@ -150,14 +150,14 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
 
         <nav class="cb-bant cb-bant--ust" aria-label="Sayfa bölümleri">
             <a class="cb-bant__marka" href="#showreel" aria-label="CineBook, sayfanın başına dön"><img src="<?php echo esc_url(MST_Randevu::varlik('cinebook-logo-transparent.png')); ?>" alt="CineBook" width="2172" height="724" fetchpriority="high" decoding="async"></a>
-            <span class="cb-bant__linkler"><a href="#nedir">Hakkında</a><a href="#yapimlar">Vizyonda</a><a href="#studyo">Stüdyo</a><a href="#cocuk">MST Çocuk</a><a href="#takip">Takip Et</a></span>
+            <span class="cb-bant__linkler"><a href="#nedir">Hakkında</a><a href="#yapimlar">Vizyonda</a><a href="#studyo">Stüdyo</a><a href="#cocuk">MST Çocuk</a><a href="#basvuru">Başvuru</a></span>
         </nav>
 
         <div class="cb-vizor">
 
             <div class="cb-reel__in">
-                <p class="cb-reel__ust">Hikâye ekrana dönüşüyor</p>
-                <h1 class="cb-reel__baslik"><img src="<?php echo esc_url(MST_Randevu::varlik('cinebook-logo-transparent.png')); ?>" alt="CineBook" width="2172" height="724" fetchpriority="high" decoding="async"></h1>
+                <p class="cb-reel__ust">Yeni bir çağ</p>
+                <h1 class="cb-reel__baslik"><span lang="en">CineBook</span></h1>
                 <p class="cb-reel__soz">Hikâyeleri sadece yayımlamıyoruz, <em>ekrana taşıyoruz.</em></p>
                 <p class="cb-reel__alt"><span lang="en">CineBook</span>, MST Yayıncılık bünyesinde kitapları fragmanlara, kısa sahnelere ve dijital film projelerine dönüştüren yeni nesil bir hikâye platformudur.</p>
                 <div class="cb-reel__cta">
@@ -175,6 +175,7 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
                 <figure class="cb-reel__afis">
                     <?php if ($fragman) : ?><button type="button" class="cb-reel__afis-kapak" data-cb-video-ac="<?php echo esc_attr($fragman); ?>" data-cb-baslik="<?php echo esc_attr($fr_ad . ' · ' . $fr_etiket); ?>" aria-label="<?php echo esc_attr($fr_ad . ' videosunu izle'); ?>"><?php else : ?><div class="cb-reel__afis-kapak"><?php endif; ?>
                         <img src="<?php echo esc_url($fr_gorsel); ?>" alt="<?php echo esc_attr($fr_ad . ' afişi'); ?>" fetchpriority="high" decoding="async">
+                        <?php if ($fragman) : ?><span class="cb-gosterim__play" aria-hidden="true">▶</span><?php endif; ?>
                     <?php echo $fragman ? '</button>' : '</div>'; ?>
                     <figcaption><strong><?php echo esc_html($fr_ad); ?></strong><span><?php echo esc_html($fr_etiket); ?><?php echo $fragman ? ' · İzle ↗' : ''; ?></span></figcaption>
                 </figure>
@@ -193,7 +194,7 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
     <section class="cb-bolum cb-nedir" id="nedir">
         <div class="uyg-kap">
             <p class="cb-etiket" data-cb-gir><span lang="en">CineBook</span> nedir?</p>
-            <h2 class="cb-nedir__soz" data-cb-gir>Kitabın <em>görünür hâle gelen</em> versiyonu.</h2>
+            <h2 class="cb-nedir__soz" data-cb-gir>Kitabın <em>ekrana taşınan</em> versiyonu.</h2>
         </div>
         <div class="cb-serit" data-cb-gir="serit" tabindex="0" aria-label="CineBook nedir: üç kare">
             <span class="cb-serit__sizinti" aria-hidden="true"></span>
@@ -278,7 +279,7 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
                 <li data-cb-grup="hepsi" class="cb-filmografi__siradaki" data-cb-gir="kare" style="--sira: <?php echo count($digerleri); ?>">
                     <a class="cb-bilet" href="#takip">
                         <span class="cb-bilet__ust"><small>CineBook</small><small>Yeni yapımlar</small></span>
-                        <span class="cb-bilet__orta"><small>Perde devam ediyor</small><strong>Yeni sahneler</strong><em>CineBook kanallarında</em></span>
+                        <span class="cb-bilet__orta"><small>Ekranda devam ediyor</small><strong>Yeni sahneler</strong><em>CineBook kanallarında</em></span>
                         <span class="cb-bilet__koc">Takip edin <i aria-hidden="true">→</i></span>
                     </a>
                     <h3>Yeni sahneler</h3>
@@ -294,13 +295,12 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
             <div class="cb-studyo">
                 <div>
                     <p class="cb-etiket">Stüdyo</p>
-                    <h2 class="cb-studyo__soz">Kitabı ekrana taşıyan ekip, <em>kitabı yayına hazırlayan</em> ekiptir.</h2>
+                    <h2 class="cb-studyo__soz">Kitabın ruhunu bilen ekip, <em>onu ekrana da taşır.</em></h2>
                     <p class="cb-studyo__metin"><span lang="en">CineBook</span>, MST Yayıncılık’ın yapım stüdyosudur. Eserin hikâyesini, karakterlerini ve atmosferini fragmana, kısa sahnelere ve sosyal medya videolarına uyarlar; çocuk kitaplarını MST Çocuk etiketiyle çizgi filme dönüştürür.</p>
                 </div>
-                <div class="cb-jenerik" aria-label="Neler yapıyoruz">
+                <div class="cb-jenerik" aria-label="CineBook yapısı">
                     <div class="cb-jenerik__pencere">
                         <ul class="cb-jenerik__akis">
-                            <li class="cb-jenerik__bas"><small>Neler yapıyoruz</small></li>
                             <?php foreach ($yetenekler as $y) : ?><li><?php echo esc_html($y); ?></li><?php endforeach; ?>
                             <li class="cb-jenerik__son"><small>Bir</small> <bdi lang="en">CineBook</bdi> <small>yapımı</small></li>
                         </ul>
@@ -358,24 +358,78 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
 
 
 
-    <!-- ============ Sosyal medya ============ -->
-    <section class="cb-bolum cb-bolum--koyu cb-iletisim" id="takip">
+    <!-- ============ Başvuru: randevu sistemi gibi adım adım ============
+         1) Tür  2) Eser  3) İletişim ve onay. JS yoksa tüm adımlar alt alta görünür ve form yine çalışır.
+         Gönderim: admin-ajax mst_cinebook_basvuru (cinebook.php). Altında küçük sosyal medya bağlantıları. -->
+    <section class="cb-bolum cb-bolum--koyu cb-iletisim cb-basvuru" id="basvuru">
         <div class="uyg-kap">
-            <p class="cb-iletisim__ust">Perde kapanmıyor, <em>hikâye sürüyor.</em></p>
-            <h2 class="cb-iletisim__baslik">Bizi takip edin</h2>
-            <p class="cb-iletisim__metin">Yeni fragmanları, sahneleri ve yapım haberlerini CineBook kanallarında izleyin.</p>
+            <p class="cb-iletisim__ust">Sıradaki sahne <em>sizin.</em></p>
+            <h2 class="cb-iletisim__baslik">Başvuru</h2>
+            <div class="cb-basvuru__in">
+                <div class="cb-basvuru__sol">
+                    <p class="cb-iletisim__metin">MST Yayıncılık yazarıysanız ve kitabınızın ekranda hayat bulmasını istiyorsanız eserinizi gönderin. Başvurunuzu inceleyip sizi arıyoruz; uygun eserler için uyarlama planını birlikte hazırlıyoruz.</p>
+                    <p class="cb-basvuru__kosul"><strong>Yalnızca MST Yayıncılık yazarlarına açıktır.</strong> <bdi lang="en">CineBook</bdi> ve MST Çocuk, kitabı MST Yayıncılık’tan yayımlanan eserler için yapılır.</p>
+                    <ol class="cb-basvuru__yol">
+                        <li><span>1</span><div><strong>Türü seçin</strong><small><bdi lang="en">CineBook</bdi> ya da MST Çocuk</small></div></li>
+                        <li><span>2</span><div><strong>Eserinizi tanıtın</strong><small>Adı, kısa özeti ve MST yayını onayı</small></div></li>
+                        <li><span>3</span><div><strong>Sizi arayalım</strong><small>Ekibimiz değerlendirip dönüş yapar</small></div></li>
+                    </ol>
+                    <?php if ($wa) : ?><a class="cb-wa" href="<?php echo esc_url($wa); ?>" target="_blank" rel="noopener"><?php echo MST_Randevu::icon('wa'); ?> Sorunuz varsa WhatsApp’tan yazın</a><?php endif; ?>
+                </div>
+
+                <form class="cb-form cb-form--adim" data-cb-form novalidate>
+                    <p class="cb-form__koc" aria-hidden="true"><span>Başvuru bileti</span><span><bdi lang="en">CineBook</bdi> · MST Çocuk</span></p>
+                    <ol class="cb-adimlar" aria-label="Başvuru adımları">
+                        <li class="is-aktif" data-cb-adim-isaret="1"><i>1</i><span>Tür</span></li>
+                        <li data-cb-adim-isaret="2"><i>2</i><span>Eser</span></li>
+                        <li data-cb-adim-isaret="3"><i>3</i><span>İletişim</span></li>
+                    </ol>
+
+                    <fieldset class="cb-adim is-aktif" data-cb-adim="1">
+                        <legend class="cb-adim__baslik">Ne için başvuruyorsunuz?</legend>
+                        <p class="cb-adim__not">Başvurular yalnızca kitabı MST Yayıncılık’tan yayımlanan yazarlarımıza açıktır.</p>
+                        <div class="cb-form__tur">
+                            <label><input type="radio" name="tur" value="cinebook" checked><span><strong><bdi lang="en">CineBook</bdi></strong><small>Kitaptan fragman, kısa sahne ya da dijital film</small></span></label>
+                            <label><input type="radio" name="tur" value="cocuk"><span><strong>MST Çocuk</strong><small>Çocuk kitabından çizgi film</small></span></label>
+                        </div>
+                        <div class="cb-adim__alt"><button type="button" class="cb-adim__ileri" data-cb-ileri>Devam <span aria-hidden="true">→</span></button></div>
+                    </fieldset>
+
+                    <fieldset class="cb-adim" data-cb-adim="2">
+                        <legend class="cb-adim__baslik">Eseriniz</legend>
+                        <label class="cb-alan"><span>Eser adı</span><input type="text" name="eser_adi" required maxlength="150" autocomplete="off"></label>
+                        <label class="cb-alan"><span>Eserinizi kısaca anlatın <em>(isteğe bağlı)</em></span><textarea name="ozet" rows="4" maxlength="1500" placeholder="Tür, konu, hedef okur yaşı…"></textarea></label>
+                        <label class="cb-onay cb-onay--mst"><input type="checkbox" name="mst_yazari" value="1" required><span>Bu kitap <strong>MST Yayıncılık</strong>’tan yayımlandı.</span></label>
+                        <div class="cb-adim__alt"><button type="button" class="cb-adim__geri" data-cb-geri>← Geri</button><button type="button" class="cb-adim__ileri" data-cb-ileri>Devam <span aria-hidden="true">→</span></button></div>
+                    </fieldset>
+
+                    <fieldset class="cb-adim" data-cb-adim="3">
+                        <legend class="cb-adim__baslik">Size nasıl ulaşalım?</legend>
+                        <p class="cb-adim__ozet" data-cb-ozet hidden></p>
+                        <label class="cb-alan"><span>Ad soyad</span><input type="text" name="yazar_adi" required minlength="3" maxlength="100" autocomplete="name"></label>
+                        <div class="cb-form__ikili">
+                            <label class="cb-alan"><span>Telefon</span><input type="tel" name="telefon" required inputmode="tel" autocomplete="tel" placeholder="05XX XXX XX XX"></label>
+                            <label class="cb-alan"><span>E-posta <em>(isteğe bağlı)</em></span><input type="email" name="eposta" autocomplete="email" placeholder="ornek@eposta.com"></label>
+                        </div>
+                        <label class="cb-hp" aria-hidden="true">Web sitesi <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+                        <label class="cb-onay"><input type="checkbox" name="kvkk" value="1" required><span><a href="<?php echo esc_url(MST_Randevu::kvkk_url()); ?>" target="_blank" rel="noopener">KVKK Aydınlatma Metni</a>’ni okudum. Kişisel verilerimin başvurumun değerlendirilmesi ve benimle iletişim kurulması amacıyla MST Yayıncılık tarafından işlenmesini kabul ediyorum.</span></label>
+                        <div class="cb-adim__alt"><button type="button" class="cb-adim__geri" data-cb-geri>← Geri</button><button type="submit" class="uyg-btn uyg-btn--altin cb-form__gonder">Başvuruyu Gönder</button></div>
+                    </fieldset>
+
+                    <p class="cb-form__hata" data-cb-hata role="alert" hidden></p>
+                    <div class="cb-form__tamam" data-cb-tamam hidden></div>
+                </form>
+            </div>
+
             <?php if ($sosyal) : ?>
-                <ul class="cb-sosyal">
-                    <?php foreach ($sosyal as $s) : $url = $o[$s[0]]; ?>
-                        <li><a href="<?php echo esc_url($url); ?>" target="_blank" rel="noopener noreferrer"
-                               aria-label="<?php echo esc_attr($s[1] . ' hesabını yeni sekmede aç'); ?>">
-                            <svg class="cb-sosyal__ikon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
-                                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><?php echo $sosyal_ikon[$s[0]]; ?></svg>
-                            <span class="cb-sosyal__icerik"><strong><?php echo esc_html($s[1]); ?></strong><small><?php echo esc_html($s[2]); ?></small></span>
-                            <span class="cb-sosyal__ok" aria-hidden="true">↗</span>
-                        </a></li>
-                    <?php endforeach; ?>
-                </ul>
+                <div class="cb-basvuru__takip" id="takip">
+                    <span>Bizi takip edin</span>
+                    <ul>
+                        <?php foreach ($sosyal as $s) : $url = $o[$s[0]]; ?>
+                            <li><a href="<?php echo esc_url($url); ?>" target="_blank" rel="noopener noreferrer" aria-label="<?php echo esc_attr($s[1] . ' hesabını yeni sekmede aç'); ?>" title="<?php echo esc_attr($s[1]); ?>"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><?php echo $sosyal_ikon[$s[0]]; ?></svg></a></li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
             <?php endif; ?>
         </div>
     </section>
@@ -391,7 +445,7 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
                 <a href="#yapimlar">Vizyonda</a>
                 <a href="#studyo">Stüdyo</a>
                 <a href="#cocuk">MST Çocuk</a>
-                <a href="#takip">Takip Et</a>
+                <a href="#basvuru">Başvuru</a>
                 <a href="<?php echo esc_url(MST_Randevu::kvkk_url()); ?>">KVKK Aydınlatma Metni</a>
                 <a href="<?php echo esc_url(home_url('/')); ?>">mstyayincilik.com</a>
             </nav>
