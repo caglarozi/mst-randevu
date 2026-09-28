@@ -139,36 +139,54 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
 
 <main class="uyg cb" lang="tr">
 
-    <!-- ============ Showreel ============
+    <!-- ============ Perde: kamera vizörü ============
+         Üstte ve altta sinema bantları (letterbox), vizör köşeleri, akan zaman kodu, projektör ışığı ve gren.
          Fragman adresi varsa arka planda sessiz döner (hareketi azalt açıksa dönmez); fragman görseli
          video yüklenene kadar ve video yoksa arka plan olur. "Şimdi izle" aynı fragmanı sesli açar. -->
     <section class="cb-reel<?php echo $fr_gorsel ? ' cb-reel--gorselli' : ''; ?>" id="showreel" <?php echo $fragman ? 'data-cb-reel="' . esc_attr($fragman) . '"' : ''; ?>>
         <div class="cb-reel__arka" aria-hidden="true">
             <?php if ($fr_gorsel) : ?><img src="<?php echo esc_url($fr_gorsel); ?>" alt="" fetchpriority="high" decoding="async"><?php endif; ?>
         </div>
-        <nav class="cb-reel__menu" aria-label="Sayfa bölümleri">
-            <span class="cb-reel__marka" lang="en">CineBook</span>
-            <a href="#nedir">Hakkında</a><a href="#yapimlar">Yapımlar</a><a href="#studyo">Stüdyo</a><a href="#cocuk">MST Çocuk</a><a href="#iletisim">İletişim</a>
+        <div class="cb-reel__isik" aria-hidden="true"></div>
+        <div class="cb-gren" aria-hidden="true"></div>
+
+        <nav class="cb-bant cb-bant--ust" aria-label="Sayfa bölümleri">
+            <span class="cb-bant__marka" lang="en">CineBook</span>
+            <span class="cb-bant__linkler"><a href="#nedir">Hakkında</a><a href="#yapimlar">Vizyonda</a><a href="#studyo">Stüdyo</a><a href="#cocuk">MST Çocuk</a><a href="#iletisim">İletişim</a></span>
         </nav>
-        <div class="cb-reel__in">
-            <p class="cb-reel__ust">Yeni bir çağ</p>
-            <h1 class="cb-reel__baslik"><span lang="en">CineBook</span></h1>
-            <p class="cb-reel__soz">Hikâyeleri sadece yayımlamıyoruz, <em>ekrana taşıyoruz.</em></p>
-            <p class="cb-reel__alt"><span lang="en">CineBook</span>, MST Yayıncılık bünyesinde kitapları fragmanlara, kısa sahnelere ve dijital film projelerine dönüştüren yeni nesil bir hikâye platformudur.</p>
-            <div class="cb-reel__cta">
-                <?php if ($fragman) : ?>
-                    <button type="button" class="cb-oynat-btn" data-cb-video-ac="<?php echo esc_attr($fragman); ?>" data-cb-baslik="<?php echo esc_attr($fr_ad); ?> · İlk fragman">
-                        <i aria-hidden="true"></i><span><strong>Şimdi izle</strong><small><?php echo esc_html($fr_ad); ?> • İlk fragman</small></span>
-                    </button>
-                <?php else : ?>
-                    <a class="cb-oynat-btn" href="#yapimlar"><i aria-hidden="true"></i><span><strong>Yapımlar</strong><small><?php echo esc_html($fr_ad); ?> • İlk fragman yakında</small></span></a>
-                <?php endif; ?>
-                <a class="cb-cizgi-btn" href="#iletisim">Birlikte çalışalım</a>
+
+        <div class="cb-vizor">
+            <span class="cb-vizor__k cb-vizor__k--1"></span><span class="cb-vizor__k cb-vizor__k--2"></span><span class="cb-vizor__k cb-vizor__k--3"></span><span class="cb-vizor__k cb-vizor__k--4"></span>
+            <p class="cb-vizor__ust" aria-hidden="true"><span><i></i>REC</span><span data-cb-zaman>00:00:00:00</span><span>SAHNE 01 · ÇEKİM 01</span></p>
+
+            <div class="cb-reel__in">
+                <p class="cb-reel__ust">Yeni bir çağ</p>
+                <h1 class="cb-reel__baslik"><span lang="en">CineBook</span></h1>
+                <p class="cb-reel__soz">Hikâyeleri sadece yayımlamıyoruz, <em>ekrana taşıyoruz.</em></p>
+                <p class="cb-reel__alt"><span lang="en">CineBook</span>, MST Yayıncılık bünyesinde kitapları fragmanlara, kısa sahnelere ve dijital film projelerine dönüştüren yeni nesil bir hikâye platformudur.</p>
+                <div class="cb-reel__cta">
+                    <?php if ($fragman) : ?>
+                        <button type="button" class="cb-oynat-btn" data-cb-video-ac="<?php echo esc_attr($fragman); ?>" data-cb-baslik="<?php echo esc_attr($fr_ad); ?> · İlk fragman">
+                            <i aria-hidden="true"></i><span><strong>Şimdi izle</strong><small><?php echo esc_html($fr_ad); ?> • İlk fragman</small></span>
+                        </button>
+                    <?php else : ?>
+                        <a class="cb-oynat-btn" href="#yapimlar"><i aria-hidden="true"></i><span><strong>Vizyonda</strong><small><?php echo esc_html($fr_ad); ?> • İlk fragman yakında</small></span></a>
+                    <?php endif; ?>
+                    <a class="cb-cizgi-btn" href="#iletisim">Birlikte çalışalım</a>
+                </div>
             </div>
+
+            <dl class="cb-kunye">
+                <?php foreach ($kunye as $k) : ?><div><dt><?php echo esc_html($k[0]); ?></dt><dd><?php echo esc_html($k[1]); ?></dd></div><?php endforeach; ?>
+            </dl>
         </div>
-        <dl class="cb-kunye">
-            <?php foreach ($kunye as $k) : ?><div><dt><?php echo esc_html($k[0]); ?></dt><dd><?php echo esc_html($k[1]); ?></dd></div><?php endforeach; ?>
-        </dl>
+
+        <p class="cb-bant cb-bant--alt cb-jenerik-blok">
+            <span><small>MST Yayıncılık</small> sunar</span>
+            <span><small>bir</small> <bdi lang="en">CineBook</bdi> <small>yapımı</small></span>
+            <span><small>yazarların</small> kitaplarından <small>uyarlanmıştır</small></span>
+            <span><small>senaryo</small> uyarlama <small>kurgu</small> ses <small>müzik</small> animasyon</span>
+        </p>
     </section>
 
     <dialog class="cb-perdelik" id="cb-perdelik" aria-label="Video">
@@ -176,25 +194,32 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
         <div class="cb-perdelik__yer"></div>
     </dialog>
 
-    <!-- ============ CineBook nedir? ============ -->
+    <!-- ============ CineBook nedir? 35 mm film şeridi ============ -->
     <section class="cb-bolum cb-nedir" id="nedir">
         <div class="uyg-kap">
             <p class="cb-etiket"><span lang="en">CineBook</span> nedir?</p>
-            <h2 class="cb-nedir__soz">Kitabın görünür hâle gelen versiyonu.</h2>
-            <ol class="cb-nedir__liste">
+            <h2 class="cb-nedir__soz">Kitabın <em>görünür hâle gelen</em> versiyonu.</h2>
+        </div>
+        <div class="cb-serit" tabindex="0" aria-label="CineBook nedir: üç kare">
+            <ol class="cb-serit__kareler">
                 <?php foreach ($nedir as $i => $n) : ?>
-                    <li><span><?php echo esc_html(sprintf('%02d', $i + 1)); ?></span><h3><?php echo esc_html($n[0]); ?></h3><p><?php echo esc_html($n[1]); ?></p></li>
+                    <li class="cb-kare">
+                        <span class="cb-kare__kod" aria-hidden="true"><bdi lang="en">CINEBOOK</bdi> 35 ▸ <?php echo (int) $i + 1; ?>A</span>
+                        <span class="cb-kare__no"><?php echo esc_html(sprintf('%02d', $i + 1)); ?></span>
+                        <h3><?php echo esc_html($n[0]); ?></h3>
+                        <p><?php echo esc_html($n[1]); ?></p>
+                    </li>
                 <?php endforeach; ?>
             </ol>
         </div>
     </section>
 
-    <!-- ============ Yapımlar: filmografi ============ -->
+    <!-- ============ Vizyonda: yapımlar ============ -->
     <section class="cb-bolum cb-bolum--yapim" id="yapimlar">
         <div class="uyg-kap">
-            <header class="cb-bas cb-bas--yan">
-                <p class="cb-etiket">Filmografi</p>
-                <h2>Yapımlar</h2>
+            <header class="cb-tabela-bas">
+                <div class="cb-tabela" aria-hidden="true"><span>Vizyonda</span></div>
+                <h2 class="cb-gizli">Yapımlar</h2>
                 <p class="cb-bas__metin">Kitaplardan uyarlanan fragmanlar, kısa sahneler ve çizgi filmler. Her yapım, eserin kendi dünyasından doğar.</p>
                 <?php if (count($gruplar) > 1) : ?>
                     <div class="cb-suzgec" role="group" aria-label="Yapımları süz">
@@ -207,7 +232,7 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
             <ul class="cb-filmografi">
                 <?php foreach ($yapimlar as $y) :
                     $afis  = $y['afis'] ?: ($y['video'] ? 'https://i.ytimg.com/vi/' . $y['video'] . '/hqdefault.jpg' : '');
-                    $durum = $y['video'] ? 'Yayında' : 'Yapımda';
+                    $durum = $y['video'] ? 'Vizyonda' : 'Yapımda';
                     $marka = $y['tur'] === 'cocuk' ? 'MST Çocuk' : 'CineBook';
                     $etk   = $y['video'] ? 'button type="button" data-cb-video-ac="' . esc_attr($y['video']) . '" data-cb-baslik="' . esc_attr($y['ad'] . ' · ' . $y['etiket']) . '" aria-label="' . esc_attr($y['ad'] . ' videosunu izle') . '"' : 'div';
                     ?>
@@ -215,7 +240,12 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
                         <<?php echo $etk; // öznitelikler yukarıda kaçırıldı ?> class="cb-afis<?php echo $y['afis'] ? ' cb-afis--gorsel' : ($afis ? ' cb-afis--kapak' : ' cb-afis--yazi'); ?>">
                             <?php if ($afis) : ?><img src="<?php echo esc_url($afis); ?>" alt="" loading="lazy" decoding="async"><?php endif; ?>
                             <?php if (!$y['afis']) : ?>
-                                <span class="cb-afis__yazi"><small lang="<?php echo $y['tur'] === 'cocuk' ? 'tr' : 'en'; ?>"><?php echo esc_html($marka); ?></small><strong><?php echo esc_html($y['ad']); ?></strong><em><?php echo esc_html($y['etiket']); ?></em></span>
+                                <span class="cb-afis__yazi">
+                                    <small><?php echo $y['tur'] === 'cocuk' ? 'MST Çocuk' : '<bdi lang="en">CineBook</bdi>'; ?> sunar</small>
+                                    <strong><?php echo esc_html($y['ad']); ?></strong>
+                                    <em><?php echo esc_html($y['etiket']); ?></em>
+                                    <span class="cb-afis__jenerik"><?php echo esc_html('MST Yayıncılık · ' . $marka . ' · ' . ($y['yil'] ?: wp_date('Y'))); ?></span>
+                                </span>
                             <?php endif; ?>
                             <?php if ($y['video']) : ?><span class="cb-afis__izle"><i aria-hidden="true"></i>İzle</span><?php endif; ?>
                         </<?php echo $y['video'] ? 'button' : 'div'; ?>>
@@ -224,7 +254,11 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
                     </li>
                 <?php endforeach; ?>
                 <li data-cb-grup="hepsi" class="cb-filmografi__siradaki">
-                    <a class="cb-afis cb-afis--bos" href="#iletisim"><span><small>Sıradaki yapım</small><strong>Sizin kitabınız</strong><em>Başvurun</em></span></a>
+                    <a class="cb-bilet" href="#iletisim">
+                        <span class="cb-bilet__ust"><small>Bilet</small><small>No 00<?php echo count($yapimlar) + 1; ?></small></span>
+                        <span class="cb-bilet__orta"><small>Sıradaki yapım</small><strong>Sizin kitabınız</strong><em>Fragman ya da çizgi film</em></span>
+                        <span class="cb-bilet__koc">Başvurun <i aria-hidden="true">→</i></span>
+                    </a>
                     <h3>Sizin kitabınız</h3>
                     <p>Fragman ya da çizgi film · <span class="cb-durum">Başvuruya açık</span></p>
                 </li>
@@ -232,24 +266,37 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
         </div>
     </section>
 
-    <!-- ============ Stüdyo ve kitapların filme yolculuğu ============ -->
+    <!-- ============ Stüdyo: jenerik ve klaketler ============ -->
     <section class="cb-bolum cb-bolum--koyu" id="studyo">
         <div class="uyg-kap">
             <div class="cb-studyo">
                 <div>
                     <p class="cb-etiket">Stüdyo</p>
-                    <h2 class="cb-studyo__soz">Kitabı ekrana taşıyan ekip, kitabı yayına hazırlayan ekiptir.</h2>
+                    <h2 class="cb-studyo__soz">Kitabı ekrana taşıyan ekip, <em>kitabı yayına hazırlayan</em> ekiptir.</h2>
                     <p class="cb-studyo__metin"><span lang="en">CineBook</span>, MST Yayıncılık’ın yapım stüdyosudur. Eserin hikâyesini, karakterlerini ve atmosferini fragmana, kısa sahnelere ve sosyal medya videolarına uyarlar; çocuk kitaplarını MST Çocuk etiketiyle çizgi filme dönüştürür.</p>
                 </div>
-                <div class="cb-jenerik">
-                    <p class="cb-etiket">Neler yapıyoruz</p>
-                    <ul><?php foreach ($yetenekler as $y) : ?><li><?php echo esc_html($y); ?></li><?php endforeach; ?></ul>
+                <div class="cb-jenerik" aria-label="Neler yapıyoruz">
+                    <div class="cb-jenerik__pencere">
+                        <ul class="cb-jenerik__akis">
+                            <li class="cb-jenerik__bas"><small>Neler yapıyoruz</small></li>
+                            <?php foreach ($yetenekler as $y) : ?><li><?php echo esc_html($y); ?></li><?php endforeach; ?>
+                            <li class="cb-jenerik__son"><small>Bir</small> <bdi lang="en">CineBook</bdi> <small>yapımı</small></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-            <h3 class="cb-yolculuk__baslik">Kitapların filme yolculuğu</h3>
-            <ol class="cb-surec">
+
+            <h3 class="cb-yolculuk__baslik">Kitapların <em>filme</em> yolculuğu</h3>
+            <ol class="cb-klaketler">
                 <?php foreach ($yolculuk as $i => $s) : ?>
-                    <li><span><?php echo esc_html(sprintf('%02d', $i + 1)); ?></span><h4><?php echo esc_html($s[0]); ?></h4><p><?php echo esc_html($s[1]); ?></p></li>
+                    <li class="cb-klaket">
+                        <span class="cb-klaket__cubuk" aria-hidden="true"></span>
+                        <div class="cb-klaket__govde">
+                            <p class="cb-klaket__satir" aria-hidden="true"><span><small>Sahne</small><?php echo esc_html(sprintf('%02d', $i + 1)); ?></span><span><small>Çekim</small>1</span><span><small>Yapım</small><bdi lang="en">CineBook</bdi></span></p>
+                            <h4><?php echo esc_html($s[0]); ?></h4>
+                            <p><?php echo esc_html($s[1]); ?></p>
+                        </div>
+                    </li>
                 <?php endforeach; ?>
             </ol>
         </div>
@@ -292,13 +339,15 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
     <!-- ============ Birlikte çalışalım ============ -->
     <section class="cb-bolum cb-bolum--koyu cb-iletisim" id="iletisim">
         <div class="uyg-kap">
-            <h2 class="cb-iletisim__baslik">Birlikte<br>çalışalım.</h2>
+            <p class="cb-iletisim__ust">Sıradaki sahne <em>sizin.</em></p>
+            <h2 class="cb-iletisim__baslik">Birlikte çalışalım</h2>
             <div class="cb-iletisim__in">
                 <div class="cb-iletisim__sol">
                     <p class="cb-iletisim__metin">Kitabınızın ekranda hayat bulmasını istiyorsanız eserinizi gönderin. Başvurunuzu inceleyip sizi arıyoruz; uygun eserler için uyarlama planını birlikte hazırlıyoruz.</p>
                     <?php if ($wa) : ?><a class="cb-wa" href="<?php echo esc_url($wa); ?>" target="_blank" rel="noopener"><?php echo MST_Randevu::icon('wa'); ?> WhatsApp’tan yazın</a><?php endif; ?>
                 </div>
             <form class="cb-form" data-cb-form novalidate>
+                <p class="cb-form__koc" aria-hidden="true"><span>Başvuru bileti</span><span><bdi lang="en">CineBook</bdi> · MST Çocuk</span></p>
                 <fieldset class="cb-form__tur">
                     <legend>Başvuru türü</legend>
                     <label><input type="radio" name="tur" value="cinebook" checked><span><strong>CineBook</strong><small>Kitaptan fragman / film</small></span></label>
@@ -345,7 +394,7 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
             </a>
             <nav class="akd-alt__linkler" aria-label="Alt menü">
                 <a href="#nedir">Hakkında</a>
-                <a href="#yapimlar">Yapımlar</a>
+                <a href="#yapimlar">Vizyonda</a>
                 <a href="#studyo">Stüdyo</a>
                 <a href="#cocuk">MST Çocuk</a>
                 <a href="#iletisim">İletişim</a>

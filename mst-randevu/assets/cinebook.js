@@ -1,5 +1,5 @@
 /* CineBook ve MST Çocuk sayfası
- * - Showreel arka planı, perdelik oynatıcı ve filmografi süzgeci
+ * - Perde arka planı, zaman kodu, akan jenerik, klaketler, perdelik oynatıcı ve filmografi süzgeci
  * - Video kartına dokununca YouTube oynatıcı yüklenir (sayfa açılışında YouTube yüklenmez)
  * - "CineBook / MST Çocuk başvurusu" bağlantıları formda türü seçer
  * - Başvuru formu AJAX ile gönderilir */
@@ -73,6 +73,47 @@
     });
   }
 
+  var azHareket = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* Vizördeki zaman kodu (24 kare/sn); hareketi azalt açıksa durur */
+  function zamanKodu() {
+    var el = document.querySelector('[data-cb-zaman]');
+    if (!el || azHareket) return;
+    var bas = performance.now(), iki = function (n) { return (n < 10 ? '0' : '') + n; };
+    (function ciz(t) {
+      var kare = Math.floor((t - bas) / (1000 / 24)), sn = Math.floor(kare / 24);
+      el.textContent = iki(Math.floor(sn / 3600)) + ':' + iki(Math.floor(sn / 60) % 60) + ':' + iki(sn % 60) + ':' + iki(kare % 24);
+      requestAnimationFrame(ciz);
+    })(bas);
+  }
+
+  /* Akan jenerik: kesintisiz döngü için satırlar bir kez daha eklenir (ekran okuyucudan gizli) */
+  function jenerik() {
+    var l = document.querySelector('.cb-jenerik__akis');
+    if (!l) return;
+    Array.prototype.slice.call(l.children).forEach(function (li) {
+      var k = li.cloneNode(true); k.setAttribute('aria-hidden', 'true'); l.appendChild(k);
+    });
+  }
+
+  /* Klaketler görününce sırayla "çakar" */
+  function klaketler() {
+    var k = document.querySelectorAll('.cb-klaket');
+    if (!k.length || azHareket || !('IntersectionObserver' in window)) return;
+    var io = new IntersectionObserver(function (g) {
+      g.forEach(function (x) {
+        if (!x.isIntersecting) return;
+        io.unobserve(x.target);
+        var i = Array.prototype.indexOf.call(k, x.target);
+        setTimeout(function () {
+          x.target.classList.add('is-cak');
+          setTimeout(function () { x.target.classList.remove('is-cak'); }, 420);
+        }, 180 * i + 200);
+      });
+    }, { threshold: .6 });
+    k.forEach(function (x) { io.observe(x); });
+  }
+
   /* Filmografi süzgeci */
   function suzgec() {
     var btn = document.querySelectorAll('[data-cb-suz]');
@@ -135,6 +176,6 @@
     });
   }
 
-  function basla() { videolar(); reel(); perdelik(); suzgec(); turBaglantilari(); form(); }
+  function basla() { videolar(); reel(); perdelik(); suzgec(); zamanKodu(); jenerik(); klaketler(); turBaglantilari(); form(); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', basla); else basla();
 })();
