@@ -525,9 +525,9 @@ html.cb-perde-acik { overflow: hidden; }
 .cb .cb-reel__soz { max-width: 650px; margin-top: 16px !important; font-size: clamp(38px, 4.1vw, 58px); font-weight: 600; line-height: 1.08; letter-spacing: -.025em; }
 .cb-reel__alt { max-width: 510px; margin-top: 20px !important; line-height: 1.75; }
 .cb-reel__afis { min-width: 0; width: 100%; max-width: 340px; margin: 0; justify-self: center; }
-.cb-reel__afis-kapak { display: block; width: 100%; aspect-ratio: 9 / 16; padding: 0; border: 0; border-radius: 18px; overflow: hidden; background: #141414; box-shadow: 0 24px 54px rgba(0,0,0,.25); cursor: pointer; }
+.cb-reel__afis-kapak { position: relative; display: block; width: 100%; aspect-ratio: 9 / 16; padding: 0; border: 0; border-radius: 18px; overflow: hidden; background: #141414; box-shadow: 0 24px 54px rgba(0,0,0,.25); cursor: pointer; }
 .cb-reel__afis-kapak img { display: block; width: 100%; height: 100%; object-fit: cover; transition: filter .3s; }
-.cb-reel__afis-kapak:hover img { filter: brightness(1.045); }
+.cb-reel__afis-kapak:hover img { filter: brightness(.8); }
 .cb-reel__afis figcaption { display: flex; justify-content: space-between; gap: 16px; margin-top: 12px; color: var(--cb-soluk); }
 .cb-reel__afis figcaption strong { font: 600 24px/1 var(--cb-serif); color: var(--cb-yazi); }
 .cb-reel__afis figcaption span { font: 600 13px/1.2 var(--cb-govde); }
@@ -539,8 +539,10 @@ html.cb-perde-acik { overflow: hidden; }
 .cb-gosterim__kapak { position: relative; display: block; width: 100%; aspect-ratio: 9 / 16; padding: 0; border: 0; border-radius: 17px; overflow: hidden; background: #141414; color: #eee; cursor: pointer; }
 .cb-gosterim__kapak img { display: block; width: 100%; height: 100%; object-fit: cover; transition: filter .25s; }
 .cb-gosterim__kapak:hover img { filter: brightness(.8); }
-.cb-gosterim__kapak:hover .cb-gosterim__play, .cb-gosterim__kapak:focus-visible .cb-gosterim__play { opacity: 1; transform: none; }
-@media (hover: none) { .cb-gosterim__kapak .cb-gosterim__play { opacity: .9; transform: none; } }
+/* Girişteki ve Vizyonda'daki afişte aynı oynat simgesi: üzerine gelince belirir */
+.cb-gosterim__kapak:hover .cb-gosterim__play, .cb-gosterim__kapak:focus-visible .cb-gosterim__play,
+.cb-reel__afis-kapak:hover .cb-gosterim__play, .cb-reel__afis-kapak:focus-visible .cb-gosterim__play { opacity: 1; transform: none; }
+@media (hover: none) { .cb-gosterim__kapak .cb-gosterim__play, .cb-reel__afis-kapak .cb-gosterim__play { opacity: .9; transform: none; } }
 .cb-gosterim__play { position: absolute; left: 50%; top: 50%; margin: -32px 0 0 -32px; width: 64px !important; height: 64px !important; opacity: 0; transform: scale(.9); transition: opacity .25s, transform .25s; display: grid; place-items: center; width: 52px; height: 52px; padding-left: 3px; border: 1px solid rgba(232,225,213,.22); border-radius: 50%; background: rgba(25,24,22,.8); font-size: 15px; backdrop-filter: blur(8px); }
 .cb-gosterim__bilgi { padding: 14px 16px 14px 0; }
 .cb-gosterim__ust { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 0; font: 600 13px/1.3 var(--cb-dar); letter-spacing: .08em; text-transform: uppercase; color: var(--cb-altin); }

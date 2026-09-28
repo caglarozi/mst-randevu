@@ -77,8 +77,7 @@ $nedir = [
     ['Sosyal medya odaklı büyüme', 'Üretilen fragmanlar ve sahneler YouTube, Instagram, TikTok ve Facebook gibi mecralara uygun biçimde hazırlanır. Böylece hikâye rafta kalmaz, ekranda da yaşamaya devam eder.'],
 ];
 
-// Akan jenerik: CineBook'un yapısını özetler
-$yetenekler = ['MST Yayıncılık bünyesinde', 'Kitaptan fragmana', 'Kısa sahneler', 'Dijital film projeleri', 'MST Çocuk ile çizgi film', 'Senaryodan kurguya tek ekip', 'Sosyal medyaya özel yapım', 'Yazar, okur ve izleyici için'];
+$yetenekler = ['Senaryo uyarlaması', 'Storyboard', 'Karakter ve görsel tasarım', 'Kurgu', 'Seslendirme', 'Müzik ve ses tasarımı', 'Animasyon', 'Dikey video', 'Dijital yayın'];
 
 $yolculuk = [
     ['Eser seçimi', 'Sinematik potansiyele sahip kitaplar seçilir ve projelendirilir.'],
@@ -176,6 +175,7 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
                 <figure class="cb-reel__afis">
                     <?php if ($fragman) : ?><button type="button" class="cb-reel__afis-kapak" data-cb-video-ac="<?php echo esc_attr($fragman); ?>" data-cb-baslik="<?php echo esc_attr($fr_ad . ' · ' . $fr_etiket); ?>" aria-label="<?php echo esc_attr($fr_ad . ' videosunu izle'); ?>"><?php else : ?><div class="cb-reel__afis-kapak"><?php endif; ?>
                         <img src="<?php echo esc_url($fr_gorsel); ?>" alt="<?php echo esc_attr($fr_ad . ' afişi'); ?>" fetchpriority="high" decoding="async">
+                        <?php if ($fragman) : ?><span class="cb-gosterim__play" aria-hidden="true">▶</span><?php endif; ?>
                     <?php echo $fragman ? '</button>' : '</div>'; ?>
                     <figcaption><strong><?php echo esc_html($fr_ad); ?></strong><span><?php echo esc_html($fr_etiket); ?><?php echo $fragman ? ' · İzle ↗' : ''; ?></span></figcaption>
                 </figure>
