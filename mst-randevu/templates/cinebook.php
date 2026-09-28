@@ -70,11 +70,6 @@ $ik = function ($n, $boy = 22) {
     ];
     return '<svg class="uyg-ic" width="' . (int) $boy . '" height="' . (int) $boy . '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' . ($d[$n] ?? '') . '</svg>';
 };
-$kunye = [
-    ['4+', 'Sosyal medya platformu'],
-    ['Yeni nesil', 'Dijital hikâye anlatımı'],
-    ['Filmleşen', 'Kitap ve fragman projeleri'],
-];
 
 $nedir = [
     ['Dijital anlatı platformu', 'CineBook, kitapları yalnızca tanıtan değil, onları sahnelere ve görsel deneyimlere dönüştüren özel bir yapı sunar.'],
@@ -146,7 +141,7 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
 <main class="uyg cb" lang="tr">
 
     <!-- ============ Perde: kamera vizörü ============
-         Üstte ve altta sinema bantları (letterbox), vizör köşeleri, akan zaman kodu, projektör ışığı ve gren.
+         Üstte ve altta sinema bantları (letterbox), vizör köşeleri, altın ışık, toz ve gren.
          Fragman adresi varsa arka planda sessiz döner (hareketi azalt açıksa dönmez); fragman görseli
          video yüklenene kadar ve video yoksa arka plan olur. "Şimdi izle" aynı fragmanı sesli açar. -->
     <section class="cb-reel<?php echo $fr_gorsel ? ' cb-reel--gorselli' : ''; ?>" id="showreel" <?php echo $fr_yt ? 'data-cb-reel="' . esc_attr($fr_yt) . '"' : ''; ?>>
@@ -166,7 +161,6 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
 
         <div class="cb-vizor">
             <span class="cb-vizor__k cb-vizor__k--1"></span><span class="cb-vizor__k cb-vizor__k--2"></span><span class="cb-vizor__k cb-vizor__k--3"></span><span class="cb-vizor__k cb-vizor__k--4"></span>
-            <p class="cb-vizor__ust" aria-hidden="true"><span><i></i>REC</span><span data-cb-zaman>00:00:00:00</span><span>SAHNE 01 · ÇEKİM 01</span></p>
 
             <div class="cb-reel__in">
                 <p class="cb-reel__ust">Yeni bir çağ</p>
@@ -185,9 +179,6 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
                 </div>
             </div>
 
-            <dl class="cb-kunye">
-                <?php foreach ($kunye as $k) : ?><div><dt><?php echo esc_html($k[0]); ?></dt><dd><?php echo esc_html($k[1]); ?></dd></div><?php endforeach; ?>
-            </dl>
         </div>
 
         <p class="cb-bant cb-bant--alt cb-jenerik-blok">

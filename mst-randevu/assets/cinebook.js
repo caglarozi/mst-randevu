@@ -1,5 +1,5 @@
 /* CineBook ve MST Çocuk sayfası
- * - Perde arka planı, zaman kodu, akan jenerik, klaketler, perdelik oynatıcı ve filmografi süzgeci
+ * - Perde arka planı, akan jenerik, klaketler, perdelik oynatıcı ve filmografi süzgeci
  * - Video kartına dokununca YouTube oynatıcı yüklenir (sayfa açılışında YouTube yüklenmez)
  * - "CineBook / MST Çocuk başvurusu" bağlantıları formda türü seçer
  * - Başvuru formu AJAX ile gönderilir */
@@ -119,18 +119,6 @@
     baslat();
   }
 
-  /* Vizördeki zaman kodu (24 kare/sn); hareketi azalt açıksa durur */
-  function zamanKodu() {
-    var el = document.querySelector('[data-cb-zaman]');
-    if (!el || azHareket) return;
-    var bas = performance.now(), iki = function (n) { return (n < 10 ? '0' : '') + n; };
-    (function ciz(t) {
-      var kare = Math.floor((t - bas) / (1000 / 24)), sn = Math.floor(kare / 24);
-      el.textContent = iki(Math.floor(sn / 3600)) + ':' + iki(Math.floor(sn / 60) % 60) + ':' + iki(sn % 60) + ':' + iki(kare % 24);
-      requestAnimationFrame(ciz);
-    })(bas);
-  }
-
   /* Akan jenerik: kesintisiz döngü için satırlar bir kez daha eklenir (ekran okuyucudan gizli) */
   function jenerik() {
     var l = document.querySelector('.cb-jenerik__akis');
@@ -220,6 +208,6 @@
     });
   }
 
-  function basla() { videolar(); reel(); perdelik(); suzgec(); toz(); zamanKodu(); jenerik(); klaketler(); turBaglantilari(); form(); }
+  function basla() { videolar(); reel(); perdelik(); suzgec(); toz(); jenerik(); klaketler(); turBaglantilari(); form(); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', basla); else basla();
 })();
