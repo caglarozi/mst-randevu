@@ -365,22 +365,26 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
             </div>
 
             <div class="cb-cocuk__afisler" style="margin-top: clamp(64px, 9vw, 100px);">
-                <div class="cb-vizyon__bas" data-cb-gir style="margin-bottom: 30px;">
-                    <h2 style="font-family: var(--mst-font); font-size: clamp(32px, 4vw, 50px); font-weight: 800; color: var(--mst-koyu); letter-spacing: -.02em;">Gelecek Yapımlar</h2>
-                    <p class="cb-bas__metin" style="color: var(--mst-yazi);">MST Çocuk'un eğlenceli ve öğretici dünyasında yakında vizyona girecek çizgi filmler.</p>
-                </div>
+                <p class="cb-etiket cb-vizyon__ara" data-cb-gir style="color: var(--mst-koyu); margin-bottom: 24px;">YAKINDA</p>
                 
-                <article class="cb-gosterim cb-gosterim--cocuk" data-cb-gir style="gap: clamp(30px, 5vw, 60px);">
-                    <div class="cb-gosterim__kapak" style="cursor: default;">
-                        <img src="<?php echo esc_url(MST_RANDEVU_URL . 'assets/yoksul-cocuk.png'); ?>" alt="Yoksul Çocuk afişi" loading="lazy" decoding="async" style="object-position: top;">
-                    </div>
-                    <div class="cb-gosterim__bilgi">
-                        <p class="cb-gosterim__ust">Çok yakında sizlerle <span>Çizgi Film</span></p>
-                        <h3>Yoksul Çocuk</h3>
-                        <p class="cb-gosterim__lead">Sımsıcak bir dostluk hikâyesi ekranlara geliyor.</p>
-                        <p class="cb-gosterim__metin">MST Yayıncılık bünyesinde sevilen <strong>Yoksul Çocuk</strong> kitabı, karakterlerine sadık kalınarak kısa çizgi filme uyarlanıyor. Çocuklar sevdikleri hikâyeyi çok yakında izleme fırsatı bulacak.</p>
-                    </div>
-                </article>
+                <ul class="cb-filmografi">
+                    <li data-cb-gir="kare">
+                        <div class="cb-afis cb-afis--gorsel">
+                            <img src="<?php echo esc_url(MST_RANDEVU_URL . 'assets/yoksul-cocuk.png'); ?>" alt="Yoksul Çocuk afişi" loading="lazy" decoding="async">
+                        </div>
+                        <h3 style="font-family: var(--cb-dar); color: var(--mst-koyu); text-transform: uppercase;">Yoksul Çocuk</h3>
+                        <p style="font-family: var(--cb-mono); color: var(--mst-yazi);">Çok yakında sizlerle · <span class="cb-durum is-yapimda">Yakında</span></p>
+                    </li>
+                    <li class="cb-filmografi__siradaki" data-cb-gir="kare" style="--sira: 1;">
+                        <a class="cb-bilet" href="#basvuru" style="box-shadow: 0 10px 30px rgba(0,0,0,.08);">
+                            <span class="cb-bilet__ust"><small>MST Çocuk</small><small>Başvuru</small></span>
+                            <span class="cb-bilet__orta"><small>Sıradaki yapım</small><strong>Sizin kitabınız</strong><em>Çizgi film olsun</em></span>
+                            <span class="cb-bilet__koc">Başvurun <i aria-hidden="true">→</i></span>
+                        </a>
+                        <h3 style="font-family: var(--cb-dar); color: var(--mst-koyu); text-transform: uppercase;">Başvuru</h3>
+                        <p style="font-family: var(--cb-mono); color: var(--mst-yazi);">Kitabınızı ekrana taşıyın · <span class="cb-durum">Başvuruya açık</span></p>
+                    </li>
+                </ul>
             </div>
         </div>
         <svg class="cb-dalga cb-dalga--alt" viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden="true"><path d="M0,60 L1440,60 L1440,36 C1120,16 880,48 680,34 C440,18 220,46 0,34 Z" fill="#1b1916"/></svg>
