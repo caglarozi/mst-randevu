@@ -110,9 +110,8 @@ class MST_CineBook
     public static function assets()
     {
         if (!self::is_page()) return;
-        // Tasarım dili akademi sayfasıyla aynı: akademi.css / akademi.js (sahne ışığı, daktilo, bölüm menüsü)
+        // Kurumsal alt bilgi akademi.css'ten gelir; sayfanın kendi düzeni cinebook.css'te
         if (!wp_style_is('mst-akademi', 'registered')) wp_register_style('mst-akademi', MST_Randevu::varlik('akademi.css'), ['mst-uygulama'], null);
-        if (!wp_script_is('mst-akademi', 'registered')) wp_register_script('mst-akademi', MST_Randevu::varlik('akademi.js'), [], null, true);
         wp_register_style('mst-cinebook', MST_Randevu::varlik('cinebook.css'), ['mst-akademi'], null);
         wp_register_script('mst-cinebook', MST_Randevu::varlik('cinebook.js'), [], null, true);
         wp_enqueue_style('mst-cinebook-font', 'https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&display=swap', [], null);
@@ -120,7 +119,6 @@ class MST_CineBook
         wp_enqueue_style('mst-cinebook');
         wp_enqueue_script('mst-randevu');
         wp_enqueue_script('mst-uygulama');
-        wp_enqueue_script('mst-akademi');
         wp_enqueue_script('mst-cinebook');
         wp_localize_script('mst-cinebook', 'MST_CB', [
             'ajax'  => admin_url('admin-ajax.php'),

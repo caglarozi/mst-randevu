@@ -1,12 +1,13 @@
 /* CineBook ve MST Çocuk sayfası
+ * - Showreel arka planı, perdelik oynatıcı ve filmografi süzgeci
  * - Video kartına dokununca YouTube oynatıcı yüklenir (sayfa açılışında YouTube yüklenmez)
  * - "CineBook / MST Çocuk başvurusu" bağlantıları formda türü seçer
  * - Başvuru formu AJAX ile gönderilir */
 (function () {
   'use strict';
 
-  function videolar() {
-    document.querySelectorAll('[data-cb-video]').forEach(function (b) {
+  function videolar(kok) {
+    (kok || document).querySelectorAll('[data-cb-video]').forEach(function (b) {
       b.addEventListener('click', function () {
         var f = document.createElement('iframe');
         f.src = 'https://www.youtube-nocookie.com/embed/' + b.getAttribute('data-cb-video') + '?autoplay=1&rel=0';
@@ -16,6 +17,73 @@
         b.appendChild(f); b.classList.add('is-oynuyor');
         b.removeAttribute('data-cb-video');
       }, { once: true });
+    });
+  }
+
+  function ytAdres(id, ek) {
+    return 'https://www.youtube-nocookie.com/embed/' + id + '?' + ek;
+  }
+
+  /* Showreel: fragman varsa arka planda sessiz, döngüde oynar (hareketi azalt açıksa oynamaz) */
+  function reel() {
+    var s = document.querySelector('[data-cb-reel]');
+    if (!s || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) return;
+    var id = s.getAttribute('data-cb-reel'), arka = s.querySelector('.cb-reel__arka');
+    if (!arka) return;
+    var f = document.createElement('iframe');
+    f.src = ytAdres(id, 'autoplay=1&mute=1&controls=0&loop=1&playlist=' + id + '&playsinline=1&rel=0&modestbranding=1');
+    f.title = ''; f.tabIndex = -1;
+    f.setAttribute('aria-hidden', 'true');
+    f.allow = 'autoplay; encrypted-media';
+    f.addEventListener('load', function () { setTimeout(function () { f.classList.add('is-hazir'); }, 800); });
+    arka.appendChild(f);
+  }
+
+  /* Perdelik oynatıcı: "Showreel'i izle" ve afişler açar; kapanınca video durur */
+  function perdelik() {
+    var d = document.getElementById('cb-reel-oynatici');
+    if (!d) return;
+    var ilk = d.innerHTML;
+    function ac(id) {
+      if (id) {
+        var k = d.querySelector('.cb-video');
+        var f = document.createElement('iframe');
+        f.src = ytAdres(id, 'autoplay=1&rel=0');
+        f.title = 'Video';
+        f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+        f.allowFullscreen = true;
+        var b = document.createElement('div');
+        b.className = 'cb-video is-oynuyor';
+        b.appendChild(f);
+        if (k) k.replaceWith(b); else d.appendChild(b);
+      }
+      if (typeof d.showModal === 'function') d.showModal(); else d.setAttribute('open', '');
+    }
+    function kapat() { if (d.close) d.close(); else d.removeAttribute('open'); }
+    document.querySelectorAll('[data-cb-ac]').forEach(function (b) {
+      b.addEventListener('click', function () { ac(null); });
+    });
+    document.querySelectorAll('[data-cb-video-ac]').forEach(function (b) {
+      b.addEventListener('click', function () { ac(b.getAttribute('data-cb-video-ac')); });
+    });
+    d.addEventListener('click', function (e) {
+      if (e.target === d || e.target.closest('[data-cb-kapat]')) kapat();
+    });
+    d.addEventListener('close', function () { d.innerHTML = ilk; videolar(d); });
+  }
+
+  /* Filmografi süzgeci */
+  function suzgec() {
+    var btn = document.querySelectorAll('[data-cb-suz]');
+    btn.forEach(function (b) {
+      b.addEventListener('click', function () {
+        var g = b.getAttribute('data-cb-suz');
+        btn.forEach(function (x) { x.classList.toggle('is-secili', x === b); x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+        document.querySelectorAll('.cb-filmografi [data-cb-grup]').forEach(function (li) {
+          var lg = li.getAttribute('data-cb-grup');
+          li.hidden = !(g === 'hepsi' || lg === 'hepsi' || lg === g);
+        });
+      });
     });
   }
 
@@ -66,6 +134,6 @@
     });
   }
 
-  function basla() { videolar(); turBaglantilari(); form(); }
+  function basla() { videolar(); reel(); perdelik(); suzgec(); turBaglantilari(); form(); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', basla); else basla();
 })();
