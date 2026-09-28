@@ -612,7 +612,7 @@
 
     <h1 class="hero__title">
         <span>Kitap Yayınlama Süreci:</span><br>
-        <em>30 Günde Raflarda.</em>
+        <em>30 Günde Yayında.</em>
     </h1>
 
     <p class="hero__sub">
