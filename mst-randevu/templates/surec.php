@@ -490,6 +490,80 @@
     .page-footer a{color:var(--muted);}
     .page-footer a:hover{color:var(--gold);}
 
+    /* ==============================
+       CROSS LINKS
+    ============================== */
+    .cross-links {
+        padding: 20px 24px 100px;
+        position: relative;
+        z-index: 1;
+    }
+    .cross-links__title {
+        text-align: center;
+        font-size: 1.5rem;
+        font-weight: 800;
+        margin-bottom: 3rem;
+        color: var(--white);
+    }
+    .cross-links__grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+    .xl-card {
+        background: linear-gradient(160deg, rgba(23,25,38,.85), rgba(23,25,38,.6));
+        border-radius: 20px;
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        box-shadow: 0 0 0 1px rgba(255,255,255,.04), 0 4px 20px rgba(0,0,0,.2);
+        transition: transform .4s ease, box-shadow .4s ease;
+    }
+    .xl-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0 0 1px rgba(197,160,89,.3), 0 12px 30px rgba(0,0,0,.3);
+    }
+    .xl-card__icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: var(--gold-dim);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1.2rem;
+        color: var(--gold);
+    }
+    .xl-card h4 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        color: var(--white);
+    }
+    .xl-card p {
+        font-size: 0.9rem;
+        color: var(--muted);
+        line-height: 1.5;
+    }
+    @media (max-width: 820px) {
+        .cross-links__grid { grid-template-columns: 1fr; }
+    }
+    .page-footer{
+        border-top: none;
+        padding:2rem 24px;
+        text-align:center;
+        color:var(--muted-2);
+        font-size:.85rem;
+        position:relative;z-index:1;
+        background: linear-gradient(to bottom, var(--dark) 0%, rgba(15,17,26,.4) 100%);
+    }
+    .page-footer a{color:var(--muted);}
+    .page-footer a:hover{color:var(--gold);}
+
     @keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
     @media(max-width:600px){
         .hero { padding: 120px 16px 60px; }
@@ -757,6 +831,36 @@
         <a href="https://wa.me/905514112004?text=Merhaba" target="_blank" rel="noopener" class="btn btn--ghost" style="font-size:1.1rem;padding:16px 36px;">
             WhatsApp'tan Bilgi Al
         </a>
+    </div>
+</section>
+
+<!-- ======================== CROSS LINKS ======================== -->
+<section class="cross-links">
+    <div class="wrap">
+        <h3 class="cross-links__title">Bunları da İnceleyebilirsiniz</h3>
+        <div class="cross-links__grid">
+            <a href="/akademi" class="xl-card">
+                <div class="xl-card__icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+                </div>
+                <h4>Yazar Kariyer Akademisi</h4>
+                <p>Yazarlığınızı geliştirin ve editörlerimizden profesyonel destek alın.</p>
+            </a>
+            <a href="/yazar-paneli" class="xl-card">
+                <div class="xl-card__icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+                </div>
+                <h4>MST Yazar Paneli</h4>
+                <p>Satışlarınızı, telif haklarınızı ve daha fazlasını anlık takip edin.</p>
+            </a>
+            <a href="/cinebook" class="xl-card">
+                <div class="xl-card__icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg>
+                </div>
+                <h4>Cinebook Projesi</h4>
+                <p>Eserinizi beyaz perdeye taşıyan özel senaryo uyarlama projesi.</p>
+            </a>
+        </div>
     </div>
 </section>
 
