@@ -329,7 +329,7 @@
       });
     }, { threshold: 0.15 });
     
-    document.querySelectorAll('.cb-gosterim, .cb-filmografi .cb-afis, .cb-filmografi .cb-bilet, .cb-iletisim, .cb-form--adim, .cb-klaket').forEach(function(el) {
+    document.querySelectorAll('.cb-gosterim, .cb-filmografi .cb-afis, .cb-filmografi .cb-bilet, .cb-studyo, .cb-klaket, .cb-cocuk__giris, .cb-cocuk__surec li, .cb-cocuk__kim, .cb-basvuru__in, .cb-form, .cb-basvuru__takip').forEach(function(el) {
       el.classList.add('cb-scroll-bekle');
       gozlemci.observe(el);
     });

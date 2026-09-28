@@ -254,22 +254,56 @@ class MST_CineBook
             update_post_meta($id, '_cb_' . $k, $v);
         }
 
-        // Bildirim: e-posta + CRM (webhook). CRM bu olayı tanımıyorsa yok sayar, başvuru yine kaydedilir.
+        // Bildirim: e-posta + CRM Web Randevuları (webhook)
         $o = MST_Randevu::opts();
         if (!empty($o['bildirim_eposta'])) {
             wp_mail($o['bildirim_eposta'], ($tur === 'cocuk' ? 'Yeni MST Çocuk başvurusu: ' : 'Yeni CineBook başvurusu: ') . $eser, $govde . "\n\nPanel: " . admin_url('edit.php?post_type=' . self::CPT));
         }
         if (!empty($o['webhook_url'])) {
             $headers = ['Content-Type' => 'application/json; charset=utf-8'];
-            if (!empty($o['webhook_token'])) $headers['Authorization'] = 'Bearer ' . $o['webhook_token'];
-            wp_remote_post($o['webhook_url'], [
-                'timeout' => 6, 'blocking' => false, 'headers' => $headers,
-                'body' => wp_json_encode([
-                    'olay' => 'cinebook.basvuru', 'kaynak' => 'mst-randevu', 'site' => home_url(), 'basvuru_id' => (int) $id,
-                    'tur' => $tur, 'tur_metin' => self::TURLER[$tur], 'eser_adi' => $eser, 'ad_soyad' => $yazar,
-                    'telefon' => '+' . $tel, 'eposta' => $eposta, 'not' => $ozet,
-                ], JSON_UNESCAPED_UNICODE),
+            if (!empty($o['webhook_token'])) {
+                $headers['Authorization'] = 'Bearer ' . $o['webhook_token'];
+                $headers['X-MST-Token']   = $o['webhook_token'];
+            }
+            $now = (new DateTime('now', wp_timezone()));
+            $tur_adi = self::TURLER[$tur] ?? ($tur === 'cocuk' ? 'MST Çocuk' : 'CineBook');
+            $p = [
+                'olay'           => 'randevu.olusturuldu',
+                'kaynak'         => 'mst-randevu',
+                'tur'            => $tur,
+                'tur_metin'      => $tur_adi . ' Başvurusu',
+                'site'           => home_url(),
+                'randevu_id'     => (int) $id,
+                'ad_soyad'       => $yazar,
+                'telefon'        => '+' . $tel,
+                'telefon_goster' => MST_Randevu::pretty_phone($tel),
+                'eposta'         => $eposta,
+                'eser_adi'       => $eser,
+                'baslangic'      => $now->format('c'),
+                'bitis'          => (clone $now)->modify('+30 minutes')->format('c'),
+                'sure_dk'        => 30,
+                'tarih_metin'    => $now->format('j F Y H:i') . ' (Başvuru)',
+                'not'            => sprintf("🎬 %s Başvurusu\n📖 Eser: %s%s%s", $tur_adi, $eser, $eposta ? "\n✉️ E-posta: $eposta" : "", $ozet ? "\n\n📝 Özet:\n$ozet" : ""),
+                'olusturma'      => $now->format('c'),
+                'mesaj'          => sprintf(
+                    "🎬 Yeni %s Başvurusu\n👤 Yazar: %s\n📞 Telefon: %s\n📖 Eser: %s%s%s",
+                    $tur_adi,
+                    $yazar,
+                    MST_Randevu::pretty_phone($tel),
+                    $eser,
+                    $eposta ? "\n✉️ E-posta: " . $eposta : "",
+                    $ozet ? "\n\n📝 Özet: " . $ozet : ""
+                ),
+            ];
+            $res = wp_remote_post($o['webhook_url'], [
+                'timeout' => 8,
+                'headers' => $headers,
+                'body'    => wp_json_encode($p, JSON_UNESCAPED_UNICODE),
             ]);
+            $sonuc = is_wp_error($res)
+                ? 'webhook: HATA (' . $res->get_error_message() . ')'
+                : 'webhook: ' . wp_remote_retrieve_response_code($res);
+            update_post_meta($id, '_cb_webhook_durumu', $sonuc);
         }
         wp_send_json_success(['mesaj' => 'Başvurunuz bize ulaştı. Eserinizi inceleyip en kısa sürede sizinle iletişime geçeceğiz.']);
     }

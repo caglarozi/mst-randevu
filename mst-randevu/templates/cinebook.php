@@ -134,7 +134,21 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
 </head>
 <body <?php body_class('mst-sayfa mst-uyg mst-akd mst-cb'); ?>>
 <?php wp_body_open(); ?>
-<?php echo MST_Randevu::header_html(false, ['Başvuru Yap', '#basvuru'], 'Merhaba, CineBook hakkında bilgi almak istiyorum.'); ?>
+<header class="mst-top mst-top--cb">
+    <div class="mst-top__in">
+        <a class="mst-top__logo" href="#showreel" aria-label="CineBook">
+            <img src="<?php echo esc_url(MST_Randevu::varlik('cinebook-logo-transparent.png')); ?>" alt="CineBook" style="height: 42px; width: auto; object-fit: contain; margin-top: 4px;">
+        </a>
+        <button type="button" class="mst-top__menu" aria-label="Menüyü aç" aria-expanded="false" aria-controls="mst-top-menu"><span></span><span></span><span></span></button>
+        <div class="mst-top__cta" id="mst-top-menu">
+            <a class="cb-top-link" href="#showreel">Ana Sayfa</a>
+            <a class="cb-top-link" href="#nedir">Hakkında</a>
+            <a class="cb-top-link" href="#yapimlar">Vizyonda</a>
+            <a class="cb-top-link" href="#cocuk">MST Çocuk</a>
+            <a class="cb-top-link cb-top-link--altin" href="#basvuru">Başvuru Yap</a>
+        </div>
+    </div>
+</header>
 
 <main class="uyg cb" lang="tr">
 
@@ -148,10 +162,7 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
         <div class="cb-gren" aria-hidden="true"></div>
         <div class="cb-karartma" aria-hidden="true"></div>
 
-        <nav class="cb-bant cb-bant--ust" aria-label="Sayfa bölümleri">
-            <a class="cb-bant__marka" href="#showreel" aria-label="CineBook, sayfanın başına dön"><img src="<?php echo esc_url(MST_Randevu::varlik('cinebook-logo-transparent.png')); ?>" alt="CineBook" width="2172" height="724" fetchpriority="high" decoding="async"></a>
-            <span class="cb-bant__linkler"><a href="#nedir">Hakkında</a><a href="#yapimlar">Vizyonda</a><a href="#studyo">Stüdyo</a><a href="#cocuk">MST Çocuk</a><a href="#basvuru">Başvuru</a></span>
-        </nav>
+
 
         <div class="cb-vizor">
 
@@ -277,13 +288,13 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
                     </li>
                 <?php endforeach; ?>
                 <li data-cb-grup="hepsi" class="cb-filmografi__siradaki" data-cb-gir="kare" style="--sira: <?php echo count($digerleri); ?>">
-                    <a class="cb-bilet" href="#takip">
-                        <span class="cb-bilet__ust"><small>CineBook</small><small>Yeni yapımlar</small></span>
-                        <span class="cb-bilet__orta"><small>Ekranda devam ediyor</small><strong>Yeni sahneler</strong><em>CineBook kanallarında</em></span>
-                        <span class="cb-bilet__koc">Takip edin <i aria-hidden="true">→</i></span>
+                    <a class="cb-bilet" href="#basvuru">
+                        <span class="cb-bilet__ust"><small>CineBook</small><small>Başvuru</small></span>
+                        <span class="cb-bilet__orta"><small>Sıradaki yapım</small><strong>Sizin kitabınız</strong><em>Ekrana taşıyalım</em></span>
+                        <span class="cb-bilet__koc">Başvurun <i aria-hidden="true">→</i></span>
                     </a>
-                    <h3>Yeni sahneler</h3>
-                    <p>Fragman ve çizgi filmler · <span class="cb-durum">Takip edin</span></p>
+                    <h3>Başvuru</h3>
+                    <p>Kitabınızı ekrana taşıyın · <span class="cb-durum">Başvuruya açık</span></p>
                 </li>
             </ul>
         </div>
@@ -326,7 +337,7 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
 
     <!-- ============ MST Çocuk ============ -->
     <section class="cb-cocuk" id="cocuk">
-        <svg class="cb-dalga" viewBox="0 0 1440 80" preserveAspectRatio="none" aria-hidden="true"><path d="M0,0 H1440 V38 C1260,82 1080,82 900,52 C720,22 540,22 360,52 C220,76 100,70 0,44 Z" fill="#151517"/></svg>
+        <svg class="cb-dalga" viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden="true"><path d="M0,0 L1440,0 L1440,24 C1120,44 880,12 680,26 C440,42 220,14 0,26 Z" fill="#1b1916"/></svg>
         <div class="uyg-kap">
             <div class="cb-cocuk__giris">
                 <div>
@@ -353,7 +364,7 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
                 </ul>
             </div>
         </div>
-        <svg class="cb-dalga cb-dalga--alt" viewBox="0 0 1440 80" preserveAspectRatio="none" aria-hidden="true"><path d="M0,80 H1440 V42 C1300,10 1140,6 960,30 C780,54 600,62 420,40 C260,20 120,22 0,40 Z" fill="#151517"/></svg>
+        <svg class="cb-dalga cb-dalga--alt" viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden="true"><path d="M0,60 L1440,60 L1440,36 C1120,16 880,48 680,34 C440,18 220,46 0,34 Z" fill="#1b1916"/></svg>
     </section>
 
 
