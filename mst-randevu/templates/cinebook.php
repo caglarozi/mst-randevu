@@ -77,7 +77,8 @@ $nedir = [
     ['Sosyal medya odaklı büyüme', 'Üretilen fragmanlar ve sahneler YouTube, Instagram, TikTok ve Facebook gibi mecralara uygun biçimde hazırlanır. Böylece hikâye rafta kalmaz, ekranda da yaşamaya devam eder.'],
 ];
 
-$yetenekler = ['Senaryo uyarlaması', 'Storyboard', 'Karakter ve görsel tasarım', 'Kurgu', 'Seslendirme', 'Müzik ve ses tasarımı', 'Animasyon', 'Dikey video', 'Dijital yayın'];
+// Akan jenerik: CineBook'un yapısını özetler
+$yetenekler = ['MST Yayıncılık bünyesinde', 'Kitaptan fragmana', 'Kısa sahneler', 'Dijital film projeleri', 'MST Çocuk ile çizgi film', 'Senaryodan kurguya tek ekip', 'Sosyal medyaya özel yapım', 'Yazar, okur ve izleyici için'];
 
 $yolculuk = [
     ['Eser seçimi', 'Sinematik potansiyele sahip kitaplar seçilir ve projelendirilir.'],
@@ -156,7 +157,7 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
         <div class="cb-vizor">
 
             <div class="cb-reel__in">
-                <p class="cb-reel__ust">Hikâye ekrana dönüşüyor</p>
+                <p class="cb-reel__ust">Yeni bir çağ</p>
                 <h1 class="cb-reel__baslik"><span lang="en">CineBook</span></h1>
                 <p class="cb-reel__soz">Hikâyeleri sadece yayımlamıyoruz, <em>ekrana taşıyoruz.</em></p>
                 <p class="cb-reel__alt"><span lang="en">CineBook</span>, MST Yayıncılık bünyesinde kitapları fragmanlara, kısa sahnelere ve dijital film projelerine dönüştüren yeni nesil bir hikâye platformudur.</p>
@@ -193,7 +194,7 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
     <section class="cb-bolum cb-nedir" id="nedir">
         <div class="uyg-kap">
             <p class="cb-etiket" data-cb-gir><span lang="en">CineBook</span> nedir?</p>
-            <h2 class="cb-nedir__soz" data-cb-gir>Kitabın <em>görünür hâle gelen</em> versiyonu.</h2>
+            <h2 class="cb-nedir__soz" data-cb-gir>Kitabın <em>perdeye taşınan</em> versiyonu.</h2>
         </div>
         <div class="cb-serit" data-cb-gir="serit" tabindex="0" aria-label="CineBook nedir: üç kare">
             <span class="cb-serit__sizinti" aria-hidden="true"></span>
@@ -294,13 +295,12 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
             <div class="cb-studyo">
                 <div>
                     <p class="cb-etiket">Stüdyo</p>
-                    <h2 class="cb-studyo__soz">Kitabı ekrana taşıyan ekip, <em>kitabı yayına hazırlayan</em> ekiptir.</h2>
+                    <h2 class="cb-studyo__soz">Kitabın ruhunu bilen ekip, <em>onu perdeye de taşır.</em></h2>
                     <p class="cb-studyo__metin"><span lang="en">CineBook</span>, MST Yayıncılık’ın yapım stüdyosudur. Eserin hikâyesini, karakterlerini ve atmosferini fragmana, kısa sahnelere ve sosyal medya videolarına uyarlar; çocuk kitaplarını MST Çocuk etiketiyle çizgi filme dönüştürür.</p>
                 </div>
-                <div class="cb-jenerik" aria-label="Neler yapıyoruz">
+                <div class="cb-jenerik" aria-label="CineBook yapısı">
                     <div class="cb-jenerik__pencere">
                         <ul class="cb-jenerik__akis">
-                            <li class="cb-jenerik__bas"><small>Neler yapıyoruz</small></li>
                             <?php foreach ($yetenekler as $y) : ?><li><?php echo esc_html($y); ?></li><?php endforeach; ?>
                             <li class="cb-jenerik__son"><small>Bir</small> <bdi lang="en">CineBook</bdi> <small>yapımı</small></li>
                         </ul>

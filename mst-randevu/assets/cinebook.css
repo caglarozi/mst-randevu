@@ -554,7 +554,9 @@ html.cb-perde-acik { overflow: hidden; }
 .cb .cb-gosterim__harici { border-bottom: 1px solid rgba(241,235,223,.45); padding-bottom: 3px; color: var(--cb-soluk); font-size: 14px; font-weight: 700; }
 .cb .cb-gosterim__harici:hover { color: var(--cb-yazi); border-color: var(--cb-yazi); }
 .cb-reel__afis-kapak:focus-visible, .cb-gosterim__kapak:focus-visible, .cb-gosterim__birincil:focus-visible, .cb-sosyal a:focus-visible { outline: 2px solid var(--cb-altin); outline-offset: 3px; }
-.cb-afis--gorsel img { object-fit: contain; background: #080808; }
+/* Yapım afişleri ve bilet dikey afiş oranında (9:16); afiş görseli kutuyu boşluksuz doldurur */
+.cb .cb-filmografi .cb-afis, .cb .cb-filmografi .cb-bilet { aspect-ratio: 9 / 16; }
+.cb-afis--gorsel img { object-fit: cover; background: #080808; }
 .cb-iletisim > .uyg-kap > .cb-iletisim__metin { max-width: 560px; margin-top: 18px; }
 .cb-iletisim .cb-sosyal { margin-top: 34px; gap: 14px; }
 .cb-iletisim .cb-sosyal li { border: 1px solid var(--cb-cizgi); border-radius: 14px; background: rgba(255,255,255,.035); }
