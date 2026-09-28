@@ -233,13 +233,14 @@ class MST_CineBook
 
         if (!isset(self::TURLER[$tur])) wp_send_json_error(['mesaj' => 'Lütfen başvuru türünü seçin.', 'alan' => 'tur']);
         if (mb_strlen($eser) < 2) wp_send_json_error(['mesaj' => 'Lütfen eserinizin adını yazın.', 'alan' => 'eser_adi']);
+        if (empty($_POST['mst_yazari'])) wp_send_json_error(['mesaj' => 'Başvurular yalnızca kitabı MST Yayıncılık’tan yayımlanan yazarlarımıza açıktır. Kitabınız MST Yayıncılık’tan yayımlandıysa kutuyu işaretleyin.', 'alan' => 'mst_yazari']);
         if (mb_strlen($yazar) < 3) wp_send_json_error(['mesaj' => 'Lütfen adınızı ve soyadınızı yazın.', 'alan' => 'yazar_adi']);
         if (!$tel) wp_send_json_error(['mesaj' => 'Geçerli bir telefon numarası girin (ör. 0532 123 45 67).', 'alan' => 'telefon']);
         if ($eposta && !is_email($eposta)) wp_send_json_error(['mesaj' => 'E-posta adresi geçerli görünmüyor.', 'alan' => 'eposta']);
         if (empty($_POST['kvkk'])) wp_send_json_error(['mesaj' => 'Devam etmek için onay kutusunu işaretleyin.', 'alan' => 'kvkk']);
 
         $govde = sprintf(
-            "Tür: %s\nEser: %s\nYazar: %s\nTelefon: %s\nE-posta: %s\n\nÖzet:\n%s",
+            "Tür: %s\nEser: %s (MST Yayıncılık yayını: evet)\nYazar: %s\nTelefon: %s\nE-posta: %s\n\nÖzet:\n%s",
             self::TURLER[$tur], $eser, $yazar, MST_Randevu::pretty_phone($tel), $eposta ?: '—', $ozet ?: '—'
         );
         $id = wp_insert_post([

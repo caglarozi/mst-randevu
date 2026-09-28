@@ -234,7 +234,7 @@
     if (!f || !window.MST_CB) return;
     var hata = f.querySelector('[data-cb-hata]'), tamam = f.querySelector('[data-cb-tamam]'), btn = f.querySelector('.cb-form__gonder');
     var adimlar = f.querySelectorAll('[data-cb-adim]'), isaretler = f.querySelectorAll('[data-cb-adim-isaret]'), ozet = f.querySelector('[data-cb-ozet]');
-    var ALAN_ADIM = { tur: 1, eser_adi: 2, ozet: 2, yazar_adi: 3, telefon: 3, eposta: 3, kvkk: 3 };
+    var ALAN_ADIM = { tur: 1, eser_adi: 2, ozet: 2, mst_yazari: 2, yazar_adi: 3, telefon: 3, eposta: 3, kvkk: 3 };
     var simdiki = 1;
     f.classList.add('is-adimli');
 
@@ -246,7 +246,7 @@
       if (alan && ALAN_ADIM[alan]) git(ALAN_ADIM[alan], true);
       hata.textContent = m; hata.hidden = false;
       var el = alan && f.querySelector('[name="' + alan + '"]');
-      if (el) { var l = el.closest('.cb-alan'); if (l) l.classList.add('is-hata'); el.focus(); }
+      if (el) { var l = el.closest('.cb-alan, .cb-onay'); if (l) l.classList.add('is-hata'); el.focus(); }
     }
     function turAdi() {
       var r = f.querySelector('input[name="tur"]:checked');
@@ -273,6 +273,7 @@
     }
     function denetle(n) {
       if (n === 2 && (f.elements.eser_adi.value || '').trim().length < 2) { goster('Lütfen eserinizin adını yazın.', 'eser_adi'); return false; }
+      if (n === 2 && !f.elements.mst_yazari.checked) { goster('Başvurular yalnızca kitabı MST Yayıncılık’tan yayımlanan yazarlarımıza açıktır. Kitabınız MST Yayıncılık’tan yayımlandıysa kutuyu işaretleyin.', 'mst_yazari'); return false; }
       return true;
     }
     f.querySelectorAll('[data-cb-ileri]').forEach(function (b) {

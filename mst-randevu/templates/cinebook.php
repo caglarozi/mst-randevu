@@ -194,7 +194,7 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
     <section class="cb-bolum cb-nedir" id="nedir">
         <div class="uyg-kap">
             <p class="cb-etiket" data-cb-gir><span lang="en">CineBook</span> nedir?</p>
-            <h2 class="cb-nedir__soz" data-cb-gir>Kitabın <em>perdeye taşınan</em> versiyonu.</h2>
+            <h2 class="cb-nedir__soz" data-cb-gir>Kitabın <em>ekrana taşınan</em> versiyonu.</h2>
         </div>
         <div class="cb-serit" data-cb-gir="serit" tabindex="0" aria-label="CineBook nedir: üç kare">
             <span class="cb-serit__sizinti" aria-hidden="true"></span>
@@ -279,7 +279,7 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
                 <li data-cb-grup="hepsi" class="cb-filmografi__siradaki" data-cb-gir="kare" style="--sira: <?php echo count($digerleri); ?>">
                     <a class="cb-bilet" href="#takip">
                         <span class="cb-bilet__ust"><small>CineBook</small><small>Yeni yapımlar</small></span>
-                        <span class="cb-bilet__orta"><small>Perde devam ediyor</small><strong>Yeni sahneler</strong><em>CineBook kanallarında</em></span>
+                        <span class="cb-bilet__orta"><small>Ekranda devam ediyor</small><strong>Yeni sahneler</strong><em>CineBook kanallarında</em></span>
                         <span class="cb-bilet__koc">Takip edin <i aria-hidden="true">→</i></span>
                     </a>
                     <h3>Yeni sahneler</h3>
@@ -295,7 +295,7 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
             <div class="cb-studyo">
                 <div>
                     <p class="cb-etiket">Stüdyo</p>
-                    <h2 class="cb-studyo__soz">Kitabın ruhunu bilen ekip, <em>onu perdeye de taşır.</em></h2>
+                    <h2 class="cb-studyo__soz">Kitabın ruhunu bilen ekip, <em>onu ekrana da taşır.</em></h2>
                     <p class="cb-studyo__metin"><span lang="en">CineBook</span>, MST Yayıncılık’ın yapım stüdyosudur. Eserin hikâyesini, karakterlerini ve atmosferini fragmana, kısa sahnelere ve sosyal medya videolarına uyarlar; çocuk kitaplarını MST Çocuk etiketiyle çizgi filme dönüştürür.</p>
                 </div>
                 <div class="cb-jenerik" aria-label="CineBook yapısı">
@@ -367,10 +367,11 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
             <h2 class="cb-iletisim__baslik">Başvuru</h2>
             <div class="cb-basvuru__in">
                 <div class="cb-basvuru__sol">
-                    <p class="cb-iletisim__metin">Kitabınızın ekranda hayat bulmasını istiyorsanız eserinizi gönderin. Başvurunuzu inceleyip sizi arıyoruz; uygun eserler için uyarlama planını birlikte hazırlıyoruz.</p>
+                    <p class="cb-iletisim__metin">MST Yayıncılık yazarıysanız ve kitabınızın ekranda hayat bulmasını istiyorsanız eserinizi gönderin. Başvurunuzu inceleyip sizi arıyoruz; uygun eserler için uyarlama planını birlikte hazırlıyoruz.</p>
+                    <p class="cb-basvuru__kosul"><strong>Yalnızca MST Yayıncılık yazarlarına açıktır.</strong> <bdi lang="en">CineBook</bdi> ve MST Çocuk, kitabı MST Yayıncılık’tan yayımlanan eserler için yapılır.</p>
                     <ol class="cb-basvuru__yol">
                         <li><span>1</span><div><strong>Türü seçin</strong><small><bdi lang="en">CineBook</bdi> ya da MST Çocuk</small></div></li>
-                        <li><span>2</span><div><strong>Eserinizi tanıtın</strong><small>Adı ve kısa bir özet</small></div></li>
+                        <li><span>2</span><div><strong>Eserinizi tanıtın</strong><small>Adı, kısa özeti ve MST yayını onayı</small></div></li>
                         <li><span>3</span><div><strong>Sizi arayalım</strong><small>Ekibimiz değerlendirip dönüş yapar</small></div></li>
                     </ol>
                     <?php if ($wa) : ?><a class="cb-wa" href="<?php echo esc_url($wa); ?>" target="_blank" rel="noopener"><?php echo MST_Randevu::icon('wa'); ?> Sorunuz varsa WhatsApp’tan yazın</a><?php endif; ?>
@@ -386,6 +387,7 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
 
                     <fieldset class="cb-adim is-aktif" data-cb-adim="1">
                         <legend class="cb-adim__baslik">Ne için başvuruyorsunuz?</legend>
+                        <p class="cb-adim__not">Başvurular yalnızca kitabı MST Yayıncılık’tan yayımlanan yazarlarımıza açıktır.</p>
                         <div class="cb-form__tur">
                             <label><input type="radio" name="tur" value="cinebook" checked><span><strong><bdi lang="en">CineBook</bdi></strong><small>Kitaptan fragman, kısa sahne ya da dijital film</small></span></label>
                             <label><input type="radio" name="tur" value="cocuk"><span><strong>MST Çocuk</strong><small>Çocuk kitabından çizgi film</small></span></label>
@@ -396,7 +398,8 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
                     <fieldset class="cb-adim" data-cb-adim="2">
                         <legend class="cb-adim__baslik">Eseriniz</legend>
                         <label class="cb-alan"><span>Eser adı</span><input type="text" name="eser_adi" required maxlength="150" autocomplete="off"></label>
-                        <label class="cb-alan"><span>Eserinizi kısaca anlatın <em>(isteğe bağlı)</em></span><textarea name="ozet" rows="4" maxlength="1500" placeholder="Tür, konu, hedef okur yaşı, kitap yayımlandı mı…"></textarea></label>
+                        <label class="cb-alan"><span>Eserinizi kısaca anlatın <em>(isteğe bağlı)</em></span><textarea name="ozet" rows="4" maxlength="1500" placeholder="Tür, konu, hedef okur yaşı…"></textarea></label>
+                        <label class="cb-onay cb-onay--mst"><input type="checkbox" name="mst_yazari" value="1" required><span>Bu kitap <strong>MST Yayıncılık</strong>’tan yayımlandı.</span></label>
                         <div class="cb-adim__alt"><button type="button" class="cb-adim__geri" data-cb-geri>← Geri</button><button type="button" class="cb-adim__ileri" data-cb-ileri>Devam <span aria-hidden="true">→</span></button></div>
                     </fieldset>
 

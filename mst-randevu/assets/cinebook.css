@@ -652,3 +652,10 @@ html.cb-perde-acik { overflow: hidden; }
   .cb-form.is-adimli .cb-adim.is-aktif { animation: none; }
 }
 .cb-adim .cb-form__tur label:nth-child(2) input:checked + span { border-color: var(--c-mavi); background: #e9f5fc; }
+
+/* Başvuru koşulu: yalnızca MST Yayıncılık yazarları */
+.cb-basvuru__kosul { margin-top: 18px !important; padding: 14px 16px; border-radius: 12px; border: 1px solid rgba(199, 167, 123, .35); background: rgba(199, 167, 123, .08); font-size: 15px; line-height: 1.6; color: var(--cb-soluk); }
+.cb-basvuru__kosul strong { display: block; color: var(--cb-altin); }
+.cb-adim__not { margin: -6px 0 0 !important; font-size: 13px; line-height: 1.5; color: var(--mst-soluk); }
+.cb .cb-onay--mst { padding: 12px 14px; border-radius: 12px; background: #f6f1e8; color: var(--mst-koyu); font-size: 14px; }
+.cb-onay--mst.is-hata { outline: 1.5px solid var(--mst-hata); }
