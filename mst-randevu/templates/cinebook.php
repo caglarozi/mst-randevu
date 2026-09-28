@@ -186,7 +186,7 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
                 <figure class="cb-reel__afis">
                     <?php if ($fragman) : ?><button type="button" class="cb-reel__afis-kapak" data-cb-video-ac="<?php echo esc_attr($fragman); ?>" data-cb-baslik="<?php echo esc_attr($fr_ad . ' · ' . $fr_etiket); ?>" aria-label="<?php echo esc_attr($fr_ad . ' videosunu izle'); ?>"><?php else : ?><div class="cb-reel__afis-kapak"><?php endif; ?>
                         <img src="<?php echo esc_url($fr_gorsel); ?>" alt="<?php echo esc_attr($fr_ad . ' afişi'); ?>" fetchpriority="high" decoding="async">
-                        <?php if ($fragman) : ?><span class="cb-gosterim__play" aria-hidden="true">▶</span><?php endif; ?>
+                        <?php if ($fragman) : ?><span class="cb-gosterim__play" aria-hidden="true"><?php echo $ik('oynat', 28); ?></span><?php endif; ?>
                     <?php echo $fragman ? '</button>' : '</div>'; ?>
                     <figcaption><strong><?php echo esc_html($fr_ad); ?></strong><span><?php echo esc_html($fr_etiket); ?><?php echo $fragman ? ' · İzle ↗' : ''; ?></span></figcaption>
                 </figure>
@@ -246,7 +246,7 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
                             data-cb-baslik="<?php echo esc_attr($gosterim['ad'] . ' · ' . $gosterim['etiket']); ?>"
                             aria-label="<?php echo esc_attr($gosterim['ad'] . ' videosunu izle'); ?>">
                         <?php if ($gosterim_kapak) : ?><img src="<?php echo esc_url($gosterim_kapak); ?>" alt="<?php echo esc_attr($gosterim['ad'] . ' afişi'); ?>" loading="lazy" decoding="async"><?php endif; ?>
-                        <span class="cb-gosterim__play" aria-hidden="true">▶</span>
+                        <span class="cb-gosterim__play" aria-hidden="true"><?php echo $ik('oynat', 28); ?></span>
                     </button>
                     <div class="cb-gosterim__bilgi">
                         <p class="cb-gosterim__ust">Şimdi vizyonda <span><?php echo esc_html($gosterim['etiket']); ?></span></p>
