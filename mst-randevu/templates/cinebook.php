@@ -187,20 +187,24 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
         <div class="cb-perdelik__yer"></div>
     </dialog>
 
-    <!-- ============ CineBook nedir? 35 mm film şeridi ============ -->
+    <!-- ============ CineBook nedir? 35 mm film şeridi ============
+         Kaydırınca yazı süzülür, kareler sırayla "yanar" (data-cb-gir, cinebook.js). -->
     <section class="cb-bolum cb-nedir" id="nedir">
         <div class="uyg-kap">
-            <p class="cb-etiket"><span lang="en">CineBook</span> nedir?</p>
-            <h2 class="cb-nedir__soz">Kitabın <em>görünür hâle gelen</em> versiyonu.</h2>
+            <p class="cb-etiket" data-cb-gir><span lang="en">CineBook</span> nedir?</p>
+            <h2 class="cb-nedir__soz" data-cb-gir>Kitabın <em>görünür hâle gelen</em> versiyonu.</h2>
         </div>
         <div class="cb-serit" tabindex="0" aria-label="CineBook nedir: üç kare">
             <ol class="cb-serit__kareler">
                 <?php foreach ($nedir as $i => $n) : ?>
-                    <li class="cb-kare">
-                        <span class="cb-kare__kod" aria-hidden="true"><bdi lang="en">CINEBOOK</bdi> 35 ▸ <?php echo (int) $i + 1; ?>A</span>
-                        <span class="cb-kare__no"><?php echo esc_html(sprintf('%02d', $i + 1)); ?></span>
-                        <h3><?php echo esc_html($n[0]); ?></h3>
-                        <p><?php echo esc_html($n[1]); ?></p>
+                    <li class="cb-kare" data-cb-gir="kare" style="--sira: <?php echo (int) $i; ?>">
+                        <span class="cb-kare__kod" aria-hidden="true">◂ <?php echo (int) $i * 4 + 12; ?>&ensp;<bdi lang="en">CINEBOOK</bdi> 5219&ensp;▸ <?php echo (int) $i * 4 + 13; ?>A</span>
+                        <span class="cb-kare__kod cb-kare__kod--alt" aria-hidden="true"><?php echo esc_html(sprintf('%02d', $i + 1)); ?>&ensp;▸&ensp;MST</span>
+                        <div class="cb-kare__goruntu">
+                            <span class="cb-kare__no" aria-hidden="true"><?php echo esc_html(sprintf('%02d', $i + 1)); ?></span>
+                            <h3><?php echo esc_html($n[0]); ?></h3>
+                            <p><?php echo esc_html($n[1]); ?></p>
+                        </div>
                     </li>
                 <?php endforeach; ?>
             </ol>

@@ -119,6 +119,19 @@
     baslat();
   }
 
+  /* Kaydırınca giriş: yalnızca açılışta ekranın altında kalan [data-cb-gir] öğeleri bekletilir,
+   * görünür olunca sırayla gelir. JS yoksa ya da hareketi azalt açıksa her şey baştan görünür. */
+  function girisler() {
+    var l = document.querySelectorAll('[data-cb-gir]');
+    if (!l.length || azHareket || !('IntersectionObserver' in window)) return;
+    var io = new IntersectionObserver(function (g) {
+      g.forEach(function (x) { if (x.isIntersecting) { x.target.classList.add('cb-gir'); io.unobserve(x.target); } });
+    }, { threshold: .2, rootMargin: '0px 0px -8% 0px' });
+    l.forEach(function (el) {
+      if (el.getBoundingClientRect().top > window.innerHeight * .92) { el.classList.add('cb-bekle'); io.observe(el); }
+    });
+  }
+
   /* Akan jenerik: kesintisiz döngü için satırlar bir kez daha eklenir (ekran okuyucudan gizli) */
   function jenerik() {
     var l = document.querySelector('.cb-jenerik__akis');
@@ -208,6 +221,6 @@
     });
   }
 
-  function basla() { videolar(); reel(); perdelik(); suzgec(); toz(); jenerik(); klaketler(); turBaglantilari(); form(); }
+  function basla() { videolar(); reel(); perdelik(); suzgec(); toz(); girisler(); jenerik(); klaketler(); turBaglantilari(); form(); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', basla); else basla();
 })();
