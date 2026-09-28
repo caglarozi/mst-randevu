@@ -125,11 +125,31 @@
     var l = document.querySelectorAll('[data-cb-gir]');
     if (!l.length || azHareket || !('IntersectionObserver' in window)) return;
     var io = new IntersectionObserver(function (g) {
-      g.forEach(function (x) { if (x.isIntersecting) { x.target.classList.add('cb-gir'); io.unobserve(x.target); } });
+      g.forEach(function (x) {
+        if (!x.isIntersecting) return;
+        var el = x.target; el.classList.add('cb-gir'); io.unobserve(el);
+        // giriş bitince sınıflar kalkar; üzerine gelme gibi sonraki hareketler gecikmesiz çalışır
+        setTimeout(function () { el.classList.remove('cb-bekle', 'cb-gir'); }, 2600);
+      });
     }, { threshold: .2, rootMargin: '0px 0px -8% 0px' });
     l.forEach(function (el) {
       if (el.getBoundingClientRect().top > window.innerHeight * .92) { el.classList.add('cb-bekle'); io.observe(el); }
     });
+  }
+
+  /* Film şeridi sayfa kaydıkça ilerler: delikler ve kareler yana kayar (film makinesinde akıyormuş gibi) */
+  function seritAkisi() {
+    var s = document.querySelector('.cb-serit');
+    if (!s || azHareket) return;
+    var bekliyor = false, gorunur = true;
+    function guncelle() {
+      bekliyor = false;
+      var r = s.getBoundingClientRect();
+      s.style.setProperty('--kay', ((r.top + r.height / 2 - window.innerHeight / 2) * -.3).toFixed(1) + 'px');
+    }
+    if ('IntersectionObserver' in window) new IntersectionObserver(function (e) { gorunur = e[0].isIntersecting; }).observe(s);
+    window.addEventListener('scroll', function () { if (gorunur && !bekliyor) { bekliyor = true; requestAnimationFrame(guncelle); } }, { passive: true });
+    guncelle();
   }
 
   /* Akan jenerik: kesintisiz döngü için satırlar bir kez daha eklenir (ekran okuyucudan gizli) */
@@ -221,6 +241,6 @@
     });
   }
 
-  function basla() { videolar(); reel(); perdelik(); suzgec(); toz(); girisler(); jenerik(); klaketler(); turBaglantilari(); form(); }
+  function basla() { videolar(); reel(); perdelik(); suzgec(); toz(); girisler(); seritAkisi(); jenerik(); klaketler(); turBaglantilari(); form(); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', basla); else basla();
 })();

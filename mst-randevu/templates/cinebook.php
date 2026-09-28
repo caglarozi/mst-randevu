@@ -194,12 +194,12 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
             <p class="cb-etiket" data-cb-gir><span lang="en">CineBook</span> nedir?</p>
             <h2 class="cb-nedir__soz" data-cb-gir>Kitabın <em>görünür hâle gelen</em> versiyonu.</h2>
         </div>
-        <div class="cb-serit" tabindex="0" aria-label="CineBook nedir: üç kare">
+        <div class="cb-serit" data-cb-gir="serit" tabindex="0" aria-label="CineBook nedir: üç kare">
+            <span class="cb-serit__sizinti" aria-hidden="true"></span>
             <ol class="cb-serit__kareler">
                 <?php foreach ($nedir as $i => $n) : ?>
                     <li class="cb-kare" data-cb-gir="kare" style="--sira: <?php echo (int) $i; ?>">
                         <span class="cb-kare__kod" aria-hidden="true">◂ <?php echo (int) $i * 4 + 12; ?>&ensp;<bdi lang="en">CINEBOOK</bdi> 5219&ensp;▸ <?php echo (int) $i * 4 + 13; ?>A</span>
-                        <span class="cb-kare__kod cb-kare__kod--alt" aria-hidden="true"><?php echo esc_html(sprintf('%02d', $i + 1)); ?>&ensp;▸&ensp;MST</span>
                         <div class="cb-kare__goruntu">
                             <span class="cb-kare__no" aria-hidden="true"><?php echo esc_html(sprintf('%02d', $i + 1)); ?></span>
                             <h3><?php echo esc_html($n[0]); ?></h3>
