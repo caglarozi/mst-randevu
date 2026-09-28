@@ -141,7 +141,7 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
 <main class="uyg cb" lang="tr">
 
     <!-- ============ Perde: kamera vizörü ============
-         Üstte ve altta sinema bantları (letterbox), vizör köşeleri, altın ışık, toz ve gren.
+         Üstte sinema bandı (bölüm menüsü), altın ışık, toz ve gren.
          Fragman adresi varsa arka planda sessiz döner (hareketi azalt açıksa dönmez); fragman görseli
          video yüklenene kadar ve video yoksa arka plan olur. "Şimdi izle" aynı fragmanı sesli açar. -->
     <section class="cb-reel<?php echo $fr_gorsel ? ' cb-reel--gorselli' : ''; ?>" id="showreel" <?php echo $fr_yt ? 'data-cb-reel="' . esc_attr($fr_yt) . '"' : ''; ?>>
@@ -160,7 +160,6 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
         </nav>
 
         <div class="cb-vizor">
-            <span class="cb-vizor__k cb-vizor__k--1"></span><span class="cb-vizor__k cb-vizor__k--2"></span><span class="cb-vizor__k cb-vizor__k--3"></span><span class="cb-vizor__k cb-vizor__k--4"></span>
 
             <div class="cb-reel__in">
                 <p class="cb-reel__ust">Yeni bir çağ</p>
@@ -181,12 +180,6 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
 
         </div>
 
-        <p class="cb-bant cb-bant--alt cb-jenerik-blok">
-            <span><small>MST Yayıncılık</small> sunar</span>
-            <span><small>bir</small> <bdi lang="en">CineBook</bdi> <small>yapımı</small></span>
-            <span><small>yazarların</small> kitaplarından <small>uyarlanmıştır</small></span>
-            <span><small>senaryo</small> uyarlama <small>kurgu</small> ses <small>müzik</small> animasyon</span>
-        </p>
     </section>
 
     <dialog class="cb-perdelik" id="cb-perdelik" aria-label="Video">
