@@ -172,7 +172,7 @@ class MST_CineBook
         if (!wp_style_is('mst-akademi', 'registered')) wp_register_style('mst-akademi', MST_Randevu::varlik('akademi.css'), ['mst-uygulama'], null);
         wp_register_style('mst-cinebook', MST_Randevu::varlik('cinebook.css'), ['mst-akademi'], null);
         wp_register_script('mst-cinebook', MST_Randevu::varlik('cinebook.js'), [], null, true);
-        wp_enqueue_style('mst-cinebook-font', 'https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Cormorant+Garamond:wght@500;600;700&display=swap', [], null);
+        wp_enqueue_style('mst-cinebook-font', 'https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Cinzel:wght@700&family=Cormorant+Garamond:wght@500;600;700&display=swap', [], null);
         wp_enqueue_style('mst-randevu-font');
         wp_enqueue_style('mst-cinebook');
         wp_enqueue_script('mst-randevu');

@@ -157,7 +157,7 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
 
             <div class="cb-reel__in">
                 <p class="cb-reel__ust">Hikâye ekrana dönüşüyor</p>
-                <h1 class="cb-reel__baslik"><img src="<?php echo esc_url(MST_Randevu::varlik('cinebook-logo-transparent.png')); ?>" alt="CineBook" width="2172" height="724" fetchpriority="high" decoding="async"></h1>
+                <h1 class="cb-reel__baslik"><span lang="en">CineBook</span></h1>
                 <p class="cb-reel__soz">Hikâyeleri sadece yayımlamıyoruz, <em>ekrana taşıyoruz.</em></p>
                 <p class="cb-reel__alt"><span lang="en">CineBook</span>, MST Yayıncılık bünyesinde kitapları fragmanlara, kısa sahnelere ve dijital film projelerine dönüştüren yeni nesil bir hikâye platformudur.</p>
                 <div class="cb-reel__cta">
