@@ -370,7 +370,7 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
                 <ul class="cb-filmografi">
                     <li data-cb-gir="kare">
                         <div class="cb-afis cb-afis--gorsel">
-                            <img src="<?php echo esc_url(MST_RANDEVU_URL . 'assets/yoksul-cocuk.png'); ?>" alt="Yoksul Çocuk afişi" loading="lazy" decoding="async">
+                            <img src="<?php echo esc_url(MST_RANDEVU_URL . 'assets/yoksul-cocuk.jpg'); ?>" alt="Yoksul Çocuk afişi" loading="lazy" decoding="async">
                         </div>
                         <h3 style="font-family: var(--cb-dar); color: var(--mst-koyu); text-transform: uppercase;">Yoksul Çocuk</h3>
                         <p style="font-family: var(--cb-mono); color: var(--mst-yazi);">Çok yakında sizlerle · <span class="cb-durum is-yapimda">Yakında</span></p>
