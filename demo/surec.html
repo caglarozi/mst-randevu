@@ -646,6 +646,27 @@
             <!-- Adım 1 -->
             <div class="tl-item">
                 <div class="tl-card">
+                    <div class="tl-card__badge">Ön Analiz</div>
+                    <div class="tl-card__icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><path d="M11 8v6l4 2"/></svg>
+                    </div>
+                    <h3>Sözleşme Öncesi 2 Aşamalı Analiz</h3>
+                    <p>Eseriniz yayın kurulumuz tarafından 2 aşamalı bir incelemeye alınır. Kitabınızın yayınevimize uygunluğu, edebi değeri ve pazar potansiyeli değerlendirilir. Bu analiz sonucunda size özel, en doğru yayın modeli belirlenir.</p>
+                    <div class="tl-card__pills">
+                        <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Kurul incelemesi</span>
+                        <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Edebi değerlendirme</span>
+                        <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Doğru paket seçimi</span>
+                    </div>
+                </div>
+                <div class="tl-node"><div class="tl-dot">01</div></div>
+                <div class="tl-empty"></div>
+            </div>
+
+            <!-- Adım 2 -->
+            <div class="tl-item">
+                <div class="tl-empty"></div>
+                <div class="tl-node"><div class="tl-dot">02</div></div>
+                <div class="tl-card">
                     <div class="tl-card__badge">Sözleşme</div>
                     <div class="tl-card__icon">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg>
@@ -658,14 +679,10 @@
                         <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Kişisel yayın planı</span>
                     </div>
                 </div>
-                <div class="tl-node"><div class="tl-dot">01</div></div>
-                <div class="tl-empty"></div>
             </div>
 
-            <!-- Adım 2 -->
+            <!-- Adım 3 -->
             <div class="tl-item">
-                <div class="tl-empty"></div>
-                <div class="tl-node"><div class="tl-dot">02</div></div>
                 <div class="tl-card">
                     <div class="tl-card__badge">Editöryel</div>
                     <div class="tl-card__icon">
@@ -679,10 +696,14 @@
                         <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Profesyonel kapak tasarımı</span>
                     </div>
                 </div>
+                <div class="tl-node"><div class="tl-dot">03</div></div>
+                <div class="tl-empty"></div>
             </div>
 
-            <!-- Adım 3 -->
+            <!-- Adım 4 -->
             <div class="tl-item">
+                <div class="tl-empty"></div>
+                <div class="tl-node"><div class="tl-dot">04</div></div>
                 <div class="tl-card">
                     <div class="tl-card__badge">Yasal Süreç</div>
                     <div class="tl-card__icon">
@@ -696,14 +717,10 @@
                         <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Tüm evraklar sizde</span>
                     </div>
                 </div>
-                <div class="tl-node"><div class="tl-dot">03</div></div>
-                <div class="tl-empty"></div>
             </div>
 
-            <!-- Adım 4 -->
+            <!-- Adım 5 -->
             <div class="tl-item">
-                <div class="tl-empty"></div>
-                <div class="tl-node"><div class="tl-dot">04</div></div>
                 <div class="tl-card">
                     <div class="tl-card__badge">Baskı</div>
                     <div class="tl-card__icon">
@@ -717,10 +734,14 @@
                         <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Sınırsız baskı hakkı</span>
                     </div>
                 </div>
+                <div class="tl-node"><div class="tl-dot">05</div></div>
+                <div class="tl-empty"></div>
             </div>
 
-            <!-- Adım 5 -->
+            <!-- Adım 6 -->
             <div class="tl-item">
+                <div class="tl-empty"></div>
+                <div class="tl-node"><div class="tl-dot">06</div></div>
                 <div class="tl-card">
                     <div class="tl-card__badge">Dağıtım</div>
                     <div class="tl-card__icon">
@@ -734,14 +755,10 @@
                         <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Fuar katılımları</span>
                     </div>
                 </div>
-                <div class="tl-node"><div class="tl-dot">05</div></div>
-                <div class="tl-empty"></div>
             </div>
 
-            <!-- Adım 6 -->
+            <!-- Adım 7 -->
             <div class="tl-item">
-                <div class="tl-empty"></div>
-                <div class="tl-node"><div class="tl-dot">06</div></div>
                 <div class="tl-card">
                     <div class="tl-card__badge">Tanıtım</div>
                     <div class="tl-card__icon">
@@ -755,6 +772,8 @@
                         <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Pakete göre kapsamlanır</span>
                     </div>
                 </div>
+                <div class="tl-node"><div class="tl-dot">07</div></div>
+                <div class="tl-empty"></div>
             </div>
 
         </div>
