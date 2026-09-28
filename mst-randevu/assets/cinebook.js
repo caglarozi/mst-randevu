@@ -76,6 +76,49 @@
 
   var azHareket = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  /* Girişte süzülen altın toz: küçük, yavaş, göz kırpan zerreler.
+   * Görünmüyorken ve sekme arka plandayken durur; hareketi azalt açıksa tek durgun kare çizilir. */
+  function toz() {
+    var t = document.querySelector('.cb-toz');
+    if (!t || !t.getContext) return;
+    var c = t.getContext('2d'), kok = t.parentNode, W = 0, H = 0, z = [], son = 0, calisiyor = false, gorunur = true;
+    function yeni(ilk) {
+      return { x: Math.random() * W, y: ilk ? Math.random() * H : H + 10, r: .5 + Math.random() * 1.6,
+               v: 6 + Math.random() * 14, s: 8 + Math.random() * 18, f: Math.random() * 6.28, h: .4 + Math.random() * .9 };
+    }
+    function kur() {
+      var r = kok.getBoundingClientRect(), dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = r.width; H = r.height; t.width = Math.round(W * dpr); t.height = Math.round(H * dpr);
+      c.setTransform(dpr, 0, 0, dpr, 0, 0);
+      z = []; for (var i = 0, n = W < 640 ? 40 : 90; i < n; i++) z.push(yeni(true));
+    }
+    function ciz(dt) {
+      c.clearRect(0, 0, W, H);
+      for (var i = 0; i < z.length; i++) {
+        var p = z[i];
+        p.y -= p.v * dt; p.f += dt * p.h;
+        if (p.y < -10) { z[i] = yeni(false); continue; }
+        var x = p.x + Math.sin(p.f) * p.s;
+        c.globalAlpha = (.25 + .55 * (.5 + .5 * Math.sin(p.f * 2.3))) * Math.min(1, (H - p.y) / 120);
+        c.fillStyle = p.r > 1.5 ? '#ffe6b0' : '#f0c36e';
+        c.beginPath(); c.arc(x, p.y, p.r, 0, 6.283); c.fill();
+      }
+      c.globalAlpha = 1;
+    }
+    function dongu(ms) {
+      if (!calisiyor) return;
+      var dt = son ? Math.min(.05, (ms - son) / 1000) : .016; son = ms;
+      ciz(dt); requestAnimationFrame(dongu);
+    }
+    function baslat() { if (!calisiyor && gorunur && !document.hidden) { calisiyor = true; son = 0; requestAnimationFrame(dongu); } }
+    kur();
+    if (azHareket) { ciz(0); return; }
+    var zm; window.addEventListener('resize', function () { clearTimeout(zm); zm = setTimeout(kur, 150); });
+    if ('IntersectionObserver' in window) new IntersectionObserver(function (e) { gorunur = e[0].isIntersecting; gorunur ? baslat() : (calisiyor = false); }).observe(kok);
+    document.addEventListener('visibilitychange', function () { document.hidden ? (calisiyor = false) : baslat(); });
+    baslat();
+  }
+
   /* Vizördeki zaman kodu (24 kare/sn); hareketi azalt açıksa durur */
   function zamanKodu() {
     var el = document.querySelector('[data-cb-zaman]');
@@ -177,6 +220,6 @@
     });
   }
 
-  function basla() { videolar(); reel(); perdelik(); suzgec(); zamanKodu(); jenerik(); klaketler(); turBaglantilari(); form(); }
+  function basla() { videolar(); reel(); perdelik(); suzgec(); toz(); zamanKodu(); jenerik(); klaketler(); turBaglantilari(); form(); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', basla); else basla();
 })();

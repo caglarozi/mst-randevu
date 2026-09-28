@@ -2,7 +2,7 @@
 /**
  * "MST CineBook ve MST Çocuk (Tam Sayfa)" şablonu.
  * Yapım şirketi sitesi düzeni: showreel girişi, CineBook nedir, afişlerden filmografi, stüdyo ve
- * kitapların filme yolculuğu, MST Çocuk, "Birlikte çalışalım" (başvuru formu).
+ * kitapların filme yolculuğu, MST Çocuk ve başvuru formu.
  * Videolar, görseller, yapımlar ve sosyal medya Yazar Randevu → CineBook Ayarları'ndan gelir.
  * Boş alanlar ziyaretçiye yer tutucu olarak değil, "yakında" ya da hiç gösterilmeden yansır.
  */
@@ -141,7 +141,7 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
 </head>
 <body <?php body_class('mst-sayfa mst-uyg mst-akd mst-cb'); ?>>
 <?php wp_body_open(); ?>
-<?php echo MST_Randevu::header_html(false, ['Birlikte Çalışalım', '#iletisim'], 'Merhaba, CineBook hakkında bilgi almak istiyorum.'); ?>
+<?php echo MST_Randevu::header_html(false, ['Başvuru Yap', '#basvuru'], 'Merhaba, CineBook hakkında bilgi almak istiyorum.'); ?>
 
 <main class="uyg cb" lang="tr">
 
@@ -153,11 +153,15 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
         <div class="cb-reel__arka" aria-hidden="true">
             <?php if ($fr_gorsel) : ?><img src="<?php echo esc_url($fr_gorsel); ?>" alt="" fetchpriority="high" decoding="async"><?php endif; ?>
         </div>
+        <!-- Altın ışık ve toz: arkada yavaş gezinen sıcak ışık lekeleri, havada süzülen toz (cinebook.js) -->
+        <div class="cb-isiklar" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+        <canvas class="cb-toz" aria-hidden="true"></canvas>
         <div class="cb-gren" aria-hidden="true"></div>
+        <div class="cb-karartma" aria-hidden="true"></div>
 
         <nav class="cb-bant cb-bant--ust" aria-label="Sayfa bölümleri">
             <span class="cb-bant__marka" lang="en">CineBook</span>
-            <span class="cb-bant__linkler"><a href="#nedir">Hakkında</a><a href="#yapimlar">Vizyonda</a><a href="#studyo">Stüdyo</a><a href="#cocuk">MST Çocuk</a><a href="#iletisim">İletişim</a></span>
+            <span class="cb-bant__linkler"><a href="#nedir">Hakkında</a><a href="#yapimlar">Vizyonda</a><a href="#studyo">Stüdyo</a><a href="#cocuk">MST Çocuk</a><a href="#basvuru">Başvuru</a></span>
         </nav>
 
         <div class="cb-vizor">
@@ -177,7 +181,7 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
                     <?php else : ?>
                         <a class="cb-oynat-btn" href="#yapimlar"><i aria-hidden="true"></i><span><strong>Vizyonda</strong><small><?php echo esc_html($fr_ad . ' • ' . $fr_etiket); ?> yakında</small></span></a>
                     <?php endif; ?>
-                    <a class="cb-cizgi-btn" href="#iletisim">Birlikte çalışalım</a>
+                    <a class="cb-cizgi-btn" href="#basvuru">Başvuru yap</a>
                 </div>
             </div>
 
@@ -258,7 +262,7 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
                     </li>
                 <?php endforeach; ?>
                 <li data-cb-grup="hepsi" class="cb-filmografi__siradaki">
-                    <a class="cb-bilet" href="#iletisim">
+                    <a class="cb-bilet" href="#basvuru">
                         <span class="cb-bilet__ust"><small>Bilet</small><small>No 00<?php echo count($yapimlar) + 1; ?></small></span>
                         <span class="cb-bilet__orta"><small>Sıradaki yapım</small><strong>Sizin kitabınız</strong><em>Fragman ya da çizgi film</em></span>
                         <span class="cb-bilet__koc">Başvurun <i aria-hidden="true">→</i></span>
@@ -315,7 +319,7 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
                     <p class="cb-cocuk__rozet">MST Çocuk</p>
                     <h2>Çocuk kitapları <span>çizgi filme</span> dönüşüyor.</h2>
                     <p class="cb-cocuk__alt">Resimli çocuk kitaplarını, karakterlerine ve çizimlerine sadık kalarak kısa çizgi filmlere uyarlıyoruz. Çocuklar sevdikleri hikâyeyi hem okuyor hem izliyor.</p>
-                    <a class="cb-cocuk__btn" href="#iletisim" data-cb-tur="cocuk">Çocuk kitabınız için başvurun</a>
+                    <a class="cb-cocuk__btn" href="#basvuru" data-cb-tur="cocuk">Çocuk kitabınız için başvurun</a>
                 </div>
                 <div class="cb-cocuk__sahne">
                     <?php echo $oynatici($cocuk_vd, 'MST Çocuk’un ilk çizgi filmi', 'Çizgi filmi izle', 'cb-video--cocuk'); ?>
@@ -340,11 +344,11 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
 
 
 
-    <!-- ============ Birlikte çalışalım ============ -->
-    <section class="cb-bolum cb-bolum--koyu cb-iletisim" id="iletisim">
+    <!-- ============ Başvuru ============ -->
+    <section class="cb-bolum cb-bolum--koyu cb-iletisim" id="basvuru">
         <div class="uyg-kap">
             <p class="cb-iletisim__ust">Sıradaki sahne <em>sizin.</em></p>
-            <h2 class="cb-iletisim__baslik">Birlikte çalışalım</h2>
+            <h2 class="cb-iletisim__baslik">Başvuru</h2>
             <div class="cb-iletisim__in">
                 <div class="cb-iletisim__sol">
                     <p class="cb-iletisim__metin">Kitabınızın ekranda hayat bulmasını istiyorsanız eserinizi gönderin. Başvurunuzu inceleyip sizi arıyoruz; uygun eserler için uyarlama planını birlikte hazırlıyoruz.</p>
@@ -401,7 +405,7 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
                 <a href="#yapimlar">Vizyonda</a>
                 <a href="#studyo">Stüdyo</a>
                 <a href="#cocuk">MST Çocuk</a>
-                <a href="#iletisim">İletişim</a>
+                <a href="#basvuru">Başvuru</a>
                 <a href="<?php echo esc_url(MST_Randevu::kvkk_url()); ?>">KVKK Aydınlatma Metni</a>
                 <a href="<?php echo esc_url(home_url('/')); ?>">mstyayincilik.com</a>
             </nav>
