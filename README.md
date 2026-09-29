@@ -76,7 +76,7 @@ Yeni sayfa → başlık (ör. “CineBook”) → *Şablon →* **MST CineBook v
 node demo-sunucu.js
 ```
 
-Windows'ta kısaca: `onizleme.bat`'a çift tıklayın (masaüstüne kısayolu konabilir). En güncel `main-dayiyo`'yu indirir ve **canlı önizlemeyi** açar (`node demo-sunucu.js --canli`): açık kaldığı sürece her 15 saniyede GitHub'a bakar, yeni sürüm gelince kendiliğinden indirir ve tarayıcıdaki sayfayı kendiliğinden yeniler; zip indirmeye gerek kalmaz. Varsayılan sayfa CineBook'tur; başka sayfa için `onizleme.bat akademi` (randevu, uygulama, akademi, akademi-randevu, cinebook). Klasörde elle yapılan değişiklikler güncellemede silinir.
+Windows'ta kısaca: `onizleme.bat`'a çift tıklayın (masaüstüne kısayolu konabilir), açık kalsın. Canlı önizleme (`node demo-sunucu.js --canli`) **kendi kendine güncellenir**: her 20 saniyede GitHub'daki `main-dayiyo`'ya bakar, yeni sürümü kendisi indirir (kaydırarak ilerletir; yerelde kayıt varsa ve klasör temizse birleştirir) ve tarayıcıdaki sayfayı yeniler. Klasörde kaydedilmemiş değişiklik ya da çakışma varsa hiçbir şeye dokunmaz, pencereye yazar; o zaman `GUNCELLE.bat` çalıştırılır. GitHub'a bakmaması için `--yerel`. Varsayılan sayfa CineBook'tur; başka sayfa için `onizleme.bat akademi` (randevu, uygulama, akademi, akademi-randevu, cinebook, surec).
 
 Ardından http://localhost:8788 — eklentinin kendi CSS/JS'i sahte verilerle çalışır; kayıtlar yalnızca sayfada tutulur.
 

@@ -28,6 +28,13 @@ exit /b 1
 :bulundu
 where git >nul 2>nul || (echo Git bulunamadi: https://git-scm.com adresinden kurun. & pause & exit /b 1)
 echo Klasor: %CD%
+echo Baslangic: %TIME%
+echo %CD% | findstr /i "OneDrive" >nul && echo UYARI: Klasor OneDrive icinde; OneDrive git'i cok yavaslatir. Klasoru C:\mst-randevu gibi OneDrive disina tasimaniz onerilir.
+
+rem Git'i Windows'ta hizlandiran ayarlar (bir kez yazilir, zararsizdir)
+git config core.fscache true >nul 2>nul
+git config core.untrackedCache true >nul 2>nul
+git config gc.auto 256 >nul 2>nul
 
 rem Yarim kalmis birlestirme varsa geri al
 if exist ".git\MERGE_HEAD" (
@@ -36,12 +43,15 @@ if exist ".git\MERGE_HEAD" (
 )
 git checkout -q main-dayiyo || goto hata
 
-rem Kaydedilmemis degisiklikleri kaydet
+echo [1/3] Yerel degisiklikler kaydediliyor... %TIME%
 git add -A
 git diff --cached --quiet || git commit -q -m "Yerel calisma (GUNCELLE.bat ile kaydedildi)" || goto hata
 
-echo En guncel hal indiriliyor...
+echo [2/3] GitHub'dan en guncel hal indiriliyor... %TIME%
 git fetch -q origin main-dayiyo || goto hata
+set "GERIDE=0"
+for /f %%n in ('git rev-list --count HEAD..FETCH_HEAD') do set "GERIDE=%%n"
+if "%GERIDE%"=="0" goto gonder
 git merge --no-edit -q FETCH_HEAD
 if not errorlevel 1 goto gonder
 
@@ -56,10 +66,18 @@ git add GUNCELLE.bat || goto cakisma
 git commit --no-edit -q || goto cakisma
 
 :gonder
-echo GitHub'a gonderiliyor...
-git push -q origin HEAD:main-dayiyo || goto hata
+rem Gonderme yalnizca GitHub'da olmayan yerel calisma varsa yapilir
+set "ILERDE=0"
+for /f %%n in ('git rev-list --count FETCH_HEAD..HEAD') do set "ILERDE=%%n"
+if "%ILERDE%"=="0" (
+  echo [3/3] Gonderilecek yerel degisiklik yok, atlandi.
+) else (
+  echo [3/3] Yerel degisiklikler GitHub'a gonderiliyor... %TIME%
+  git push -q origin HEAD:main-dayiyo || goto hata
+)
+echo Bitis: %TIME%
 echo.
-echo Tamam: bu klasor ve GitHub artik ayni, en guncel halde.
+if "%GERIDE%"=="0" (echo Zaten en guncel halde.) else (echo Tamam: en guncel hal indirildi.)
 echo Onizleme aciksa sayfa kendiliginden yenilenir; acik degilse onizleme.bat'a cift tiklayin.
 echo.
 pause

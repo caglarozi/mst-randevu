@@ -2,6 +2,7 @@
 rem MST yerel onizleme: cift tiklayin.
 rem Bu klasordeki calismayi korur; GitHub'dan indirip dosyalari sifirlamaz.
 rem Demo veya stil dosyalari degisince acik sayfayi yeniler.
+rem Acik kaldigi surece GitHub'daki yeni surumleri 20 saniyede bir kendisi indirir; elle guncellemeye gerek yok.
 rem Baska sayfa icin: onizleme.bat akademi   (randevu, uygulama, akademi, akademi-randevu, cinebook)
 chcp 65001 >nul
 cd /d "%~dp0"

@@ -1,3 +1,15 @@
+<?php
+if (!defined('ABSPATH')) {
+    exit;
+}
+// Bağlantılar sayfadan sayfaya elle yazılmaz: eklenti ilgili şablonlu sayfayı kendisi bulur, yoksa canlı adrese düşer.
+$sy_randevu = MST_Randevu::randevu_url();
+$sy_wa      = MST_Randevu::wa_link('Merhaba, yayınlama süreciniz hakkında bilgi almak istiyorum.') ?: 'https://mstyayincilik.com/';
+$sy_akademi = MST_Randevu::akademi_url() ?: 'https://mstyayincilik.com/mst-yazar-akademisi/';
+$sy_panel_s = get_posts(['post_type' => 'page', 'post_status' => 'publish', 'numberposts' => 1, 'meta_key' => '_wp_page_template', 'meta_value' => MST_Randevu::SABLON_UYG, 'fields' => 'ids']);
+$sy_panel   = $sy_panel_s ? get_permalink($sy_panel_s[0]) : MST_Randevu::uygulama_url();
+$sy_cinebook = (class_exists('MST_CineBook') ? MST_CineBook::url() : '') ?: 'https://mstyayincilik.com/cinebook/';
+?>
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -128,23 +140,7 @@
         opacity:0;
         animation:fadeUp 2.5s var(--ease-std) 1.5s forwards;
     }
-    .hero__img-wrap {
-        margin-top: 56px;
-        opacity:0;
-        animation:fadeUp 2.5s var(--ease-std) 1.8s forwards;
-        display: flex;
-        justify-content: center;
-        width: 100%;
-    }
-    .hero__img-wrap img {
-        width: 100%;
-        max-width: 1200px;
-        height: auto;
-        border-radius: 0;
-        box-shadow: none;
-        border: none;
-        mix-blend-mode: lighten;
-    }
+    
     .btn {
         display:inline-flex;
         align-items:center;
@@ -261,49 +257,185 @@
         transition: height .1s ease-out;
         bottom:auto;
     }
-
+    /* Timeline Illustration */
     .tl-image {
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 24px;
-        opacity: 0.9;
+        transition: transform 0.4s ease;
+    }
+    .tl-item:hover .tl-image {
+        transform: scale(1.05);
     }
     .tl-image img {
-        max-width: 100%;
-        max-height: 280px;
+        width: 100%;
+        max-width: 320px;
+        height: auto;
         object-fit: contain;
-        filter: drop-shadow(0 10px 20px rgba(0,0,0,0.4));
-        transition: transform 0.3s var(--ease-std);
+        filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));
     }
-    .tl-image img:hover {
-        transform: translateY(-5px) scale(1.05);
-    }
-    @media(max-width:820px){ .timeline::before, .timeline::after {left:28px;} }
 
+    /* TL Grid Layout (Desktop) */
     .tl-item {
-        display:grid;
-        grid-template-columns:1fr 72px 1fr;
-        gap:0 32px;
-        margin-bottom:80px;
-        opacity:0;
-        transform:translateY(36px);
-        transition:opacity .9s ease-out, transform .9s ease-out;
+        display: grid;
+        grid-template-columns: 1fr 100px 1fr;
+        gap: 0;
+        position: relative;
+        padding-bottom: 80px;
     }
-    .tl-item.visible{opacity:1;transform:none;}
-    .tl-item:nth-child(odd)  .tl-card{grid-column:1;grid-row:1;}
-    .tl-item:nth-child(odd)  .tl-image{grid-column:3;}
-    .tl-item:nth-child(even) .tl-card{grid-column:3;grid-row:1;}
-    .tl-item:nth-child(even) .tl-image{grid-column:1;}
-    .tl-node{grid-column:2;grid-row:1;display:flex;justify-content:center;padding-top:32px;position:relative;z-index:2;}
+    .tl-node {
+        grid-column: 2;
+        grid-row: 1 / span 2;
+        display: flex;
+        justify-content: center;
+        padding-top: 32px;
+        position: relative;
+        z-index: 2;
+    }
+
+    /* Odd items: Content Left, Image Right */
+    .tl-item:nth-child(odd) .tl-question { 
+        grid-column: 1; 
+        grid-row: 1; 
+        align-self: end; 
+        padding-right: 40px; 
+        text-align: right; 
+    }
+    .tl-item:nth-child(odd) .tl-card { 
+        grid-column: 1; 
+        grid-row: 2; 
+        margin-right: 40px; 
+    }
+    .tl-item:nth-child(odd) .tl-image { 
+        grid-column: 3; 
+        grid-row: 1 / span 2; 
+        padding-left: 40px; 
+    }
+
+    /* Even items: Content Right, Image Left */
+    .tl-item:nth-child(even) .tl-question { 
+        grid-column: 3; 
+        grid-row: 1; 
+        align-self: end; 
+        padding-left: 40px; 
+        text-align: left; 
+    }
+    .tl-item:nth-child(even) .tl-card { 
+        grid-column: 3; 
+        grid-row: 2; 
+        margin-left: 40px; 
+    }
+    .tl-item:nth-child(even) .tl-image { 
+        grid-column: 1; 
+        grid-row: 1 / span 2; 
+        padding-right: 40px; 
+    }
+
+    /* Responsive Mobile & Tablet */
     @media(max-width:820px){
-        .timeline{padding-left:80px;}
-        .tl-item{grid-template-columns:none;display:block;position:relative;padding-left:0;}
-        .tl-item:nth-child(even) .tl-card,
-        .tl-item:nth-child(odd)  .tl-card{grid-column:unset;}
-        .tl-image{display:none;}
-        .tl-node{position:absolute;top:24px;left:-80px;grid-column:unset;padding-top:0;}
+        .timeline {
+            padding-left: 76px;
+            padding-right: 0;
+            padding-top: 10px;
+        }
+        .timeline::before, 
+        .timeline::after {
+            left: 28px;
+            transform: translateX(-50%);
+        }
+        .tl-item {
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            padding-bottom: 56px;
+            padding-left: 0;
+            gap: 0;
+        }
+        .tl-node {
+            position: absolute;
+            top: 0;
+            left: -76px;
+            width: 56px;
+            padding-top: 0;
+            grid-column: unset;
+            grid-row: unset;
+            z-index: 2;
+            display: flex;
+            justify-content: center;
+        }
+        .tl-item:nth-child(odd) .tl-question,
+        .tl-item:nth-child(even) .tl-question {
+            grid-column: unset;
+            grid-row: unset;
+            order: 1;
+            text-align: left;
+            padding: 0;
+            margin: 0 0 16px 0;
+            align-self: flex-start;
+        }
+        .tl-item:nth-child(odd) .tl-card,
+        .tl-item:nth-child(even) .tl-card {
+            grid-column: unset;
+            grid-row: unset;
+            order: 2;
+            margin: 0;
+            width: 100%;
+        }
+        .tl-item:nth-child(odd) .tl-image,
+        .tl-item:nth-child(even) .tl-image {
+            grid-column: unset;
+            grid-row: unset;
+            order: 3;
+            padding: 0;
+            margin: 24px auto 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+        .tl-item .tl-image img {
+            max-width: 240px;
+            height: auto;
+        }
     }
+
+    @media(max-width:520px){
+        .timeline {
+            padding-left: 60px;
+        }
+        .timeline::before, 
+        .timeline::after {
+            left: 22px;
+        }
+        .tl-item {
+            padding-bottom: 48px;
+        }
+        .tl-node {
+            left: -60px;
+            width: 44px;
+        }
+        .tl-dot {
+            width: 44px;
+            height: 44px;
+            font-size: 1rem;
+        }
+        .tl-card {
+            padding: 1.5rem 1.2rem;
+            border-radius: 18px;
+        }
+        .tl-question {
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+        }
+        .tl-item .tl-image img {
+            max-width: 200px;
+        }
+        .pill {
+            font-size: 0.8rem;
+            padding: 6px 12px;
+        }
+    }
+
+
 
     .tl-dot {
         width:56px;height:56px;
@@ -428,6 +560,18 @@
         border-radius:50%;
         background:var(--gold-light);
         box-shadow:0 0 10px rgba(197,160,89,.6);
+    }
+    .tl-question {
+        font-size: clamp(1.2rem, 4vw, 1.5rem);
+        font-weight: 800;
+        line-height: 1.35;
+        color: var(--gold-light);
+        margin-bottom: 1.2rem;
+        padding-left: 0;
+    }
+    .tl-item.visible .tl-question {
+        opacity: 1;
+        transform: none;
     }
     .tl-card h3{font-size:1.4rem;font-weight:800;margin-bottom:.8rem;line-height:1.2;}
     .tl-card p{color:var(--muted);font-size:1rem;line-height:1.75;}
@@ -606,7 +750,7 @@
         .hero__cta .btn, .cta-row .btn { width: 100%; justify-content: center; }
         .section { padding: 80px 16px; }
         .section__desc { margin-bottom: 2rem; }
-        .tl-item { margin-bottom: 64px; }
+        /* .tl-item spacing handled by padding-bottom */
         .tl-card { padding: 1.5rem; }
         .tl-card h3 { font-size: 1.25rem; }
         .features-grid { gap: 32px; margin-top: 48px; }
@@ -627,7 +771,7 @@
         </button>
         <div class="mst-top__cta" id="mst-top-menu">
             <a class="mst-top__btn mst-top__btn--wa"
-               href="https://wa.me/905514112004?text=Merhaba"
+               href="<?php echo esc_url($sy_wa); ?>"
                target="_blank" rel="noopener" aria-label="WhatsApp'tan yazın">
                 <svg class="mst-ic" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
                 <span>WhatsApp</span>
@@ -636,7 +780,7 @@
                 <span>Siteye Git</span>
                 <svg class="mst-ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M19 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h5"/></svg>
             </a>
-            <a class="mst-top__btn mst-top__btn--altin" href="/"><span>Ön Görüşme Al</span></a>
+            <a class="mst-top__btn mst-top__btn--altin" href="<?php echo esc_url($sy_randevu); ?>"><span>Ön Görüşme Al</span></a>
         </div>
     </div>
 </header>
@@ -655,19 +799,17 @@
     </p>
 
     <div class="hero__cta">
-        <a href="/" class="btn btn--gold">
+        <a href="<?php echo esc_url($sy_randevu); ?>" class="btn btn--gold">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
             Ücretsiz Ön Görüşme
         </a>
-        <a href="https://wa.me/905514112004?text=Merhaba" target="_blank" rel="noopener" class="btn btn--ghost">
+        <a href="<?php echo esc_url($sy_wa); ?>" target="_blank" rel="noopener" class="btn btn--ghost">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
             WhatsApp'tan Bilgi Al
         </a>
     </div>
 
-    <div class="hero__img-wrap">
-        <img src="<?php echo MST_RANDEVU_URL; ?>assets/surec-hero.jpg" alt="Kitap Yayınlama Süreci" loading="lazy">
-    </div>
+
 
 </section>
 
@@ -683,12 +825,13 @@
 
             <!-- Adım 1 -->
             <div class="tl-item">
+                <h3 class="tl-question">Kitabım yayına uygun mu?</h3>
                 <div class="tl-card">
                     <div class="tl-card__badge">Ön Analiz</div>
                     <div class="tl-card__icon">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><path d="M11 8v6l4 2"/></svg>
                     </div>
-                    <h3>Sözleşme Öncesi 2 Aşamalı Analiz</h3>
+
                     <p>Eseriniz yayın kurulumuz tarafından 2 aşamalı bir incelemeye alınır. Kitabınızın yayınevimize uygunluğu, edebi değeri ve pazar potansiyeli değerlendirilir. Bu analiz sonucunda size özel, en doğru yayın modeli belirlenir.</p>
                     <div class="tl-card__pills">
                         <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Kurul incelemesi</span>
@@ -697,57 +840,62 @@
                     </div>
                 </div>
                 <div class="tl-node"><div class="tl-dot">01</div></div>
-                <div class="tl-image"><img src="<?php echo MST_RANDEVU_URL; ?>assets/adim-1.png" alt="Adım Karakteri" onerror="this.src='https://placehold.co/400x300/0f111a/d4af37?text=Adim+Gorseli'"></div>
+                <div class="tl-image"><img src="<?php echo MST_RANDEVU_URL; ?>assets/step1.png" alt="Adım 1 İllüstrasyon"></div>
+
             </div>
 
             <!-- Adım 2 -->
             <div class="tl-item">
-                <div class="tl-image"><img src="<?php echo MST_RANDEVU_URL; ?>assets/adim-2.png" alt="Adım Karakteri" onerror="this.src='https://placehold.co/400x300/0f111a/d4af37?text=Adim+Gorseli'"></div>
-                <div class="tl-node"><div class="tl-dot">02</div></div>
+                <h3 class="tl-question">Sözleşme sonrası ne olur?</h3>
                 <div class="tl-card">
+
                     <div class="tl-card__badge">Sözleşme</div>
                     <div class="tl-card__icon">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg>
                     </div>
-                    <h3>Sözleşme ve Profesyonel Ekip Ataması</h3>
-                    <p>Kitap yayınlama sözleşmemiz imzalandığı an, eseriniz için uzman bir editör ve kapak tasarımcısı görevlendirilir. Kitabınızın türüne en uygun yayımlama stratejisi belirlenerek süreç başlatılır.</p>
+
+                    <p>Kitap yayınlama sözleşmemiz imzalandığı an, eseriniz için uzman bir editör ve uzman bir grafiker görevlendirilir. Kitabınızın türüne en uygun yayımlama stratejisi belirlenerek süreç başlatılır.</p>
                     <div class="tl-card__pills">
                         <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Birebir editör</span>
-                        <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Özel tasarımcı</span>
+                        <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Uzman grafiker</span>
                         <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Kişisel yayın planı</span>
                     </div>
                 </div>
+                <div class="tl-node"><div class="tl-dot">02</div></div>
+                <div class="tl-image"><img src="<?php echo MST_RANDEVU_URL; ?>assets/step2.png" alt="Adım 2 İllüstrasyon"></div>
             </div>
 
             <!-- Adım 3 -->
             <div class="tl-item">
+                <h3 class="tl-question">Kitabım nasıl düzenlenir ve tasarlanır?</h3>
                 <div class="tl-card">
                     <div class="tl-card__badge">Editöryel</div>
                     <div class="tl-card__icon">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19 7-7 3 3-7 7-3-3z"/><path d="m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="m2 2 7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
                     </div>
-                    <h3>Editöryel Okuma ve Kapak Tasarımı</h3>
-                    <p>Kitabınız dilbilgisi, kurgu ve akıcılık yönünden titizlikle incelenir. İçerik düzenlemeleri ve profesyonel kitap kapağı tasarımı yapılırken <strong>her adım tarafınıza onaya sunulur.</strong> Siz onaylamadan asla baskıya geçilmez.</p>
+
+                    <p>Kitabınız dilbilgisi, kurgu ve akıcılık yönünden titizlikle incelenir. İçerik düzenlemeleri ve uzman grafiker eşliğinde kapak ve iç tasarım yapılırken <strong>her adım tarafınıza onaya sunulur.</strong> Siz onaylamadan asla baskıya geçilmez.</p>
                     <div class="tl-card__pills">
                         <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Kapsamlı editöryel inceleme</span>
                         <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Her değişiklik onaya gönderilir</span>
-                        <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Profesyonel kapak tasarımı</span>
+                        <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Uzman grafiker</span>
                     </div>
                 </div>
                 <div class="tl-node"><div class="tl-dot">03</div></div>
-                <div class="tl-image"><img src="<?php echo MST_RANDEVU_URL; ?>assets/adim-3.png" alt="Adım Karakteri" onerror="this.src='https://placehold.co/400x300/0f111a/d4af37?text=Adim+Gorseli'"></div>
+                <div class="tl-image"><img src="<?php echo MST_RANDEVU_URL; ?>assets/step3.png" alt="Adım 3 İllüstrasyon"></div>
+
             </div>
 
             <!-- Adım 4 -->
             <div class="tl-item">
-                <div class="tl-image"><img src="<?php echo MST_RANDEVU_URL; ?>assets/adim-4.png" alt="Adım Karakteri" onerror="this.src='https://placehold.co/400x300/0f111a/d4af37?text=Adim+Gorseli'"></div>
-                <div class="tl-node"><div class="tl-dot">04</div></div>
+                <h3 class="tl-question">Yasal işlemleri kim halleder?</h3>
                 <div class="tl-card">
+
                     <div class="tl-card__badge">Yasal Süreç</div>
                     <div class="tl-card__icon">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
                     </div>
-                    <h3>Yasal Süreç: Kültür Bakanlığı, ISBN ve Bandrol</h3>
+
                     <p>Kitap yayımlamak için gereken ISBN tahsisi ve bandrol alımı gibi tüm resmî işlemleri yayınevimiz bizzat yürütür. Alınan yasal bandrolleri <strong>e-Devlet</strong> üzerinden anında sorgulayabilirsiniz.</p>
                     <div class="tl-card__pills">
                         <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> ISBN alınır</span>
@@ -755,16 +903,19 @@
                         <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Tüm evraklar sizde</span>
                     </div>
                 </div>
+                <div class="tl-node"><div class="tl-dot">04</div></div>
+                <div class="tl-image"><img src="<?php echo MST_RANDEVU_URL; ?>assets/step4.png" alt="Adım 4 İllüstrasyon"></div>
             </div>
 
             <!-- Adım 5 -->
             <div class="tl-item">
+                <h3 class="tl-question">Kitabım ne zaman basılır?</h3>
                 <div class="tl-card">
                     <div class="tl-card__badge">Baskı</div>
                     <div class="tl-card__icon">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><path d="M8 7h6"/><path d="M8 11h8"/></svg>
                     </div>
-                    <h3>Matbaa, Baskı Aşaması ve Yazar Nüshaları</h3>
+
                     <p>Tasarım ve yasal süreçlerin ardından kitabınız <strong>30 gün içinde basılarak</strong> hazır hale gelir. Ücretsiz yazar nüshalarınız adresinize gönderilir ve sözleşme süresince <strong>sınırsız tekrar baskı</strong> avantajından faydalanırsınız.</p>
                     <div class="tl-card__pills">
                         <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> 30 gün garantisi</span>
@@ -773,36 +924,40 @@
                     </div>
                 </div>
                 <div class="tl-node"><div class="tl-dot">05</div></div>
-                <div class="tl-image"><img src="<?php echo MST_RANDEVU_URL; ?>assets/adim-5.png" alt="Adım Karakteri" onerror="this.src='https://placehold.co/400x300/0f111a/d4af37?text=Adim+Gorseli'"></div>
+                <div class="tl-image"><img src="<?php echo MST_RANDEVU_URL; ?>assets/step5.png" alt="Adım 5 İllüstrasyon"></div>
+
             </div>
 
             <!-- Adım 6 -->
             <div class="tl-item">
-                <div class="tl-image"><img src="<?php echo MST_RANDEVU_URL; ?>assets/adim-6.png" alt="Adım Karakteri" onerror="this.src='https://placehold.co/400x300/0f111a/d4af37?text=Adim+Gorseli'"></div>
-                <div class="tl-node"><div class="tl-dot">06</div></div>
+                <h3 class="tl-question">Kitabım nerelerde satılır?</h3>
                 <div class="tl-card">
+
                     <div class="tl-card__badge">Dağıtım</div>
                     <div class="tl-card__icon">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>
                     </div>
-                    <h3>Kitap Dağıtımı ve Online Satış Platformları</h3>
+
                     <p>Eseriniz basıldıktan hemen sonra başta <strong>MST Yayıncılık mağazası</strong> olmak üzere tüm ana platformlarda satışa açılır. Bunlar D&R, İdefix, Trendyol, Hepsiburada, N11 ve Pazarama gibi platformlardır. Seçmiş olduğunuz paket içeriğine göre bunlara <strong>Amazon</strong> da dahil olur.</p>
                     <div class="tl-card__pills">
                         <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> 15+ yerli platform</span>
                         <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Amazon (pakete göre)</span>
-                        <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Fuar katılımları</span>
+                        <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Bölgeye göre fuar katılımları</span>
                     </div>
                 </div>
+                <div class="tl-node"><div class="tl-dot">06</div></div>
+                <div class="tl-image"><img src="<?php echo MST_RANDEVU_URL; ?>assets/step6.png" alt="Adım 6 İllüstrasyon"></div>
             </div>
 
             <!-- Adım 7 -->
             <div class="tl-item">
+                <h3 class="tl-question">Kitabım nasıl tanıtılır?</h3>
                 <div class="tl-card">
                     <div class="tl-card__badge">Tanıtım</div>
                     <div class="tl-card__icon">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 18-5v12L3 13v-2z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>
                     </div>
-                    <h3>Yazar Markası ve Dijital Tanıtım Çalışmaları</h3>
+
                     <p>Seçilen yayın paketine göre yazar kimliğinizi güçlendirecek PR (tanıtım) çalışmaları hayata geçirilir. Sosyal medya reklamlarından basın bültenlerine kadar geniş kitlelere ulaşmanız sağlanır.</p>
                     <div class="tl-card__pills">
                         <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Yazar kimliği inşası</span>
@@ -811,8 +966,31 @@
                     </div>
                 </div>
                 <div class="tl-node"><div class="tl-dot">07</div></div>
-                <div class="tl-image"><img src="<?php echo MST_RANDEVU_URL; ?>assets/adim-7.png" alt="Adım Karakteri" onerror="this.src='https://placehold.co/400x300/0f111a/d4af37?text=Adim+Gorseli'"></div>
+                <div class="tl-image"><img src="<?php echo MST_RANDEVU_URL; ?>assets/step7.png" alt="Adım 7 İllüstrasyon"></div>
+
             </div>
+
+            <!-- Adım 8 -->
+            <div class="tl-item">
+                <h3 class="tl-question">Kitabım filme dönüşebilir mi?</h3>
+                <div class="tl-card">
+                    <div class="tl-card__badge">CineBook</div>
+                    <div class="tl-card__icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/></svg>
+                    </div>
+
+                    <p>MST Yayıncılık'a özel <strong>CineBook</strong> projesiyle kitabınız filme dönüşür. Eserinizin karakterleri ekranda canlanır, hikâyeniz görsel bir deneyime dönüşür. Yalnızca MST yazarlarına açık bu hizmet, kitabınızın okur, izleyici ve yazar olarak üç farklı kitleye ulaşmasını sağlar.</p>
+                    <div class="tl-card__pills">
+                        <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Kitaptan filme uyarlama</span>
+                        <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Görsel anlatı deneyimi</span>
+                        <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Yalnızca MST yazarlarına özel</span>
+                    </div>
+                </div>
+                <div class="tl-node"><div class="tl-dot">08</div></div>
+                <div class="tl-image"><img src="<?php echo MST_RANDEVU_URL; ?>assets/step8.png" alt="Adım 8 İllüstrasyon"></div>
+
+            </div>
+
 
         </div>
     </div>
@@ -867,7 +1045,7 @@
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                 </div>
                 <h4>Fuar Katılımları</h4>
-                <p>MST Yayıncılık'ın yıl içinde katıldığı kitap fuarlarında kitabınız temsil edilir ve okuyucuyla fiziksel olarak buluşur.</p>
+                <p>Fuar katılımlarımız bölgeye göre planlanır. MST Yayıncılık'ın yıl içinde katıldığı bölgesel kitap fuarlarında kitabınız temsil edilir ve okuyucuyla fiziksel olarak buluşur.</p>
             </div>
         </div>
     </div>
@@ -881,11 +1059,11 @@
     <h2>Kitabınız güvende,<br>süreç <em>sizin elinizde.</em></h2>
     <p>Her adım onayınızla ilerler, tüm haklarınız sözleşmeyle güvence altına alınır. Şimdi eserinizi okurlarla buluşturmanın tam zamanı.</p>
     <div class="cta-row" style="justify-content:center;">
-        <a href="/" class="btn btn--gold" style="font-size:1.1rem;padding:16px 36px;">
+        <a href="<?php echo esc_url($sy_randevu); ?>" class="btn btn--gold" style="font-size:1.1rem;padding:16px 36px;">
             Ücretsiz Ön Görüşme Al
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </a>
-        <a href="https://wa.me/905514112004?text=Merhaba" target="_blank" rel="noopener" class="btn btn--ghost" style="font-size:1.1rem;padding:16px 36px;">
+        <a href="<?php echo esc_url($sy_wa); ?>" target="_blank" rel="noopener" class="btn btn--ghost" style="font-size:1.1rem;padding:16px 36px;">
             WhatsApp'tan Bilgi Al
         </a>
     </div>
@@ -896,26 +1074,26 @@
     <div class="wrap">
         <h3 class="cross-links__title">Bunları da İnceleyebilirsiniz</h3>
         <div class="cross-links__grid">
-            <a href="/akademi" class="xl-card">
+            <a href="<?php echo esc_url($sy_akademi); ?>" class="xl-card">
                 <div class="xl-card__icon">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
                 </div>
                 <h4>Yazar Kariyer Akademisi</h4>
                 <p>Yazarlığınızı geliştirin ve editörlerimizden profesyonel destek alın.</p>
             </a>
-            <a href="/yazar-paneli" class="xl-card">
+            <a href="<?php echo esc_url($sy_panel); ?>" class="xl-card">
                 <div class="xl-card__icon">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
                 </div>
                 <h4>MST Yazar Paneli</h4>
                 <p>Satışlarınızı, telif haklarınızı ve daha fazlasını anlık takip edin.</p>
             </a>
-            <a href="/cinebook" class="xl-card">
+            <a href="<?php echo esc_url($sy_cinebook); ?>" class="xl-card">
                 <div class="xl-card__icon">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg>
                 </div>
                 <h4>Cinebook Projesi</h4>
-                <p>Eserinizi beyaz perdeye taşıyan özel senaryo uyarlama projesi.</p>
+                <p>MST yazarlarının kitaplarını fragmana ve ekrana taşıyoruz.</p>
             </a>
         </div>
     </div>
