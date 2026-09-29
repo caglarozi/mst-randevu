@@ -12,3 +12,4 @@ Thumbs.db
 # Büyük medya dosyaları (GitHub dosya boyutu sınırı)
 *.mp4
 *.mov
+!mst-randevu/assets/surec-tanitim.mp4

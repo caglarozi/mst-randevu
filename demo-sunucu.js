@@ -21,7 +21,7 @@
 //   node demo-sunucu.js --crm ANAHTAR --crm-url https://…/randevu
 const http = require('http'), fs = require('fs'), path = require('path'), { execFile } = require('child_process');
 const root = __dirname;
-const types = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.webp': 'image/webp', '.png': 'image/png', '.jpg': 'image/jpeg' };
+const types = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.webp': 'image/webp', '.png': 'image/png', '.jpg': 'image/jpeg', '.mp4': 'video/mp4', '.mov': 'video/quicktime' };
 
 const arg = ad => { const i = process.argv.indexOf(ad); return i > -1 ? process.argv[i + 1] : ''; };
 const CRM_ANAHTAR = arg('--crm');
@@ -97,7 +97,26 @@ http.createServer((req, res) => {
   if (p === '/surec') p = '/demo/surec.html';       // MST Yayıncılık Süreç Sayfası
   const file = path.normalize(path.join(root, p));
   if (!file.startsWith(root) || !fs.existsSync(file) || fs.statSync(file).isDirectory()) { res.writeHead(404); return res.end('Bulunamadı'); }
-  res.writeHead(200, { 'Content-Type': types[path.extname(file)] || 'application/octet-stream', 'Cache-Control': 'no-store' });
+  if (req.headers.range && path.extname(file) === '.mp4') {
+    const stat = fs.statSync(file);
+    const parts = req.headers.range.replace(/bytes=/, '').split('-');
+    const start = parseInt(parts[0], 10);
+    const end = parts[1] ? parseInt(parts[1], 10) : stat.size - 1;
+    res.writeHead(206, {
+      'Content-Range': `bytes ${start}-${end}/${stat.size}`,
+      'Accept-Ranges': 'bytes',
+      'Content-Length': (end - start) + 1,
+      'Content-Type': 'video/mp4'
+    });
+    return fs.createReadStream(file, { start, end }).pipe(res);
+  }
+  const stat = fs.statSync(file);
+  res.writeHead(200, {
+    'Content-Type': types[path.extname(file)] || 'application/octet-stream',
+    'Content-Length': stat.size,
+    'Accept-Ranges': 'bytes',
+    'Cache-Control': 'no-store'
+  });
   if (CANLI && path.extname(file) === '.html') return res.end(fs.readFileSync(file, 'utf8').replace('</body>', CANLI_BETIK + '</body>'));
   fs.createReadStream(file).pipe(res);
 }).listen(8788, () => {
