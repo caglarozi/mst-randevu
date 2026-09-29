@@ -234,6 +234,274 @@ $sy_cinebook = (class_exists('MST_CineBook') ? MST_CineBook::url() : '') ?: 'htt
     .section__title em { font-style:normal; color:var(--gold); }
     .section__desc { font-size:1.1rem; color:var(--muted); max-width:600px; line-height:1.7; margin-bottom:3rem; }
 
+    
+    /* ==============================
+       30 GÜN YAYIN SİMÜLATÖRÜ
+    ============================== */
+    .sim-box {
+        background: linear-gradient(145deg, rgba(23, 25, 38, 0.85), rgba(15, 17, 26, 0.95));
+        border: 1px solid rgba(197, 160, 89, 0.25);
+        border-radius: var(--r-xl);
+        padding: 36px 32px;
+        margin: 0 auto 64px;
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        position: relative;
+        overflow: hidden;
+    }
+    .sim-box::before {
+        content: '';
+        position: absolute;
+        top: -120px;
+        right: -120px;
+        width: 340px;
+        height: 340px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(197, 160, 89, 0.12) 0%, transparent 70%);
+        pointer-events: none;
+    }
+    .sim-box__header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 24px;
+        margin-bottom: 28px;
+        flex-wrap: wrap;
+    }
+    .sim-box__kicker {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 8px;
+    }
+    .sim-box__title {
+        font-size: clamp(1.3rem, 2.8vw, 1.8rem);
+        font-weight: 800;
+        margin-bottom: 6px;
+        letter-spacing: -0.01em;
+        color: var(--white);
+    }
+    .sim-box__sub {
+        font-size: 0.95rem;
+        color: var(--muted);
+        max-width: 540px;
+        line-height: 1.5;
+    }
+    .sim-picker {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 10px;
+    }
+    .sim-picker__quick {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+    .sim-btn {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 99px;
+        padding: 8px 16px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--muted);
+        cursor: pointer;
+        transition: all 0.25s ease;
+        font-family: inherit;
+    }
+    .sim-btn:hover {
+        background: rgba(197, 160, 89, 0.1);
+        border-color: rgba(197, 160, 89, 0.3);
+        color: var(--white);
+    }
+    .sim-btn.is-active {
+        background: var(--gold);
+        border-color: var(--gold);
+        color: var(--dark);
+        box-shadow: 0 4px 16px rgba(197, 160, 89, 0.35);
+        font-weight: 700;
+    }
+    .sim-picker__custom {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .sim-picker__label {
+        font-size: 0.8rem;
+        color: var(--muted-2);
+        font-weight: 600;
+    }
+    .sim-date-input {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 6px 12px;
+        font-size: 0.85rem;
+        color: var(--white);
+        font-family: inherit;
+        outline: none;
+        cursor: pointer;
+        transition: border-color 0.2s ease;
+        color-scheme: dark;
+    }
+    .sim-date-input:focus {
+        border-color: var(--gold);
+    }
+
+    /* Track Grid */
+    .sim-track {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+        margin-bottom: 24px;
+        position: relative;
+    }
+    .sim-card {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 18px;
+        padding: 22px 20px;
+        transition: transform 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+    }
+    .sim-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(197, 160, 89, 0.3);
+        background: rgba(255, 255, 255, 0.035);
+    }
+    .sim-card__num {
+        display: inline-block;
+        font-size: 0.75rem;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 8px;
+    }
+    .sim-card__date {
+        font-size: 1.35rem;
+        font-weight: 800;
+        color: var(--white);
+        margin-bottom: 8px;
+        line-height: 1.25;
+    }
+    .sim-card__title {
+        font-size: 0.98rem;
+        font-weight: 700;
+        margin-bottom: 6px;
+        color: var(--white);
+        line-height: 1.3;
+    }
+    .sim-card__desc {
+        font-size: 0.85rem;
+        color: var(--muted);
+        line-height: 1.5;
+        margin: 0;
+    }
+
+    /* 30. Gün Hedef Kartı (Glow) */
+    .sim-card--goal {
+        background: linear-gradient(145deg, rgba(197, 160, 89, 0.15), rgba(23, 25, 38, 0.75));
+        border: 1px solid rgba(197, 160, 89, 0.45);
+        box-shadow: 0 8px 24px rgba(197, 160, 89, 0.15);
+    }
+    .sim-card--goal .sim-card__badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 0.75rem;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        color: var(--gold-light);
+        margin-bottom: 8px;
+    }
+    .sim-card__date--gold {
+        color: var(--gold-light);
+        text-shadow: 0 0 16px rgba(197, 160, 89, 0.4);
+    }
+
+    .sim-box__footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-top: 20px;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+    .sim-box__guarantee {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 0.9rem;
+        color: var(--muted);
+    }
+    .sim-box__guarantee svg {
+        color: var(--gold);
+        flex-shrink: 0;
+    }
+    .sim-box__btn {
+        padding: 10px 22px;
+        font-size: 0.88rem;
+    }
+
+    @media (max-width: 820px) {
+        .sim-box {
+            padding: 24px 20px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+        }
+        .sim-box__header {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 16px;
+        }
+        .sim-picker {
+            align-items: stretch;
+        }
+        .sim-picker__quick {
+            width: 100%;
+        }
+        .sim-btn {
+            flex: 1;
+            text-align: center;
+            padding: 8px 10px;
+            font-size: 0.8rem;
+        }
+        .sim-track {
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .sim-box__footer {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 14px;
+        }
+        .sim-box__btn {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+    @media (max-width: 520px) {
+        .sim-track {
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+        .sim-card {
+            padding: 16px 14px;
+        }
+        .sim-card__date {
+            font-size: 1.2rem;
+        }
+    }
+
     /* ==============================
        TIMELINE
     ============================== */
@@ -821,6 +1089,78 @@ $sy_cinebook = (class_exists('MST_CineBook') ? MST_CineBook::url() : '') ?: 'htt
         <h2 class="section__title">Kitap Bastırma Süreci:<br><em>Her Adım Profesyonellerin Elinde</em></h2>
         <p class="section__desc">Kitap yayımlama sürecinde belirsizliklere yer yok. Eserinizi yayınevimize teslim ettikten sonra, her aşamada sizi bilgilendiriyor ve onayınızla ilerliyoruz.</p>
 
+        <!-- ======================== 30 GÜN YAYIN SİMÜLATÖRÜ ======================== -->
+        <div class="sim-box" id="simulator">
+            <div class="sim-box__header">
+                <div class="sim-box__title-group">
+                    <span class="sim-box__kicker">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        Canlı Yayın Simülatörü
+                    </span>
+                    <h3 class="sim-box__title">Dosyanızı Ne Zaman Teslim Edersiniz?</h3>
+                    <p class="sim-box__sub">Teslim tarihinizi seçin; 30 günlük yayın yol haritanızı ve kitabınızın çıkış gününü anında görün:</p>
+                </div>
+
+                <div class="sim-picker">
+                    <div class="sim-picker__quick">
+                        <button type="button" class="sim-btn is-active" data-offset="0">Bugün</button>
+                        <button type="button" class="sim-btn" data-offset="1">Yarın</button>
+                        <button type="button" class="sim-btn" data-offset="next-monday">Gelecek Pazartesi</button>
+                    </div>
+                    <div class="sim-picker__custom">
+                        <label for="simDateInput" class="sim-picker__label">Farklı Tarih:</label>
+                        <input type="date" id="simDateInput" class="sim-date-input" aria-label="Teslim Tarihi Seçin">
+                    </div>
+                </div>
+            </div>
+
+            <div class="sim-track">
+                <!-- Milestone 1 -->
+                <div class="sim-card">
+                    <div class="sim-card__num">1. Gün</div>
+                    <div class="sim-card__date" id="simDate1">-</div>
+                    <h4 class="sim-card__title">Dosya Teslimi &amp; Analiz</h4>
+                    <p class="sim-card__desc">Yayın kurulu incelemesi ve sözleşme sürecinin başlatılması.</p>
+                </div>
+
+                <!-- Milestone 2 -->
+                <div class="sim-card">
+                    <div class="sim-card__num">12. Gün</div>
+                    <div class="sim-card__date" id="simDate2">-</div>
+                    <h4 class="sim-card__title">Editöryel &amp; Kapak Onayı</h4>
+                    <p class="sim-card__desc">İç mizanpaj ve kapak tasarımının tamamlanıp onayınıza sunulması.</p>
+                </div>
+
+                <!-- Milestone 3 -->
+                <div class="sim-card">
+                    <div class="sim-card__num">22. Gün</div>
+                    <div class="sim-card__date" id="simDate3">-</div>
+                    <h4 class="sim-card__title">ISBN, Bandrol &amp; Matbaa</h4>
+                    <p class="sim-card__desc">Kültür Bakanlığı yasal bandrol tahsisi ve seri baskıya geçiş.</p>
+                </div>
+
+                <!-- Milestone 4 (Hedef) -->
+                <div class="sim-card sim-card--goal">
+                    <div class="sim-card__badge">★ 30. GÜN HEDEFİ</div>
+                    <div class="sim-card__date sim-card__date--gold" id="simDate4">-</div>
+                    <h4 class="sim-card__title">Kitabınız Raflarda &amp; Sizde!</h4>
+                    <p class="sim-card__desc">Ücretsiz yazar nüshalarınız kargoda, D&amp;R ve pazar yerlerinde satışta.</p>
+                </div>
+            </div>
+
+            <div class="sim-box__footer">
+                <div class="sim-box__guarantee">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+                    <span><strong>30 Gün Şeffaf Yayın Garantisi</strong> — Her aşama onayınızla ilerler.</span>
+                </div>
+                <a href="<?php echo esc_url($sy_randevu); ?>" class="btn btn--gold sim-box__btn">
+                    <span>Bu Takvimle Başla: Ön Görüşme Al</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+            </div>
+        </div>
+
+
         <div class="timeline">
 
             <!-- Adım 1 -->
@@ -1182,6 +1522,94 @@ if (timeline) {
 
     }, {passive:true});
 }
+
+/* ---- 30 Gün Yayın Simülatörü ---- */
+(function initSimulator() {
+    const dInput = document.getElementById('simDateInput');
+    const quickBtns = document.querySelectorAll('.sim-btn');
+    const d1El = document.getElementById('simDate1');
+    const d2El = document.getElementById('simDate2');
+    const d3El = document.getElementById('simDate3');
+    const d4El = document.getElementById('simDate4');
+
+    if (!d1El) return;
+
+    const monthsTR = [
+        'Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran',
+        'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'
+    ];
+    const daysTR = ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'];
+
+    function formatDate(d) {
+        const day = d.getDate();
+        const month = monthsTR[d.getMonth()];
+        const dayName = daysTR[d.getDay()];
+        return `${day} ${month} <span style="font-size:0.75em;font-weight:600;opacity:0.75;display:block;">${dayName}</span>`;
+    }
+
+    function addDays(base, days) {
+        const res = new Date(base.getTime());
+        res.setDate(res.getDate() + days);
+        return res;
+    }
+
+    function updateDates(startDate) {
+        const d1 = startDate;
+        const d2 = addDays(startDate, 11); // 12. Gün
+        const d3 = addDays(startDate, 21); // 22. Gün
+        const d4 = addDays(startDate, 29); // 30. Gün
+
+        d1El.innerHTML = formatDate(d1);
+        d2El.innerHTML = formatDate(d2);
+        d3El.innerHTML = formatDate(d3);
+        d4El.innerHTML = formatDate(d4);
+
+        if (dInput) {
+            const yyyy = startDate.getFullYear();
+            const mm = String(startDate.getMonth() + 1).padStart(2, '0');
+            const dd = String(startDate.getDate()).padStart(2, '0');
+            dInput.value = `${yyyy}-${mm}-${dd}`;
+        }
+    }
+
+    function getNextMonday() {
+        const today = new Date();
+        const day = today.getDay(); // 0 is Sunday, 1 is Monday
+        const diff = (day === 0 ? 1 : (8 - day));
+        return addDays(today, diff);
+    }
+
+    // Default to today
+    let currentBase = new Date();
+    updateDates(currentBase);
+
+    quickBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            quickBtns.forEach(b => b.classList.remove('is-active'));
+            btn.classList.add('is-active');
+
+            const offset = btn.dataset.offset;
+            if (offset === 'next-monday') {
+                currentBase = getNextMonday();
+            } else {
+                currentBase = addDays(new Date(), parseInt(offset, 10));
+            }
+            updateDates(currentBase);
+        });
+    });
+
+    if (dInput) {
+        dInput.addEventListener('change', () => {
+            if (dInput.value) {
+                const parts = dInput.value.split('-');
+                currentBase = new Date(parts[0], parts[1] - 1, parts[2]);
+                quickBtns.forEach(b => b.classList.remove('is-active'));
+                updateDates(currentBase);
+            }
+        });
+    }
+})();
+
 </script>
 
 </body>
