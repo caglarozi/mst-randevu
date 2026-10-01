@@ -52,7 +52,8 @@ class MST_CineBook
             'fragman_ad'   => 'Gökbörü',
             'fragman_etiket' => 'İlk bölüm',
             'fragman_gorsel' => '', // öne çıkan fragmanın afişi / kapak görseli
-            'cocuk_url'    => '',   // MST Çocuk örnek çizgi film (YouTube)
+            'cocuk_url'    => 'https://www.youtube.com/watch?v=4kC64wMaORc', // MST Çocuk: Yoksul Çocuk çizgi filmi (YouTube)
+            'cocuk_gorsel' => '', // MST Çocuk kapak görseli (16:9)
             'youtube'      => 'https://www.youtube.com/@cinebookoffical',
             'instagram'    => 'https://www.instagram.com/cinebookofficial',
             'facebook'     => 'https://www.facebook.com/search/top?q=cinebookoffical',
@@ -95,7 +96,7 @@ class MST_CineBook
             // Sıradaki yapım: afişi ve videosu gelince CineBook Ayarları → Yapımlar'dan güncellenir
             $l[] = ['ad' => 'Meçhul Tren', 'tur' => 'cinebook', 'etiket' => 'Çok yakında sizlerle', 'yil' => '', 'video' => '', 'afis' => MST_Randevu::varlik('mechul-tren-afis.png')];
             if (self::video_kodu($o['cocuk_url'])) {
-                $l[] = ['ad' => 'MST Çocuk', 'tur' => 'cocuk', 'etiket' => 'Çizgi film', 'yil' => '', 'video' => self::video_kodu($o['cocuk_url']), 'afis' => ''];
+                $l[] = ['ad' => 'Yoksul Çocuk', 'tur' => 'cocuk', 'etiket' => 'Çizgi film', 'yil' => '', 'video' => self::video_kodu($o['cocuk_url']), 'afis' => MST_Randevu::varlik('yoksul-cocuk.jpg')];
             }
         }
         return $l;
@@ -322,7 +323,7 @@ class MST_CineBook
         if (!current_user_can('manage_options')) wp_die('Yetkisiz');
         check_admin_referer('mst_cinebook_ayar');
         $o = self::opts();
-        foreach (['fragman_url', 'fragman_gorsel', 'cocuk_url', 'youtube', 'instagram', 'facebook', 'tiktok'] as $k) {
+        foreach (['fragman_url', 'fragman_gorsel', 'cocuk_url', 'cocuk_gorsel', 'youtube', 'instagram', 'facebook', 'tiktok'] as $k) {
             $o[$k] = esc_url_raw(trim(wp_unslash($_POST[$k] ?? '')));
         }
         $o['fragman_ad'] = sanitize_text_field(wp_unslash($_POST['fragman_ad'] ?? ''));
@@ -378,6 +379,7 @@ class MST_CineBook
                     <tr><th>Videonun etiketi</th><td><input type="text" name="fragman_etiket" class="regular-text" value="<?php echo esc_attr($o['fragman_etiket']); ?>" placeholder="İlk bölüm"><p class="description">“Şimdi izle · Gökbörü • İlk bölüm” gibi görünür.</p></td></tr>
                     <?php $alan('fragman_gorsel', 'Fragman görseli (afiş / kapak)', 'Girişin arka planında ve “Şimdi izle” kartında kullanılır. Yatay (16:9) görsel önerilir.', true); ?>
                     <?php $alan('cocuk_url', 'MST Çocuk çizgi filmi (YouTube ya da Instagram)', 'MST Çocuk bölümünde gösterilir. Boşsa “yakında” görünür.'); ?>
+                    <?php $alan('cocuk_gorsel', 'MST Çocuk kapak görseli (16:9)', 'MST Çocuk video oynatıcısının arka plan görseli. Boşsa varsayılan Yoksul Çocuk görseli kullanılır. Yatay (16:9) görsel önerilir.', true); ?>
                 </table>
                 <h2>Yapımlar</h2>
                 <p class="description">Sayfadaki filmografi. Hiç yapım girilmezse öne çıkan fragman tek yapım olarak gösterilir. Satırı silmek için adı boşaltıp kaydedin. Afiş için dikey (2:3) görsel önerilir; afiş yoksa videonun kapağı kullanılır.</p>

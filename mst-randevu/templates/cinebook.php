@@ -13,6 +13,7 @@ if (!defined('ABSPATH')) {
 $o         = MST_CineBook::opts();
 $fragman   = MST_CineBook::video_kodu($o['fragman_url']);
 $cocuk_vd  = MST_CineBook::video_kodu($o['cocuk_url']);
+$cocuk_kapak = !empty($o['cocuk_gorsel']) ? $o['cocuk_gorsel'] : MST_Randevu::varlik('yoksul-cocuk-video.jpg');
 $fr_yt     = MST_CineBook::youtube_mu($fragman) ? $fragman : ''; // arka planda yalnızca YouTube döner
 $wa        = MST_Randevu::wa_link('Merhaba, CineBook hakkında bilgi almak istiyorum.');
 $fr_ad     = $o['fragman_ad'] ?: 'Gökbörü';
@@ -348,7 +349,7 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
                     <a class="cb-cocuk__btn" href="#takip">Yeni çizgi filmleri takip edin</a>
                 </div>
                 <div class="cb-cocuk__sahne">
-                    <?php echo $oynatici($cocuk_vd, 'MST Çocuk’un ilk çizgi filmi', 'Çizgi filmi izle', 'cb-video--cocuk'); ?>
+                    <?php echo $oynatici($cocuk_vd, 'Yoksul Çocuk · Çizgi Film', 'Çizgi filmi izle', 'cb-video--cocuk', $cocuk_kapak); ?>
                 </div>
             </div>
 
@@ -366,15 +367,22 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
             </div>
 
             <div class="cb-cocuk__afisler" style="margin-top: clamp(64px, 9vw, 100px);">
-                <p class="cb-etiket cb-vizyon__ara" data-cb-gir style="color: var(--mst-koyu); margin-bottom: 24px;">YAKINDA</p>
+                <p class="cb-etiket cb-vizyon__ara" data-cb-gir style="color: var(--mst-koyu); margin-bottom: 24px;">YAYINDA</p>
                 
                 <ul class="cb-filmografi">
                     <li data-cb-gir="kare">
-                        <div class="cb-afis cb-afis--gorsel">
-                            <img src="<?php echo esc_url(MST_RANDEVU_URL . 'assets/yoksul-cocuk.jpg'); ?>" alt="Yoksul Çocuk afişi" loading="lazy" decoding="async">
-                        </div>
+                        <?php if ($cocuk_vd) : ?>
+                            <button type="button" class="cb-afis cb-afis--gorsel" data-cb-video-ac="<?php echo esc_attr($cocuk_vd); ?>" data-cb-baslik="Yoksul Çocuk · Çizgi Film" aria-label="Yoksul Çocuk videosunu izle">
+                                <img src="<?php echo esc_url(MST_RANDEVU_URL . 'assets/yoksul-cocuk.jpg'); ?>" alt="Yoksul Çocuk afişi" loading="lazy" decoding="async">
+                                <span class="cb-afis__izle"><i aria-hidden="true"></i>İzle</span>
+                            </button>
+                        <?php else : ?>
+                            <div class="cb-afis cb-afis--gorsel">
+                                <img src="<?php echo esc_url(MST_RANDEVU_URL . 'assets/yoksul-cocuk.jpg'); ?>" alt="Yoksul Çocuk afişi" loading="lazy" decoding="async">
+                            </div>
+                        <?php endif; ?>
                         <h3 style="font-family: var(--cb-dar); color: var(--mst-koyu); text-transform: uppercase;">Yoksul Çocuk</h3>
-                        <p style="font-family: var(--cb-mono); color: var(--mst-yazi);">Çok yakında sizlerle · <span class="cb-durum is-yapimda">Yakında</span></p>
+                        <p style="font-family: var(--cb-mono); color: var(--mst-yazi);">Çizgi film · <span class="cb-durum">Yayında</span></p>
                     </li>
                     <li class="cb-filmografi__siradaki" data-cb-gir="kare" style="--sira: 1;">
                         <a class="cb-bilet" href="#basvuru" style="box-shadow: 0 10px 30px rgba(0,0,0,.08);">

@@ -111,13 +111,23 @@ http.createServer((req, res) => {
     return fs.createReadStream(file, { start, end }).pipe(res);
   }
   const stat = fs.statSync(file);
+  if (CANLI && path.extname(file) === '.html') {
+    const html = fs.readFileSync(file, 'utf8').replace('</body>', CANLI_BETIK + '</body>');
+    const buf = Buffer.from(html, 'utf8');
+    res.writeHead(200, {
+      'Content-Type': types['.html'],
+      'Content-Length': buf.length,
+      'Accept-Ranges': 'bytes',
+      'Cache-Control': 'no-store'
+    });
+    return res.end(buf);
+  }
   res.writeHead(200, {
     'Content-Type': types[path.extname(file)] || 'application/octet-stream',
     'Content-Length': stat.size,
     'Accept-Ranges': 'bytes',
     'Cache-Control': 'no-store'
   });
-  if (CANLI && path.extname(file) === '.html') return res.end(fs.readFileSync(file, 'utf8').replace('</body>', CANLI_BETIK + '</body>'));
   fs.createReadStream(file).pipe(res);
 }).listen(8788, () => {
   console.log('hazir http://localhost:8788  (randevu)');

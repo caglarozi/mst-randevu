@@ -224,7 +224,11 @@
                     <a class="cb-cocuk__btn" href="#takip">Yeni çizgi filmleri takip edin</a>
                 </div>
                 <div class="cb-cocuk__sahne">
-                    <div class="cb-video cb-video--bos cb-video--cocuk"><span class="cb-video__oynat" aria-hidden="true"></span><p><strong>MST Çocuk’un ilk çizgi filmi</strong><small>Yakında burada</small></p></div>                </div>
+                    <button type="button" class="cb-video cb-video--cocuk" data-cb-video="4kC64wMaORc" aria-label="Yoksul Çocuk · Çizgi Film videosunu oynat" style="background-image:url('/mst-randevu/assets/yoksul-cocuk-video.jpg')">
+                        <span class="cb-video__oynat" aria-hidden="true"></span>
+                        <span class="cb-video__etiket">Çizgi filmi izle</span>
+                    </button>
+                </div>
             </div>
 
             <ol class="cb-cocuk__surec">
@@ -241,15 +245,16 @@
             </div>
 
             <div class="cb-cocuk__afisler" style="margin-top: clamp(64px, 9vw, 100px);">
-                <p class="cb-etiket cb-vizyon__ara" data-cb-gir style="color: var(--mst-koyu); margin-bottom: 24px;">YAKINDA</p>
+                <p class="cb-etiket cb-vizyon__ara" data-cb-gir style="color: var(--mst-koyu); margin-bottom: 24px;">YAYINDA</p>
                 
                 <ul class="cb-filmografi">
                     <li data-cb-gir="kare">
-                        <div class="cb-afis cb-afis--gorsel">
+                        <button type="button" class="cb-afis cb-afis--gorsel" data-cb-video-ac="4kC64wMaORc" data-cb-baslik="Yoksul Çocuk · Çizgi Film" aria-label="Yoksul Çocuk videosunu izle">
                             <img src="/mst-randevu/assets/yoksul-cocuk.jpg" alt="Yoksul Çocuk afişi" loading="lazy" decoding="async">
-                        </div>
+                            <span class="cb-afis__izle"><i aria-hidden="true"></i>İzle</span>
+                        </button>
                         <h3 style="font-family: var(--cb-dar); color: var(--mst-koyu); text-transform: uppercase;">Yoksul Çocuk</h3>
-                        <p style="font-family: var(--cb-mono); color: var(--mst-yazi);">Çok yakında sizlerle · <span class="cb-durum is-yapimda">Yakında</span></p>
+                        <p style="font-family: var(--cb-mono); color: var(--mst-yazi);">Çizgi film · <span class="cb-durum">Yayında</span></p>
                     </li>
                     <li class="cb-filmografi__siradaki" data-cb-gir="kare" style="--sira: 1;">
                         <a class="cb-bilet" href="#basvuru" style="box-shadow: 0 10px 30px rgba(0,0,0,.08);">

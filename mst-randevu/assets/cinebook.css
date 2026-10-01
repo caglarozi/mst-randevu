@@ -388,6 +388,7 @@ html.cb-perde-acik { overflow: hidden; }
 .cb-video--cocuk { border-radius: 22px; }
 .cb-video--cocuk .cb-video__oynat { background: var(--c-mercan); box-shadow: 0 0 0 10px rgba(242, 107, 91, .2); }
 .cb-video--cocuk .cb-video__oynat::after { border-left-color: #fff; }
+.cb-video--cocuk .cb-video__etiket { background: rgba(18, 16, 14, .75); color: #fff; padding: 6px 14px; border-radius: 999px; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); box-shadow: 0 4px 12px rgba(0, 0, 0, .2); }
 .cb-cocuk .cb-video--bos { background: repeating-linear-gradient(135deg, #fdeccd 0 18px, #fbe3b8 18px 36px); color: #5a534b; }
 .cb-cocuk .cb-video--bos::after { display: none; }
 .cb-cocuk .cb-video--bos small { color: #8a7f70; }
