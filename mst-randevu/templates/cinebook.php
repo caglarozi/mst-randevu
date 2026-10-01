@@ -72,9 +72,9 @@ $ik = function ($n, $boy = 22) {
 };
 
 $nedir = [
-    ['Dijital anlatı platformu', 'CineBook, kitapları yalnızca tanıtan değil, onları sahnelere ve görsel deneyimlere dönüştüren özel bir yapı sunar.'],
-    ['Yazar, okur, izleyici', 'Aynı hikâyeyi üç farklı kitleye ulaştırır. Okuyan için eser, izleyen için sahne, yazar için vitrin oluşturur.'],
-    ['Sosyal medya odaklı büyüme', 'Üretilen fragmanlar ve sahneler YouTube, Instagram, TikTok ve Facebook gibi mecralara uygun biçimde hazırlanır. Böylece hikâye rafta kalmaz, ekranda da yaşamaya devam eder.'],
+    ['film', 'Dijital anlatı platformu', 'CineBook, kitapları yalnızca tanıtan değil, onları sahnelere ve görsel deneyimlere dönüştüren özel bir yapı sunar.'],
+    ['kisiler', 'Yazar, okur, izleyici', 'Aynı hikâyeyi üç farklı kitleye ulaştırır. Okuyan için eser, izleyen için sahne, yazar için vitrin oluşturur.'],
+    ['megafon', 'Sosyal medya odaklı büyüme', 'Üretilen fragmanlar ve sahneler YouTube, Instagram, TikTok ve Facebook gibi mecralara uygun biçimde hazırlanır. Böylece hikâye rafta kalmaz, ekranda da yaşamaya devam eder.'],
 ];
 
 $yetenekler = ['Senaryo uyarlaması', 'Storyboard', 'Karakter ve görsel tasarım', 'Kurgu', 'Seslendirme', 'Müzik ve ses tasarımı', 'Animasyon', 'Dikey video', 'Dijital yayın'];
@@ -214,8 +214,9 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
                     <li class="cb-kare" data-cb-gir="kare" style="--sira: <?php echo (int) $i; ?>">
                         <div class="cb-kare__goruntu">
                             <span class="cb-kare__no" aria-hidden="true"><?php echo esc_html(sprintf('%02d', $i + 1)); ?></span>
-                            <h3><?php echo esc_html($n[0]); ?></h3>
-                            <p><?php echo esc_html($n[1]); ?></p>
+                            <span class="cb-kare__ikon"><?php echo $ik($n[0], 24); ?></span>
+                            <h3><?php echo esc_html($n[1]); ?></h3>
+                            <p><?php echo esc_html($n[2]); ?></p>
                         </div>
                     </li>
                 <?php endforeach; ?>
@@ -411,7 +412,7 @@ MST_Randevu::seo_hazirla('cinebook'); // arama başlığı/açıklaması (wp_hea
                     <?php if ($wa) : ?><a class="cb-wa" href="<?php echo esc_url($wa); ?>" target="_blank" rel="noopener"><?php echo MST_Randevu::icon('wa'); ?> Sorunuz varsa WhatsApp’tan yazın</a><?php endif; ?>
                 </div>
 
-                <form class="cb-form cb-form--adim" data-cb-form novalidate>
+                <form class="cb-form cb-form--adim" data-cb-form>
                     <p class="cb-form__koc" aria-hidden="true"><span>Başvuru bileti</span><span><bdi lang="en">CineBook</bdi> · MST Çocuk</span></p>
                     <ol class="cb-adimlar" aria-label="Başvuru adımları">
                         <li class="is-aktif" data-cb-adim-isaret="1"><i>1</i><span>Tür</span></li>

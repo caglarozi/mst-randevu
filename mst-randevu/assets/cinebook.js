@@ -236,6 +236,7 @@
     var adimlar = f.querySelectorAll('[data-cb-adim]'), isaretler = f.querySelectorAll('[data-cb-adim-isaret]'), ozet = f.querySelector('[data-cb-ozet]');
     var ALAN_ADIM = { tur: 1, eser_adi: 2, ozet: 2, mst_yazari: 2, yazar_adi: 3, telefon: 3, eposta: 3, kvkk: 3 };
     var simdiki = 1;
+    f.setAttribute('novalidate', '');
     f.classList.add('is-adimli');
 
     function temizle() {
@@ -317,9 +318,10 @@
     });
   }
 
-  /* Ağır scroll (aşağı kaydırma) animasyonları */
+  /* Kaydırınca beliren animasyonlar (data-cb-scroll veya bilinen sınıflar) */
   function scrollReveal() {
-    if (azHareket) return;
+    if (azHareket || !('IntersectionObserver' in window)) return;
+    var seciciler = '.cb-gosterim, .cb-filmografi .cb-afis, .cb-filmografi .cb-bilet, .cb-studyo, .cb-klaket, .cb-cocuk__giris, .cb-cocuk__surec li, .cb-cocuk__kim, .cb-basvuru__in, .cb-form, .cb-basvuru__takip, [data-cb-scroll]';
     var gozlemci = new IntersectionObserver(function(girdiler) {
       girdiler.forEach(function(girdi) {
         if (girdi.isIntersecting) {
@@ -328,8 +330,7 @@
         }
       });
     }, { threshold: 0.15 });
-    
-    document.querySelectorAll('.cb-gosterim, .cb-filmografi .cb-afis, .cb-filmografi .cb-bilet, .cb-studyo, .cb-klaket, .cb-cocuk__giris, .cb-cocuk__surec li, .cb-cocuk__kim, .cb-basvuru__in, .cb-form, .cb-basvuru__takip').forEach(function(el) {
+    document.querySelectorAll(seciciler).forEach(function(el) {
       el.classList.add('cb-scroll-bekle');
       gozlemci.observe(el);
     });
